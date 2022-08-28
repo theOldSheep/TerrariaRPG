@@ -56,7 +56,7 @@ on skript start:
 	{playerAttrMap}.put("damageMulti", 1)
 	{playerAttrMap}.put("damageRangedMulti", 1)
 	{playerAttrMap}.put("damageRocketMulti", 1)
-	{playerAttrMap}.put("damageSummonMulti", 1)
+	{playerAttrMap}.put("damageSummonMulti", 0.75)
 	{playerAttrMap}.put("damageTakenMulti", 1)
 	{playerAttrMap}.put("damageType", "Melee")
 	{playerAttrMap}.put("defence", 0)
@@ -185,6 +185,7 @@ on first join:
 	set chestplate of player to getItem("木胸甲")
 	set leggings of player to getItem("木护胫")
 	add "useLocalSprite" to scoreboard tags of player
+	set metadata "team" of player to "red"
 on join:
 	set {_att} to player.addAttachment(Bukkit.getPluginManager().getPlugin("Skript"))
 	add "chatitem.use" to {_perms::*}
@@ -808,6 +809,8 @@ command /垃圾箱:
 	trigger:
 		open a new chest inventory with 1 row named "&a垃圾箱" for command sender
 command /togglepvp:
+	cooldown: 1 minute
+	cooldown message: 你在 %remaining time% 后才可以再次使用此功能！
 	trigger:
 		if command sender has scoreboard tag "PVP":
 			remove "PVP" from scoreboard tags of command sender
@@ -816,6 +819,8 @@ command /togglepvp:
 			add "PVP" to scoreboard tags of command sender
 			send "&c您已进入PVP状态" to command sender
 command /team <text>:
+	cooldown: 1 minute
+	cooldown message: 你在 %remaining time% 后才可以再次使用此功能！
 	trigger:
 		if arg-1 is "red":
 			set player list name of command sender to "&c<红队>&r%name of command sender%"
@@ -1309,13 +1314,16 @@ function playerUseItem(ply: player, item: item):
 			if chance of {_chanceConsumption}:
 				remove {_bullet} from slot {_bltInd} of {_bltInv}
 		if {_bullet} is set:
-			play sound "entity.generic.explode" with volume 3 and pitch 1.2 at location of {_ply}
+			set {_shots} to 1
+			set {_shots} to yml value "%{_itemType}%.shots" from file "plugins/Data/weapons.yml"
+			if {_autoSwing} is true:
+				play sound "item.gunfire" with volume 3 and pitch 1 at location of {_ply}
+			else:
+				play sound "entity.generic.explode" with volume 3 and pitch 1.2 at location of {_ply}
 			applyCD({_ply}, ceil({_attrMap}.get("useTime") * ({_attrMap}.get("useTimeMulti")) * ({_attrMap}.get("useTimeRangedMulti")) * 0.75))
 			set {_projectileSpeed} to sqrt(abs({_projectileSpeed} * ({_attrMap}.getOrDefault("projectileSpeedMulti", 1)) * ({_attrMapBullet}.getOrDefault("projectileSpeedBulletMultiMulti", 1)))) * 0.8
 			set {_yaw} to {_ply}.getHandle().yaw
 			set {_pitch} to {_ply}.getHandle().pitch
-			set {_shots} to 1
-			set {_shots} to yml value "%{_itemType}%.shots" from file "plugins/Data/weapons.yml"
 			set {_offSet} to yml value "%{_itemType}%.offSet" from file "plugins/Data/weapons.yml"
 			loop {_shots} times:
 				set {_velocity} to new vector with yaw {_yaw} and pitch {_pitch}
@@ -1341,7 +1349,7 @@ function playerUseItem(ply: player, item: item):
 					add "isGranade" to scoreboard tags of {_bulletE}
 				projectileAI({_bulletE}, {_weaponType})
 				if {_itemType} is "发条突击步枪":
-					play sound "entity.generic.explode" with volume 3 and pitch 1.2 at location of {_ply}
+					play sound "item.gunfire" with volume 3 and pitch 1.2 at location of {_ply}
 					wait 1 tick
 					if gamemode of {_ply} is spectator:
 						stop trigger

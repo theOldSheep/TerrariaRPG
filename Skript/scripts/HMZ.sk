@@ -51,15 +51,9 @@ function handleHMZ(ply: player):
 	set {_bossbar} to new BossBattleServer(CraftChatMessage.fromString("毁灭者", true)[0], BarColor.GREEN, BarStyle.PROGRESS)
 	{_bossbar}.setVisible(true)
 	
-	set {_targets} to new HashMap()
-	loop all players in world of {_ply}:
-		if loop-player is not {_ply}:
-			metadata "tier" of loop-player >= 4
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
-		else:
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
+	spawn a slime at {_spawnLoc}
+	set {_targets} to setupBossTarget((spawned entity), 4, {_ply}, true, {_bossbar})
+	(spawned entity).remove()
 	set {_healthMulti} to getBossHealthMulti({_targets}.size())
 	set {_health} to round(240000 * {_healthMulti})
 	set {_segList} to new ArrayList(50)

@@ -5,6 +5,7 @@ import:
 	java.util.Random
 	lk.vexview.api.VexViewAPI
 	lk.vexview.tag.components.VexTextTag
+	net.minecraft.server.v1_11_R1.AxisAlignedBB
 	org.bukkit.entity.Arrow
 	org.bukkit.entity.EntityType
 	org.bukkit.entity.Projectile
@@ -59,6 +60,10 @@ function checkCanDamage(d: entity, v: entity) :: boolean:
 			return true
 	else:
 		gamemode of {_v} is survival
+		if metadata "motherType" of {_d} is "史莱姆":
+			set {_acc} to metadata "accessory" of {_v}
+			if {_acc}.contains("皇家凝胶"):
+				return false
 		if {_d} doesn't have scoreboard tag "isNPC":
 			return true
 	return false
@@ -73,7 +78,7 @@ on damage:
 	victim is a living entity
 	cancel event
 	set {_attrMap} to metadata "attrMap" of damager
-	if ({_attrMap}.get("damage")) = 0:
+	if ({_attrMap}.getOrDefault("damage", 0)) = 0:
 		stop trigger
 	if damage cause is fall:
 		victim has scoreboard tag "noFallDamage"
@@ -81,6 +86,33 @@ on damage:
 	if "%victim.getType()%" is "SLIME":
 		damage cause is suffocation or fall
 		stop trigger
+	if "%damage cause%" is "cramming":
+		if victim doesn't have scoreboard tag "isNPC" or "isAnimal":
+			if victim is not a player:
+				stop trigger
+		set {_boundingBox} to victim.getHandle().getBoundingBox()
+		set {_length} to (({_boundingBox}.d) - ({_boundingBox}.a)) / 2
+		set {_height} to (({_boundingBox}.e) - ({_boundingBox}.b)) / 2
+		set {_width} to (({_boundingBox}.f) - ({_boundingBox}.c)) / 2
+		set {_centerLoc} to location((({_boundingBox}.a) + {_length}), (({_boundingBox}.b) + {_height}), (({_boundingBox}.c + {_width})), (world of victim))
+
+		set {_maxDmg} to 0
+		set {_entities} to (world of victim).getNearbyEntities({_centerLoc}, {_length}, {_height}, {_width})
+		loop ...{_entities}:
+			set {_curr} to loop-value
+			if {_curr} has scoreboard tag "isMonster":
+				checkCanDamage({_curr}, victim) is not false
+				health of {_curr} > 0
+				set {_attrMap} to metadata "attrMap" of {_curr}
+				if {_attrMap}.getOrDefault("damage", 0) > {_maxDmg}:
+					set {_maxDmg} to {_attrMap}.getOrDefault("damage", 0)
+					set {_damager} to {_curr}
+		if {_damager} is set:
+			set {_dmgType} to "%{_attrMap}.get(""damageType"")%"
+			if {_dmgType} is not "Melee":
+				handleDamage(victim, {_damager}, (({_attrMap}.get("damage")) * 0.8), {_dmgType})
+			else:
+				handleDamage(victim, {_damager}, ({_attrMap}.get("damage")), {_dmgType})
 	if "%damage cause%" is "attack" or "sweep attack":
 		if damager has scoreboard tag "noMelee":
 			stop trigger
@@ -92,11 +124,8 @@ on damage:
 				stop trigger
 			playerUseItem(damager, (damager's tool))
 			stop trigger
-		else if victim is a player:
-			metadata "motherType" of damager is "史莱姆"
-			set {_acc} to metadata "accessory" of victim
-			if {_acc}.contains("皇家凝胶"):
-				stop trigger
+		if checkCanDamage(damager, victim) is false:
+			stop trigger
 		set {_dmgType} to "%{_attrMap}.get(""damageType"")%"
 		if {_dmgType} is not "Melee":
 			handleDamage(victim, damager, (({_attrMap}.get("damage")) * 0.8), {_dmgType})

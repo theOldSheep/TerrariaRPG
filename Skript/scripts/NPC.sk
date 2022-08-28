@@ -1,3 +1,4 @@
+#~spawnNPC(location of "laomianyang" parsed as player, "向导")
 import:
 	java.util.ArrayList
 	java.util.HashMap
@@ -128,18 +129,99 @@ on chunk load:
 			continue
 		{_NPC}.remove()
 		
-		
+function NPCAttackTarget(NPC: entity, projectileVelocity: number, hasGravity: boolean):
+	set {_NPCType} to name of {_NPC}
+	if {_NPCType} is "护士":
+		set {_health} to 500
+		loop all living entities in radius 24 of {_NPC}:
+			if loop-entity has scoreboard tag "isNPC":
+				health of loop-entity < {_health}
+				health of loop-entity > 0
+				(loop-entity).isDead() is not true
+				set {_health} to health of loop-entity
+				set {_target} to loop-entity
+		if {_target} is set:
+			set {_healAmount} to min(max health of {_target} - health of {_target}, 20)
+			heal {_target} by {_healAmount}
+			displayHolo({_target}, {_healAmount}, false, "回血")
+			play 25 happy villager 1 above location of {_target}
+	else:
+		set {_distance} to 99999
+		if {_NPCType} is "渔夫":
+			set {_loopDist} to 12
+		else if {_NPCType} is "建材商人":
+			set {_loopDist} to 5
+		else if {_NPCType} is "军火商":
+			set {_loopDist} to 48
+		else:
+			set {_loopDist} to 24
+		loop all living entities in radius {_loopDist} of {_NPC}:
+			if checkCanDamage({_NPC}, loop-entity) is true:
+				{_NPC}.hasLineOfSight(loop-entity) is true
+				health of loop-entity > 0
+				(loop-entity).isDead() is not true
+				set {_currDist} to distance between {_NPC} and loop-entity
+				if {_currDist} < {_distance}:
+					set {_distance} to {_currDist}
+					set {_target} to loop-entity
+		if {_target} is set:
+			if {_NPCType} is "渔夫":
+				set {_eyeHeight} to 0.8
+			else:
+				set {_eyeHeight} to 1.6
+			set {_eyeLoc} to (location of {_NPC}).add(0, {_eyeHeight}, 0)
+			set {_attrMap} to metadata "attrMap" of {_NPC}
+			set {_velocity} to (eye location of {_target}).subtract({_eyeLoc}).toVector()
+			if {_NPCType} is "建材商人":
+				set {_color} to new ArrayList()
+				{_color}.add("150|150|0")
+				handleStrikeLine({_NPC}, (vector yaw of {_velocity}), (vector yaw of {_velocity}), 6, getItem("金质短剑"), {_color}, (new ArrayList()), false, {_null})
+			else:
+				if {_hasGravity} is true:
+					set {_timeFlight} to ((vector length of {_velocity}) / {_projectileVelocity}) / 20
+					set vector length of {_velocity} to {_projectileVelocity}
+					set {_offSet} to {_timeFlight} / 40
+					add {_offSet} to y component of {_velocity}
+				else:
+					set vector length of {_velocity} to {_projectileVelocity}
+				if {_NPCType} is "向导" or "渔夫":
+					set {_arrow} to (world of {_NPC}).spawnEntity({_eyeLoc}, EntityType.ARROW)
+					{_arrow}.setCustomName("木箭")
+					{_arrow}.setVelocity({_velocity})
+					{_arrow}.setShooter({_NPC})
+					set metadata "attrMap" of {_arrow} to {_attrMap}.clone()
+					set metadata "collided" of {_arrow} to new ArrayList()
+					projectileAI({_arrow}, "BOW")
+				else if {_NPCType} is "裁缝":
+					set {_projectile} to spawnProjectile({_NPC}, {_velocity}, {_attrMap}, "骷髅头", {_eyeLoc})
+					set metadata "penetration" of {_projectile} to 2
+					set gravity of {_projectile} to off
+					projectileAI({_projectile}, "MAGIC_PROJECTILE")
+				else if {_NPCType} is "军火商":
+					set {_projectile} to spawnProjectile({_NPC}, {_velocity}, {_attrMap}, "火枪子弹", {_eyeLoc})
+					set gravity of {_projectile} to off
+					projectileAI({_projectile}, "GUN")
+				else if {_NPCType} is "哥布林工匠":
+					set {_projectile} to spawnProjectile({_NPC}, {_velocity}, {_attrMap}, "尖刺球", {_eyeLoc})
+					set metadata "Bounce" of {_projectile} to 12
+					projectileAI({_arrow}, "Arrow")
+				else if {_NPCType} is "爆破专家":
+					set {_projectile} to spawnProjectile({_NPC}, {_velocity}, {_attrMap}, "手榴弹", {_eyeLoc})
+					set metadata "Bounce" of {_projectile} to 4
+					add "isGranade" to scoreboard tags of {_projectile}
+					projectileAI({_arrow}, "Arrow")
 function handleNPC(NPC: entity):
-	if name of {_NPC} is "渔夫":
+	set {_NPCType} to name of {_NPC}
+	if {_NPCType} is "渔夫":
 		set {_disguise} to new MobDisguise(DisguiseType.VILLAGER, false)
 		{_disguise}.getWatcher().setProfession(Profession.BUTCHER)
 	else:
 		set {_disguise} to new MobDisguise(DisguiseType.VILLAGER, true)
-		if name of {_NPC} is "向导" or "护士" or "建材商人" or "裁缝":
+		if {_NPCType} is "向导" or "护士" or "建材商人" or "裁缝":
 			{_disguise}.getWatcher().setProfession(Profession.LIBRARIAN)
-		else if name of {_NPC} is "军火商" or "哥布林工匠":
+		else if {_NPCType} is "军火商" or "哥布林工匠":
 			{_disguise}.getWatcher().setProfession(Profession.BLACKSMITH)
-		else if name of {_NPC} is "爆破专家":
+		else if {_NPCType} is "爆破专家":
 			{_disguise}.getWatcher().setProfession(Profession.PRIEST)
 	{_disguise}.setReplaceSounds(true)
 	DisguiseAPI.disguiseEntity({_NPC}, {_disguise})
@@ -157,21 +239,9 @@ function handleNPC(NPC: entity):
 	{_NPCnms}.goalSelector.a(6f, new PathfinderGoalRandomLookaround({_NPCnms}))
 	
 	#attrMap
-	set max health of {_NPC} to 250
-	set health of {_NPC} to 250
-	set {_attrMap} to new HashMap(13)
-	{_attrMap}.put("damageArrowMulti", 1)
-	{_attrMap}.put("damageMulti", 5)
-	{_attrMap}.put("damageRangedMulti", 1)
-	{_attrMap}.put("damageType", "Arrow")
-	{_attrMap}.put("defenceMulti", 5)
-	{_attrMap}.put("invulnerabilityTick", 10)
-	{_attrMap}.put("knockbackArrowMulti", 1)
-	{_attrMap}.put("knockbackMulti", 1)
-	{_attrMap}.put("knockbackRangedMulti", 1)
-	{_attrMap}.put("knockbackResistance", 0.5)
-	{_attrMap}.put("regen", 0.5)
-	{_attrMap}.put("regenMulti", 1)
+	set max health of {_NPC} to 500
+	set health of {_NPC} to 500
+	set {_attrMap} to new HashMap()
 	
 	set metadata "attrMap" of {_NPC} to {_attrMap}
 	set {_type} to {_NPC}.getCustomName()
@@ -183,16 +253,92 @@ function handleNPC(NPC: entity):
 	{NPC}.put({_type}, {_NPC})
 	
 	{_attrMap}.put("crit", 4)
-	{_attrMap}.put("damage", 36)
 	{_attrMap}.put("defence", 15)
 	{_attrMap}.put("knockback", 2)
+	{_attrMap}.put("knockbackResistance", 0.5)
+	{_attrMap}.put("invulnerabilityTick", 10)
+	if {_NPCType} is "向导":
+		{_attrMap}.put("damageType", "Arrow")
+		{_attrMap}.put("damage", 30)
+		set {_projectileVelocity} to 1.5
+		set {_hasGravity} to true
+	else if {_NPCType} is "渔夫":
+		{_attrMap}.put("damageType", "Arrow")
+		{_attrMap}.put("damage", 24)
+		set {_projectileVelocity} to 1
+		set {_hasGravity} to true
+	else if {_NPCType} is "建材商人":
+		{_attrMap}.put("damageType", "Melee")
+		{_attrMap}.put("damage", 32)
+		set {_projectileVelocity} to 4
+		set {_hasGravity} to false
+	else if {_NPCType} is "裁缝":
+		{_attrMap}.put("damageType", "Magic")
+		{_attrMap}.put("damage", 48)
+		set {_projectileVelocity} to 1.25
+		set {_hasGravity} to false
+	else if {_NPCType} is "军火商":
+		{_attrMap}.put("damageType", "Bullet")
+		{_attrMap}.put("damage", 72)
+		set {_projectileVelocity} to 2
+		set {_hasGravity} to false
+	else if {_NPCType} is "哥布林工匠":
+		{_attrMap}.put("damageType", "Arrow")
+		{_attrMap}.put("damage", 44)
+		set {_projectileVelocity} to 0.35
+		set {_hasGravity} to true
+	else if {_NPCType} is "爆破专家":
+		{_attrMap}.put("damageType", "Arrow")
+		{_attrMap}.put("damage", 60)
+		set {_projectileVelocity} to 0.4
+		set {_hasGravity} to true
 	
+	set {_index} to 0
+	set {_lastHealth} to -1
+	set {_regenCD} to 0
 	while 1 = 1:
-		wait 4 seconds
-		if (world of {_NPC}).getTime() is between 22470 and 22530:
-			spawnNPC((world of {_NPC}).getSpawnLocation().add((a random number between -3 and 3), 0, (a random number between -3 and 3)), name of {_NPC})
-			{_NPC}.remove()
-			stop loop
+		wait 10 ticks
+		add 1 to {_index}
+		
+		if health of {_NPC} > 0:
+			{_NPC}.isDead() is not true
+			# health regen
+			if health of {_NPC} < {_lastHealth}:
+				set {_regenCD} to 20
+			set {_lastHealth} to health of {_NPC}
+			if {_regenCD} > 0:
+				remove 1 from {_regenCD}
+			else:
+				heal {_NPC} by 2
+				set {_regenCD} to 3
+			# attack
+			if {_NPCType} is "向导":
+				NPCAttackTarget({_NPC}, {_projectileVelocity}, {_hasGravity})
+			else if {_NPCType} is "渔夫":
+				NPCAttackTarget({_NPC}, {_projectileVelocity}, {_hasGravity})
+			else if {_NPCType} is "护士":
+				if mod({_index}, 2) = 0:
+					NPCAttackTarget({_NPC}, {_projectileVelocity}, {_hasGravity})
+			else if {_NPCType} is "建材商人":
+				NPCAttackTarget({_NPC}, {_projectileVelocity}, {_hasGravity})
+			else if {_NPCType} is "裁缝":
+				if mod({_index}, 4) = 0:
+					NPCAttackTarget({_NPC}, {_projectileVelocity}, {_hasGravity})
+			else if {_NPCType} is "军火商":
+				if mod({_index}, 3) = 0:
+					NPCAttackTarget({_NPC}, {_projectileVelocity}, {_hasGravity})
+			else if {_NPCType} is "哥布林工匠":
+				if mod({_index}, 4) = 0:
+					NPCAttackTarget({_NPC}, {_projectileVelocity}, {_hasGravity})
+			else if {_NPCType} is "爆破专家":
+				if mod({_index}, 6) = 0:
+					NPCAttackTarget({_NPC}, {_projectileVelocity}, {_hasGravity})
+		
+		if mod({_index}, 8) = 0:
+			if (world of {_NPC}).getTime() is between 22470 and 22530:
+				spawnNPC((world of {_NPC}).getSpawnLocation().add((a random number between -3 and 3), 0, (a random number between -3 and 3)), name of {_NPC})
+				{_NPC}.remove()
+				stop trigger
 	
 
 on VexGuiCloseEvent:

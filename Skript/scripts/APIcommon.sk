@@ -219,6 +219,22 @@ function checkMobTarget(target: entity, mob: entity) :: boolean:
 			return false
 		return true
 	return false
+function setupBossTarget(BOSS: entity, tier: integer, ply: player, hasDistanceRestriction: boolean, bossbar: object) :: object:
+	set {_targets} to new HashMap()
+	loop all players in {_BOSS}.getWorld():
+		if loop-player is not {_ply}:
+			metadata "tier" of loop-player >= {_tier}
+			(metadata "team" of loop-player) is (metadata "team" of {_ply})
+			if {_hasDistanceRestriction} is true:
+				if distance between loop-player and {_ply} > 192:
+					continue
+			{_bossbar}.addPlayer(loop-player.getHandle())
+			{_targets}.put(name of loop-player, 0)
+		else:
+			{_bossbar}.addPlayer(loop-player.getHandle())
+			{_targets}.put(name of loop-player, 0)
+	broadcast "BOSS的挑战者为：%{_targets}.keySet()%"
+	return {_targets}
 function getBossHealthMulti(numPly: number) :: number:
 	set {_numPly} to round({_numPly})
 	set {_curr} to 1
@@ -1187,7 +1203,6 @@ function resetPlayerStats(ply: player):
 	set metadata "minions" of {_ply} to new ArrayList()
 	set metadata "hooks" of {_ply} to new ArrayList()
 	set metadata "nextMinionIndex" of {_ply} to 0
-	set metadata "team" of {_ply} to "red"
 	set metadata "mobAmount" of {_ply} to 0
 	set metadata "toolChanged" of {_ply} to false
 	set metadata "useCD" of {_ply} to false
@@ -1875,7 +1890,7 @@ function handleDamage(v: entity, d: entity, dmg: number, damageCause: text):
 	set {_accessories} to new ArrayList()
 	set {_accessories} to metadata "accessory" of {_v}
 	if {_d} is living entity:
-		health of {_d} < 0
+		health of {_d} <= 0
 		{_damageCause} is "Melee"
 		stop trigger
 	set {_isMinionDmg} to false
@@ -2009,7 +2024,6 @@ function handleDamage(v: entity, d: entity, dmg: number, damageCause: text):
 
 	if entityDamageEvent({_d}, {_dPly}, {_v}, {_damageTaker}, {_dmg}, {_damageCause}) is false:
 		stop trigger
-	
 	if {_fixedDamage} is not true:
 		set {_damageTakenMulti} to {_attrMapV}.getOrDefault("damageTakenMulti", 1)
 		set {_dmg} to {_dmg} * a random number between 0.9 and 1.1
@@ -2320,8 +2334,9 @@ function handleEntityExplode(entity: entity, exception: entity):
 		if {_victim} is not living entity:
 			continue
 		if {_victim} is shooter of {_entity}:
-			{_damageShooter} is true
-			handleDamage({_victim}, {_entity}, {_damage}, "Explode")
+			if {_damageShooter} is true:
+				{_victim} is a player
+				handleDamage({_victim}, {_entity}, {_damage}, "Explode")
 			continue
 		if {_victim} is {_exception}:
 			continue

@@ -63,15 +63,7 @@ function handleSZMY(jgy: entity, myy: entity, ply: player):
 	set metadata "bossbar" of {_jgy} to {_bossbar}
 	set metadata "bossbar" of {_myy} to {_bossbar}
 	
-	set {_targets} to new HashMap()
-	loop all players in {_ply}.getWorld():
-		if loop-player is not {_ply}:
-			metadata "tier" of loop-player >= 4
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
-		else:
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
+	set {_targets} to setupBossTarget({_jgy}, 4, {_ply}, true, {_bossbar})
 	set metadata "targets" of {_jgy} to {_targets}
 	set metadata "targets" of {_myy} to {_targets}
 	set {_healthMulti} to getBossHealthMulti({_targets}.size())

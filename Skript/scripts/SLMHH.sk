@@ -52,15 +52,7 @@ function handleSLMHH(slmhh: entity, ply: player):
 	{_bossbar}.setVisible(true)
 	set metadata "bossbar" of {_slmhh} to {_bossbar}
 	
-	set {_targets} to new HashMap()
-	loop all players in {_slmhh}.getWorld():
-		if loop-player is not {_ply}:
-			metadata "tier" of loop-player >= 4
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
-		else:
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
+	set {_targets} to setupBossTarget({_slmhh}, 4, {_ply}, true, {_bossbar})
 	set metadata "targets" of {_slmhh} to {_targets}
 	set {_healthMulti} to getBossHealthMulti({_targets}.size())
 	{_slmhh}.setInvulnerable(true)

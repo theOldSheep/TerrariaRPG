@@ -60,10 +60,7 @@ function handleKLW(klw: entity, ply: player, hand1: entity, hand2: entity):
 	{_bossbar}.setVisible(true)
 	set metadata "bossbar" of {_klw} to {_bossbar}
 	
-	set {_targets} to new HashMap()
-	loop all players in {_klw}.getWorld():
-		{_bossbar}.addPlayer(loop-player.getHandle())
-		{_targets}.put(name of loop-player, 0)
+	set {_targets} to setupBossTarget({_klw}, 2, {_ply}, true, {_bossbar})
 	set metadata "targets" of {_klw} to {_targets}
 	set metadata "targets" of {_hand1} to {_targets}
 	set metadata "targets" of {_hand2} to {_targets}
@@ -266,7 +263,7 @@ function handleKLW(klw: entity, ply: player, hand1: entity, hand2: entity):
 				{_klw}.setCustomName("骷髅王&1")
 			else:
 				set {_vHead} to {_target}.getLocation().subtract({_klw}.getLocation()).toVector()
-				set vector length of {_vHead} to min(2, (distance between {_klw} and {_target}) / 10)
+				set vector length of {_vHead} to min(2, (distance between {_klw} and {_target}) / 8)
 				set {_locHead} to {_klw}.getLocation()
 				teleport {_klw} to {_locHead}.add({_vHead})
 			add 1 to {_countAI}

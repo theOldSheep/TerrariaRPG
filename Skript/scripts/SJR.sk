@@ -104,15 +104,7 @@ function handleSJR(ply: player):
 	{_bossbar}.setVisible(true)
 	set metadata "bossbar" of {_sjr} to {_bossbar}
 	
-	set {_targets} to new HashMap()
-	loop all players in {_sjr}.getWorld():
-		if loop-player is not {_ply}:
-			metadata "tier" of loop-player >= 6
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
-		else:
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
+	set {_targets} to setupBossTarget({_sjr}, 6, {_ply}, true, {_bossbar})
 	set metadata "targets" of {_sjr} to {_targets}
 	set metadata "targets" of {_head} to {_targets}
 	set {_healthMulti} to getBossHealthMulti({_targets}.size())

@@ -48,10 +48,7 @@ function handleEOC(eoc: entity, ply: player):
 	{_bossbar}.setVisible(true)
 	set metadata "bossbar" of {_eoc} to {_bossbar}
 	
-	set {_targets} to new HashMap()
-	loop all players in {_eoc}.getWorld():
-		{_bossbar}.addPlayer(loop-player.getHandle())
-		{_targets}.put(name of loop-player, 0)
+	set {_targets} to setupBossTarget({_eoc}, 0, {_ply}, true, {_bossbar})
 	set metadata "targets" of {_eoc} to {_targets}
 	set {_healthMulti} to getBossHealthMulti({_targets}.size())
 	{_eoc}.setInvulnerable(true)

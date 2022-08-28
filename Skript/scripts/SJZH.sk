@@ -66,15 +66,7 @@ function handleSJZH(ply: player):
 	{_bossbar}.setVisible(true)
 	set metadata "bossbar" of {_sjzh} to {_bossbar}
 	
-	set {_targets} to new HashMap()
-	loop all players in {_sjzh}.getWorld():
-		if loop-player is not {_ply}:
-			metadata "tier" of loop-player >= 4
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
-		else:
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
+	set {_targets} to setupBossTarget({_sjzh}, 5, {_ply}, true, {_bossbar})
 	set metadata "targets" of {_sjzh} to {_targets}
 	set {_healthMulti} to getBossHealthMulti({_targets}.size())
 	{_sjzh}.setInvulnerable(true)
@@ -285,7 +277,7 @@ function SJZHprojectileAI(projectile: entity, target: entity):
 			set {_v} to velocity of {_projectile}
 			set vector length of {_v} to 1
 			#ac = v^2 / r
-			set vector length of {_dVec} to 0.75 / {_currDist}
+			set vector length of {_dVec} to 0.6 / {_currDist}
 			{_v}.add({_dVec})
 			set velocity of {_projectile} to {_v}
 		wait 1 tick

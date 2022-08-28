@@ -40,7 +40,8 @@ function threadTime():
 		{_world}.setGameRuleValue("doWeatherCycle", "false")
 		{_world}.setKeepSpawnInMemory(false)
 		{_world}.setGameRuleValue("doMobSpawning", "false")
-		{_world}.setGameRuleValue("maxEntityCramming", "-1")
+		{_world}.setGameRuleValue("maxEntityCramming", "1")
+		{_world}.setGameRuleValue("randomTickSpeed", "5")
 	set {_world} to world("world")
 	set {_wb} to {_world}.getWorldBorder()
 	{_wb}.setCenter({_world}.getSpawnLocation())
@@ -66,7 +67,9 @@ function threadTime():
 					handleFallenStar({_spawnLoc}, {_attrMapFallenStar})
 		#ticking event
 		if {event} is set:
-			if {eventInfo}.getOrDefault("isInvasion", false) is false:
+			if {eventInfo} is not set:
+				clear {event}
+			else if {eventInfo}.getOrDefault("isInvasion", false) is false:
 				{eventInfo}.put("progress", {eventInfo}.get("progress") + 1)
 				if {eventInfo}.get("progress") >= {eventInfo}.get("progressMax"):
 					if {event} is "史莱姆雨":

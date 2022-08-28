@@ -71,15 +71,7 @@ function handleMoonLord(ply: player):
 	{_bossbar}.setVisible(true)
 	set metadata "bossbar" of {_yqlz} to {_bossbar}
 	
-	set {_targets} to new HashMap()
-	loop all players in {_yqlz}.getWorld():
-		if loop-player is not {_ply}:
-			metadata "tier" of loop-player >= 6
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
-		else:
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
+	set {_targets} to setupBossTarget({_yqlz}, 7, {_ply}, false, {_bossbar})
 	set metadata "targets" of {_yqlz} to {_targets}
 	set metadata "targets" of {_hand1} to {_targets}
 	set metadata "targets" of {_hand2} to {_targets}

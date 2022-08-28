@@ -84,15 +84,7 @@ function handleJXKLW(jxklw: entity, hand1: entity, hand2: entity, hand3: entity,
 	{_bossbar}.setVisible(true)
 	set metadata "bossbar" of {_jxklw} to {_bossbar}
 	
-	set {_targets} to new HashMap()
-	loop all players in {_jxklw}.getWorld():
-		if loop-player is not {_ply}:
-			metadata "tier" of loop-player >= 4
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
-		else:
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
+	set {_targets} to setupBossTarget({_jxklw}, 4, {_ply}, true, {_bossbar})
 	set metadata "targets" of {_jxklw} to {_targets}
 	set metadata "targets" of {_hand1} to {_targets}
 	set metadata "targets" of {_hand2} to {_targets}

@@ -50,10 +50,7 @@ function handleSLMW(slmw: entity, ply: player):
 	{_bossbar}.setVisible(true)
 	set metadata "bossbar" of {_slmw} to {_bossbar}
 	
-	set {_targets} to new HashMap()
-	loop all players in {_slmw}.getWorld():
-		{_bossbar}.addPlayer(loop-player.getHandle())
-		{_targets}.put(name of loop-player, 0)
+	set {_targets} to setupBossTarget({_slmw}, 0, {_ply}, true, {_bossbar})
 	set metadata "targets" of {_slmw} to {_targets}
 	set {_healthMulti} to getBossHealthMulti({_targets}.size())
 	{_slmw}.setInvulnerable(true)

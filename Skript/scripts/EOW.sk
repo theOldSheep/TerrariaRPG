@@ -53,7 +53,6 @@ on rightclick:
 		{_attrMapBullet}.put("knockbackRangedMulti", 1)
 		{_attrMapBullet}.put("knockbackMulti", 1)
 		set {_arlst} to new ArrayList(30)
-		set {_targets} to new HashMap()
 		set {_bossbar} to new BossBattleServer(CraftChatMessage.fromString("世界吞噬者", true)[0], BarColor.GREEN, BarStyle.PROGRESS)
 		{_bossbar}.setVisible(true)
 		set {_goalSel} to new PathfinderGoalSelector((player's world).getHandle().methodProfiler)
@@ -61,9 +60,7 @@ on rightclick:
 		spawn a slime at {_spawnLoc}
 		set {_eow} to spawned entity
 		set {_eow}.getHandle().goalSelector to {_goalSel}
-		loop all players in {_eow}.getWorld():
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
+		set {_targets} to setupBossTarget({_eow}, 1, player, true, {_bossbar})
 		{BOSS}.put("世界吞噬者", {_arlst})
 		set metadata "attrMap" of {_eow} to {_attrMap}.clone()
 		set metadata "targets" of {_eow} to {_targets}

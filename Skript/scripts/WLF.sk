@@ -93,10 +93,7 @@ function handleWLF(wlf: entity, ply: player, eyeTop: entity, eyeBottom: entity):
 	{_bossbar}.setVisible(true)
 	set metadata "bossbar" of {_wlf} to {_bossbar}
 	
-	set {_targets} to new HashMap()
-	loop all players in {_wlf}.getWorld():
-		{_bossbar}.addPlayer(loop-player.getHandle())
-		{_targets}.put(name of loop-player, 0)
+	set {_targets} to setupBossTarget({_wlf}, 3, {_ply}, true, {_bossbar})
 	set metadata "targets" of {_wlf} to {_targets}
 	set metadata "targets" of {_eyeTop} to {_targets}
 	set metadata "targets" of {_eyeBottom} to {_targets}
