@@ -69,6 +69,7 @@ on skript stop:
 			(loop-value).remove()
 
 every 1 second:
+every 2 ticks:
 	loop all players:
 		wait 3 ticks
 		attemptMobSpawn(loop-player)
@@ -589,7 +590,12 @@ function entityAI(entity: entity, target: entity, type: text):
 				else:
 					set {_target} to mobRetarget({_entity}, {_target})
 			if {_target} is set:
+				set {_changeDirection} to false
 				if distance between location of {_entity} and location of {_target} > 8:
+					set {_changeDirection} to true
+				else if mod({_index}, 15) = 0:
+					set {_changeDirection} to true
+				if {_changeDirection} is true:
 					set {_dV} to vector((x-coordinate of {_target} - x-coordinate of {_entity}), (y-coordinate of {_target} - y-coordinate of {_entity}), (z-coordinate of {_target} - z-coordinate of {_entity}))
 					if vector length of {_dV} = 0:
 						set {_dV} to vector(0, 0.3, 0)
@@ -599,7 +605,7 @@ function entityAI(entity: entity, target: entity, type: text):
 						if mod({_index}, 22) >= 8:
 							{_dV}.multiply(-1.7)
 							set {_index} to 0
-				else if {_type} is "恶魔" or "巫毒恶魔":
+				if {_type} is "恶魔" or "巫毒恶魔":
 					mod({_index}, 4) = 0
 					set {_velocity} to {_target}.getLocation().subtract({_entity}.getLocation()).toVector()
 					set vector length of {_velocity} to 0.05

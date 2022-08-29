@@ -121,7 +121,6 @@ on chunk load:
 				if max health of {_NPC} is 2:
 					set max health of {_NPC} to 500
 					set health of {_NPC} to 500
-					handleNPC({_NPC})
 					continue
 			else if {_NPC} is armor stand:
 				continue
@@ -175,7 +174,7 @@ function NPCAttackTarget(NPC: entity, projectileVelocity: number, hasGravity: bo
 			if {_NPCType} is "建材商人":
 				set {_color} to new ArrayList()
 				{_color}.add("150|150|0")
-				handleStrikeLine({_NPC}, (vector yaw of {_velocity}), (vector yaw of {_velocity}), 6, getItem("金质短剑"), {_color}, (new ArrayList()), false, {_null})
+				handleStrikeLine({_NPC}, (vector yaw of {_velocity}), (vector pitch of {_velocity}), 6, getItem("金质短剑"), {_color}, (new ArrayList()), false, {_null})
 			else:
 				if {_hasGravity} is true:
 					set {_timeFlight} to ((vector length of {_velocity}) / {_projectileVelocity}) / 20

@@ -181,7 +181,7 @@ function handleSJZH(ply: player):
 			set {_dVec} to (location of {_target}).subtract(0, 1, 0).subtract({_loc}).toVector()
 			set {_dist} to vector length of {_dVec}
 			if {_form} = 1:
-				set {_speed} to max({_dist} / 30, 0.8)
+				set {_speed} to max({_dist} / 35, 0.6)
 				if {_healthPercent} <= 0.5:
 					set {_form} to 2
 					set name of {_sjzh} to "世纪之花&1"
@@ -193,7 +193,7 @@ function handleSJZH(ply: player):
 						loop 3 times:
 							SJZHtentacle((loop-value-1), {_attrMapTentacle}, {_sjzh})
 			else:
-				set {_speed} to max({_dist} / 25, 1.25)
+				set {_speed} to max({_dist} / 20, 0.8)
 			if {_rage} is true:
 				set {_speed} to {_speed} * 1.5
 			if vector length of {_dVec} > 0:
@@ -243,7 +243,7 @@ function SJZHprojectile(sjzh: entity, target: entity, type: integer, attribute: 
 	if {_type} < 3:
 		set {_speed} to 1
 	else:
-		set {_speed} to 3
+		set {_speed} to 2
 	set {_velocity} to (eye location of {_target}).subtract(eye location of {_sjzh}).toVector()
 	set {_projectile} to {_sjzh}.getWorld().spawnEntity({_sjzh}.getEyeLocation(), EntityType.SPLASH_POTION)
 	
@@ -277,7 +277,7 @@ function SJZHprojectileAI(projectile: entity, target: entity):
 			set {_v} to velocity of {_projectile}
 			set vector length of {_v} to 1
 			#ac = v^2 / r
-			set vector length of {_dVec} to 0.6 / {_currDist}
+			set vector length of {_dVec} to 0.5 / {_currDist}
 			{_v}.add({_dVec})
 			set velocity of {_projectile} to {_v}
 		wait 1 tick
@@ -311,8 +311,10 @@ function SJZHtentacle(attatched: entity, attrMap: object, sjzh: entity):
 				set {_destination} to (eye location of {_attatched}).add({_v}).add({_offSet})
 			set {_dVel} to {_destination}.subtract(eye location of {_tentacle}).toVector()
 			vector length of {_dVel} >= 0
-			set vector length of {_dVel} to min((vector length of {_dVel}) / 5, 1)
+			set vector length of {_dVel} to min((vector length of {_dVel}) / 6, 1)
 			set {_velocity} to (velocity of {_tentacle}).add({_dVel})
+			if vector length of {_velocity} > 1:
+				set vector length of {_velocity} to 1
 			{_tentacle}.setVelocity({_velocity})
 		wait 5 ticks
 	{_attatched} is {_sjzh}

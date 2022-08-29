@@ -15,8 +15,8 @@ spawnInfo:
     day:
         史莱姆: 1
     night:
-        僵尸: 35
-        恶魔之眼: 15
+        僵尸: 16
+        恶魔之眼: 8
         装甲幻影魔: 3
         幽灵: 1
     underworld:
@@ -27,13 +27,13 @@ spawnInfo:
         红恶魔: 8
         巫毒恶魔: 1
     jungle_day:
-        丛林蝙蝠: 2
-        丛林史莱姆: 2
+        丛林蝙蝠: 10
+        丛林史莱姆: 10
         巨型陆龟: 1
     jungle_night:
-        丛林蝙蝠: 2
-        僵尸: 2
-        恶魔之眼: 1
+        丛林蝙蝠: 8
+        僵尸: 6
+        恶魔之眼: 6
         巨型陆龟: 1
     jungle_underground:
         丛林蝙蝠: 1
@@ -41,9 +41,11 @@ spawnInfo:
     jungle_cavern:
         丛林蝙蝠: 15
         丛林史莱姆: 10
-        巨型陆龟: 8
+        巨型陆龟: 4
     tundra_cavern:
-        冰雪陆龟: 6
+        史莱姆: 20
+        黑隐士: 4
+        冰雪陆龟: 1
     corruption_underground:
         噬魂怪: 1
     corruption:
@@ -574,7 +576,7 @@ mobInfo:
         monsterType: "SLIME"
         disguiseType: "BAT"
         variants:
-            hell1:
+            default1:
                 attributes:
                     damage: 105
                     damageType: "Melee"
@@ -587,7 +589,7 @@ mobInfo:
         monsterType: "SLIME"
         disguiseType: "BAT"
         variants:
-            hell1:
+            default1:
                 attributes:
                     damage: 80
                     damageType: "Melee"

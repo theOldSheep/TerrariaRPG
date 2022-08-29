@@ -185,7 +185,6 @@ on first join:
 	set chestplate of player to getItem("木胸甲")
 	set leggings of player to getItem("木护胫")
 	add "useLocalSprite" to scoreboard tags of player
-	set metadata "team" of player to "red"
 on join:
 	set {_att} to player.addAttachment(Bukkit.getPluginManager().getPlugin("Skript"))
 	add "chatitem.use" to {_perms::*}
