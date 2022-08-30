@@ -14,27 +14,19 @@ import:
 on skript enable:
 	set {versionTimeTicker} to 0
 	set {fallenStars} to new ArrayList()
-	threadTime()
-	set {_time} to (world("world")).getTime()
-	wait 1 second
-	while 1 = 1:
-		clear {_currTime}
-		set {_currTime} to (world("world")).getTime()
-		if {_currTime} = {_time}:
-			threadTime()
-		set {_time} to (world("world")).getTime()
-		wait 1 second
+	worldBasicSettings()
 on skript disable:
 	removeFallenStars()
-function threadTime():
+function worldBasicSettings():
 	add 1 to {versionTimeTicker}
 	set {_ver} to {versionTimeTicker}
 	clear {event}
 	clear {eventInfo}
-	add world("world") to {_worlds::*}
-	add world("world_nether") to {_worlds::*}
-	add world("zy") to {_worlds::*}
-	loop {_worlds::*}:
+	clear {worlds::*}
+	add world("world") to {allWorlds::*}
+	add world("world_nether") to {allWorlds::*}
+	add world("zy") to {allWorlds::*}
+	loop {allWorlds::*}:
 		set {_world} to loop-value
 		{_world}.setTime[long](0)
 		{_world}.setGameRuleValue("doDaylightCycle", "false")
@@ -48,108 +40,115 @@ function threadTime():
 	{_wb}.setCenter({_world}.getSpawnLocation())
 	{_wb}.setDamageAmount(10)
 	{_wb}.setSize(20000)
-	set {_attrMapFallenStar} to new HashMap()
-	{_attrMapFallenStar}.put("damage", 1000)
-	{_attrMapFallenStar}.put("damageType", "Arrow")
-	wait 1 tick
-	while {_ver} = {versionTimeTicker}:
-		set {_time} to {_world}.getTime() + 3
-		subtract mod({_time}, 3) from {_time}
-		loop {_worlds::*}:
-			set {_w} to loop-value
-			{_w}.setTime[long]({_time})
-		if {_time} is between 13500 and 22500:
-			loop all players:
-				if chance of 0.005:
-					set {_ply} to loop-player
-					set {_spawnLoc} to (location of {_ply}).add((a random number between -60 and 60), 0, (a random number between -60 and 60))
-					set {_spawnLoc} to (location of {_ply}).add((a random number between -6 and 6), 0, (a random number between -6 and 6))
-					set y-coordinate of {_spawnLoc} to a random number between 300 and 400
-					handleFallenStar({_spawnLoc}, {_attrMapFallenStar})
-		#ticking event
-		if {event} is set:
-			if {eventInfo} is not set:
+	set {attrMapFallenStar} to new HashMap()
+	{attrMapFallenStar}.put("damage", 1000)
+	{attrMapFallenStar}.put("damageType", "Arrow")
+every 5 ticks:
+	set {_world} to world("world")
+	set {_time} to {_world}.getTime() + 3
+	subtract mod({_time}, 3) from {_time}
+	loop {allWorlds::*}:
+		set {_w} to loop-value
+		{_w}.setTime[long]({_time})
+	if {_time} is between 13500 and 22500:
+		loop all players:
+			if chance of 0.005:
+				set {_ply} to loop-player
+				set {_spawnLoc} to (location of {_ply}).add((a random number between -60 and 60), 0, (a random number between -60 and 60))
+				set {_spawnLoc} to (location of {_ply}).add((a random number between -6 and 6), 0, (a random number between -6 and 6))
+				set y-coordinate of {_spawnLoc} to a random number between 300 and 400
+				handleFallenStar({_spawnLoc})
+	#ticking event
+	if {event} is set:
+		if {eventInfo} is not set:
+			clear {event}
+		else if {eventInfo}.getOrDefault("isInvasion", false) is false:
+			{eventInfo}.put("progress", {eventInfo}.get("progress") + 1)
+			if {eventInfo}.get("progress") >= {eventInfo}.get("progressMax"):
+				if {event} is "史莱姆雨":
+					broadcast "&a史莱姆不再从天而降."
 				clear {event}
-			else if {eventInfo}.getOrDefault("isInvasion", false) is false:
-				{eventInfo}.put("progress", {eventInfo}.get("progress") + 1)
-				if {eventInfo}.get("progress") >= {eventInfo}.get("progressMax"):
-					if {event} is "史莱姆雨":
-						broadcast "&a史莱姆不再从天而降."
-					clear {event}
-			else if {event} is "冰霜月" or "南瓜月":
-				{eventInfo}.put("progress", {eventInfo}.get("progress") + 1)
-				if {eventInfo}.get("progress") >= {eventInfo}.get("progressMax"):
-					clear {event}
-		#creating event
-		if {_world}.getTime() is 22500:
-			removeFallenStars()
-			set {questFish} to a random text out of (yml nodes "questFish" from file "plugins/Data/fishing.yml")
-			set {questFishCompleted} to new HashSet()
-			#slime rain
-			{event} is not set
-			if chance of 0.05:
-				reserveEvent("史莱姆雨", (a random integer between 0 and 1200), "&d&l史莱姆正在从天而降！")
-				set {eventInfo} to new HashMap(5)
-				{eventInfo}.put("progress", 0)
-				{eventInfo}.put("progressMax", 3000)
-				{eventInfo}.put("slimeKill", 0)
-			#goblin army
-			{event} is not set
-			set {_chance} to 0.035
-			set {_progress} to 40
+		else if {event} is "冰霜月" or "南瓜月":
+			{eventInfo}.put("progress", {eventInfo}.get("progress") + 1)
+			if {eventInfo}.get("progress") >= {eventInfo}.get("progressMax"):
+				clear {event}
+	#creating event
+	if {_world}.getTime() is 22500:
+		removeFallenStars()
+		set {questFish} to a random text out of (yml nodes "questFish" from file "plugins/Data/fishing.yml")
+		set {questFishCompleted} to new HashSet()
+		#slime rain
+		{event} is not set
+		if chance of 0.05:
+			reserveEvent("史莱姆雨", (a random integer between 0 and 1200), "&d&l史莱姆正在从天而降！")
+			set {eventInfo} to new HashMap(5)
+			{eventInfo}.put("progress", 0)
+			{eventInfo}.put("progressMax", 3000)
+			{eventInfo}.put("slimeKill", 0)
+		#goblin army
+		{event} is not set
+		set {_chance} to 0.035
+		set {_progress} to 40
+		loop all players in {_world}:
+			health of loop-player > 200
+			add 40 to {_progress}
+			metadata "tier" of loop-player >= 1
+			set {_completed} to yml value "goblinDefeated" from file "plugins/PlayerData/%name of loop-player%.yml"
+			if {_completed} is not true:
+				set {_chance} to 0.33
+				stop loop
+		if chance of {_chance}:
+			broadcast "&d&l一支哥布林军团正在逼近..."
+			reserveEvent("哥布林军团", (a random integer between 60 and 120), "&d&l哥布林军团来了！")
+			set {eventInfo} to new HashMap(5)
+			{eventInfo}.put("invadeProgress", 0)
+			{eventInfo}.put("invadeProgressMax", {_progress})
+			{eventInfo}.put("isInvasion", true)
+		#solar eclipse
+		{event} is not set
+		if chance of 0.05:
+			set {_canOccur} to false
 			loop all players in {_world}:
-				health of loop-player > 200
-				add 40 to {_progress}
-				metadata "tier" of loop-player >= 1
-				set {_completed} to yml value "goblinDefeated" from file "plugins/PlayerData/%name of loop-player%.yml"
-				if {_completed} is not true:
-					set {_chance} to 0.33
-					stop loop
-			if chance of {_chance}:
-				broadcast "&d&l一支哥布林军团正在逼近..."
-				reserveEvent("哥布林军团", (a random integer between 60 and 120), "&d&l哥布林军团来了！")
-				set {eventInfo} to new HashMap(5)
-				{eventInfo}.put("invadeProgress", 0)
-				{eventInfo}.put("invadeProgressMax", {_progress})
-				{eventInfo}.put("isInvasion", true)
-			#solar eclipse
-			{event} is not set
-			if chance of 0.05:
-				set {_canOccur} to false
-				loop all players in {_world}:
-					metadata "tier" of loop-player >= 4
-					set {_canOccur} to true
-					stop loop
-				{_canOccur} is true
-				broadcast "&a&l正在发生日食！"
-				set {event} to "日食"
-				set {eventInfo} to new HashMap(5)
-				{eventInfo}.put("progress", 0)
-				{eventInfo}.put("progressMax", 5000)
-			{event} is not set
-		else if {_world}.getTime() is 13500:
-			if chance of 0.05:
-				#blood moon
-				set {_canOccur} to false
-				loop all players in {_world}:
-					max health of loop-player > 125
-					set {_canOccur} to true
-					stop loop
-				{_canOccur} is true
-				getMoonPhase() is not between 3 and 5
-				broadcast "&d&l血月正在升起..."
-				set {event} to "血月"
-				set {eventInfo} to new HashMap(5)
-				{eventInfo}.put("progress", 0)
-				{eventInfo}.put("progressMax", 3000)
-			else if chance of 0.05:
-				#meteor shower
-				broadcast "&d&l正在发生陨石雨..."
-				set {event} to "陨石雨"
-				set {eventInfo} to new HashMap(5)
-				{eventInfo}.put("progress", 0)
-				{eventInfo}.put("progressMax", 3000)
-		wait 5 ticks
+				metadata "tier" of loop-player >= 4
+				set {_canOccur} to true
+				stop loop
+			{_canOccur} is true
+			broadcast "&a&l正在发生日食！"
+			set {event} to "日食"
+			set {eventInfo} to new HashMap(5)
+			{eventInfo}.put("progress", 0)
+			{eventInfo}.put("progressMax", 5000)
+		{event} is not set
+	else if {_world}.getTime() is 13500:
+		#blood moon
+		if chance of 0.05:
+			set {_canOccur} to false
+			loop all players in {_world}:
+				max health of loop-player > 125
+				set {_canOccur} to true
+				stop loop
+			{_canOccur} is true
+			getMoonPhase() is not between 3 and 5
+			broadcast "&d&l血月正在升起..."
+			set {event} to "血月"
+			set {eventInfo} to new HashMap(5)
+			{eventInfo}.put("progress", 0)
+			{eventInfo}.put("progressMax", 3000)
+		#meteor shower
+		{event} is not set
+		set {_chanceMeteorShower} to 0.05
+		loop all players:
+			if loop-player has scoreboard tag "waitingForMeteorShower":
+				set {_chanceMeteorShower} to 0.5
+		if chance of {_chanceMeteorShower}:
+			broadcast "&d&l正在发生陨石雨..."
+			loop all players:
+				if loop-player has scoreboard tag "waitingForMeteorShower":
+					remove "waitingForMeteorShower" from scoreboard tags of loop-player
+			set {event} to "陨石雨"
+			set {eventInfo} to new HashMap(5)
+			{eventInfo}.put("progress", 0)
+			{eventInfo}.put("progressMax", 3000)
 
 function handleFallenStar(spawnLoc: location, attrMapFallenStar: object):
 	set {_velocity} to vector((a random number between 0.5 and -0.5), -2, (a random number between 0.5 and -0.5))
@@ -160,7 +159,7 @@ function handleFallenStar(spawnLoc: location, attrMapFallenStar: object):
 	set {_collided} to new ArrayList()
 	set metadata "collided" of {_star} to {_collided}
 	set metadata "penetration" of {_star} to 99
-	set metadata "attrMap" of {_star} to {_attrMapFallenStar}
+	set metadata "attrMap" of {_star} to {attrMapFallenStar}
 	add "isFallenStar" to scoreboard tags of {_star}
 	add "ignoreCanDamageCheck" to scoreboard tags of {_star}
 	set glowing of {_star} to on

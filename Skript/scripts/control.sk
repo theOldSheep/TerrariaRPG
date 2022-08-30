@@ -276,8 +276,8 @@ on KeyBoardPressEvent:
 		while {_index} < {_accessory}.size():
 			if {_accessory}.get({_index}) is "跳跃之瓶":
 				set {_maxProgress} to 1
-				set {_maxVelocity} to 2
-				set {_maxAcceleration} to 1.3
+				set {_maxVelocity} to 1.5
+				set {_maxAcceleration} to 0.8
 			else if {_accessory}.get({_index}) is "火箭靴" or "幽灵靴":
 				set {_maxProgress} to 12
 				set {_maxVelocity} to 1.3
@@ -298,13 +298,19 @@ on KeyBoardPressEvent:
 				set {_maxVelocity} to 1.6
 			else if {_accessory}.get({_index}) is "天界之翼":
 				set {_maxProgress} to 25
-				set {_maxVelocity} to 2.4
+				set {_maxVelocity} to 2
 			else if {_accessory}.get({_index}) is "猪鲨之翼":
 				set {_maxProgress} to 25
 				set {_maxVelocity} to 1.5
 			if {_maxProgress} is set:
 				if {_accessory}.contains("翱翔徽章") is true:
 					set {_maxVelocity} to {_maxVelocity} * 1.25
+					set {_maxAcceleration} to {_maxAcceleration} * 1.25
+				set {_attrMap} to metadata "attrMap" of player
+				if {_attrMap} is set:
+					set {_multi} to {_attrMap}.getOrDefault("speedMulti", 1)
+					set {_maxVelocity} to {_maxVelocity} * {_multi}
+					set {_maxAcceleration} to {_maxAcceleration} * {_multi}
 				stop loop
 			add 1 to {_index}
 		if {_index} >= {_accessory}.size():
@@ -335,6 +341,7 @@ on KeyBoardPressEvent:
 			if gamemode of player is spectator:
 				stop loop
 			if {_maxProgress} = 1:
+				# bottle
 				set {_v} to velocity of player
 				if y of {_v} < 0:
 					set {_force} to {_maxAcceleration} - y of {_v}
@@ -389,7 +396,7 @@ on KeyBoardPressEvent:
 		set {_dir} to new vector with yaw (player.getHandle().yaw) and pitch 0
 		set {_playerVelocity} to velocity of player
 		set {_dashSpeed} to 1
-		set {_dashSpeed} to sqrt(try (metadata "attrMap" of player).getOrDefault("speedMulti", 1))
+		set {_dashSpeed} to try (metadata "attrMap" of player).getOrDefault("speedMulti", 1)
 		set vector length of {_dir} to {_dashSpeed}
 		set y of {_dir} to ((y of {_playerVelocity}) * -1) + y of {_dir}
 		push player {_dir}
@@ -818,7 +825,7 @@ command /togglepvp:
 			add "PVP" to scoreboard tags of command sender
 			send "&c您已进入PVP状态" to command sender
 command /team <text>:
-	cooldown: 1 minute
+	cooldown: 10 seconds
 	cooldown message: 你在 %remaining time% 后才可以再次使用此功能！
 	trigger:
 		if arg-1 is "red":
@@ -2800,7 +2807,7 @@ function minionAI(minion: entity, owner: player, nameMinion: text):
 						set gravity of {_projectile} to off
 						set metadata "followTarget" of {_projectile} to {_target}
 						projectileAI({_projectile}, "MAGIC")
-						set {_teleportCD} to a random integer between 10 and 20
+						set {_teleportCD} to a random integer between 5 and 15
 					set {_targetLoc} to eye location of {_target}
 					if distance between location of {_minion} and {_targetLoc} > 12:
 						set {_dVec} to {_targetLoc}.subtract(location of {_minion}).toVector()
@@ -2808,7 +2815,7 @@ function minionAI(minion: entity, owner: player, nameMinion: text):
 						set {_dVec} to (location of {_minion}).subtract({_targetLoc}).toVector()
 						set pitch of {_dVec} to -30
 					set vector length of {_dVec} to 0.5
-					set {_index} to mod({_index}, 10)
+					set {_index} to mod({_index}, 6)
 					if {_index} = 0:
 						set {_v} to (eye location of {_target}).subtract(eye location of {_minion}).toVector()
 						if vector length of {_v} = 0:
@@ -2819,8 +2826,8 @@ function minionAI(minion: entity, owner: player, nameMinion: text):
 						set metadata "followTarget" of {_projectile} to {_target}
 						projectileAI({_projectile}, "MAGIC")
 				else:
-					set {_teleportCD} to 5
-					set {_targetLoc} to (location of {_target}).add(0, 4, 0)
+					set {_teleportCD} to a random number between 5 and 10
+					set {_targetLoc} to (location of {_target}).add(a random number between -1 and 1, a random number between 5 and 6, a random number between -1 and 1)
 					if distance between location of {_minion} and {_targetLoc} > 2:
 						set {_dVec} to {_targetLoc}.subtract(location of {_minion}).toVector()
 						set vector length of {_dVec} to 0.7
@@ -2832,12 +2839,14 @@ function minionAI(minion: entity, owner: player, nameMinion: text):
 				loop min({_minionIndex}, {_minionList}.size()) times:
 					set {_loopMinion} to ({_minionList}.get({_i}))
 					if trimText(name of {_loopMinion}) is "星尘之龙":
+						# current minion is a body segment
 						set {_i} to -1
 						{_minion}.setCustomName("星尘之龙")
 						set {_meleeCD} to metadata "meleeCD" of {_loopMinion}
 						stop loop
 					add 1 to {_i}
 				if {_i} >= 0:
+					# current minion is head segment
 					clear {_segments::*}
 					{_minion}.setCustomName("星尘之龙&1")
 					set {_i} to {_minionIndex} + 1
@@ -2864,6 +2873,9 @@ function minionAI(minion: entity, owner: player, nameMinion: text):
 						set velocity of {_minion} to {_v}
 					set {_dmg} to 80 * (1.69 + ((size of {_segments::*}) * 0.46))
 					{_attrMap}.put("damage", {_dmg})
+					loop {_segments::*}:
+						set {_currentSeg} to loop-value
+						(metadata "attrMap" of {_currentSeg}).put("damage", {_dmg})
 					
 					#follow head
 					set {_lastLoc} to (location of {_minion}).add((velocity of {_minion}).multiply(3))
@@ -2964,15 +2976,19 @@ function minionAI(minion: entity, owner: player, nameMinion: text):
 		
 		if {_attrMap}.get("damageType") is "Melee":
 			set {_velocity} to velocity of {_minion}
+			set {_dmgCD} to 5
 			if {_nameMinion} is "星尘之龙":
 				set {_checkHitTime} to 1
 				set {_checkRadius} to 0.75
+				set {_dmgCD} to 2
 			else if {_nameMinion} is "蜘蛛":
 				set {_checkHitTime} to 1
 				set {_checkRadius} to 0.5
 			else:
 				set {_checkHitTime} to (floor((vector length of {_velocity}) * 4) + 1)
 				set {_checkRadius} to 0.3
+				if {_nameMinion} is "泰拉棱镜":
+					set {_dmgCD} to 15
 			loop {_checkHitTime} times:
 				if loop-number > 1:
 					set vector length of {_velocity} to (loop-number - 1) / 4
@@ -2991,7 +3007,7 @@ function minionAI(minion: entity, owner: player, nameMinion: text):
 						if {_nameMinion} is "蜘蛛":
 							{_victim} is {_target}
 							set {_teleport} to {_victim}
-						damageCD({_meleeCD}, {_victim}, 5)
+						damageCD({_meleeCD}, {_victim}, {_dmgCD})
 		
 		add 1 to {_index}
 		add 1 to {_idx}

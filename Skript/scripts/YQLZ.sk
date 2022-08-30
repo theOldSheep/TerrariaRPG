@@ -177,7 +177,7 @@ function handleMoonLord(ply: player):
 			stop loop
 		else:
 			#AI part starting here
-			set {_centerLoc} to (location of {_target}).add(sin({_indexAI} / 2) * 35, 0, cos({_indexAI} / 2) * 35)
+			set {_centerLoc} to (location of {_target}).add(sin({_indexAI} / 2) * 50, 0, cos({_indexAI} / 2) * 50)
 			set {_dV} to {_centerLoc}.subtract(location of {_bg::1}).toVector()
 			if vector length of {_dV} > 2.25:
 				vector length of {_dV} < 100
@@ -433,7 +433,7 @@ function handleMoonLordPerk(entity: entity, type: text, yqlz: entity):
 					set metadata "reach" of {_entity} to 35 - (loop-number * 0.4)
 				wait 1 tick
 				loop {_projectiles::*}:
-					if distance between loop-value-2 and {_target} < 5:
+					if distance between loop-value-2 and {_target} < 4:
 						remove loop-value-2 from {_projectiles::*}
 						handleEntityExplode(loop-value-2, {_null})
 						(loop-value-2).remove()

@@ -61,25 +61,18 @@ on script load:
 		set {NPC} to new HashMap(4)
 	set {_loc} to {_world}.getSpawnLocation().add((a random number between -3 and 3), 0, (a random number between -3 and 3))
 	spawnNPC({_loc}, "向导")
-	wait 4 ticks
 	set {_loc} to {_world}.getSpawnLocation().add((a random number between -3 and 3), 0, (a random number between -3 and 3))
 	spawnNPC({_loc}, "哥布林工匠")
-	wait 4 ticks
 	set {_loc} to {_world}.getSpawnLocation().add((a random number between -3 and 3), 0, (a random number between -3 and 3))
 	spawnNPC({_loc}, "护士")
-	wait 4 ticks
 	set {_loc} to {_world}.getSpawnLocation().add((a random number between -3 and 3), 0, (a random number between -3 and 3))
 	spawnNPC({_loc}, "军火商")
-	wait 4 ticks
 	set {_loc} to {_world}.getSpawnLocation().add((a random number between -3 and 3), 0, (a random number between -3 and 3))
 	spawnNPC({_loc}, "爆破专家")
-	wait 4 ticks
 	set {_loc} to {_world}.getSpawnLocation().add((a random number between -3 and 3), 0, (a random number between -3 and 3))
 	spawnNPC({_loc}, "渔夫")
-	wait 4 ticks
 	set {_loc} to {_world}.getSpawnLocation().add((a random number between -3 and 3), 0, (a random number between -3 and 3))
 	spawnNPC({_loc}, "建材商人")
-	wait 4 ticks
 	set {_loc} to {_world}.getSpawnLocation().add((a random number between -3 and 3), 0, (a random number between -3 and 3))
 	spawnNPC({_loc}, "裁缝")
 on skript disable:
@@ -121,6 +114,7 @@ on chunk load:
 				if max health of {_NPC} is 2:
 					set max health of {_NPC} to 500
 					set health of {_NPC} to 500
+					handleNPC({_NPC})
 					continue
 			else if {_NPC} is armor stand:
 				continue
@@ -210,6 +204,10 @@ function NPCAttackTarget(NPC: entity, projectileVelocity: number, hasGravity: bo
 					add "isGranade" to scoreboard tags of {_projectile}
 					projectileAI({_arrow}, "Arrow")
 function handleNPC(NPC: entity):
+	set {_AIversion} to 0
+	set {_AIversion} to metadata "AIversion" of {_NPC}
+	add 1 to {_AIversion}
+	set metadata "AIversion" of {_NPC} to {_AIversion}
 	set {_NPCType} to name of {_NPC}
 	if {_NPCType} is "渔夫":
 		set {_disguise} to new MobDisguise(DisguiseType.VILLAGER, false)
@@ -298,8 +296,11 @@ function handleNPC(NPC: entity):
 	while 1 = 1:
 		wait 10 ticks
 		add 1 to {_index}
-		
-		if health of {_NPC} > 0:
+		if metadata "AIversion" of {_NPC} != {_AIversion}:
+			stop trigger
+		if (chunk at {_NPC}).isLoaded() is true:
+			health of {_NPC} > 0
+			max health of {_NPC} > 10
 			{_NPC}.isDead() is not true
 			# health regen
 			if health of {_NPC} < {_lastHealth}:
@@ -334,6 +335,7 @@ function handleNPC(NPC: entity):
 					NPCAttackTarget({_NPC}, {_projectileVelocity}, {_hasGravity})
 		
 		if mod({_index}, 8) = 0:
+			max health of {_NPC} > 1.01
 			if (world of {_NPC}).getTime() is between 22470 and 22530:
 				spawnNPC((world of {_NPC}).getSpawnLocation().add((a random number between -3 and 3), 0, (a random number between -3 and 3)), name of {_NPC})
 				{_NPC}.remove()

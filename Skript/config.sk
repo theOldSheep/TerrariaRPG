@@ -76,7 +76,7 @@ allow ops to use effect commands: true
 # Whether server operators which do not have the permission "skript.effectcommands" should have access to effect commands.
 # This setting is mainly useful for servers that do not run any permissions plugin.
 
-player variable fix: true
+player variable fix: false
 # Whether to enable the player variable fix if a player has rejoined and was reciding inside a variable.
 # Player objects inside a variable(list or normal) are not updated to the new player object
 # A server creates whenever a player rejoins.
@@ -150,7 +150,7 @@ disable variable will not be saved warnings: false
 # Disables the "... i.e contents cannot be saved ..." warning when reloading and something in your scripts sets a variable(non local) to a value that is not serializable.
 # By Mirre.
 
-disable variable missing and/or warnings: false
+disable variable missing and/or warnings: true
 # Disables the "List is missing 'and' or 'or', defaulting to 'and'" warning when reloading your script.
 
 disable starting a variable's name with an expression warnings: false

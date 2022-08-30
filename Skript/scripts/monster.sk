@@ -68,10 +68,8 @@ on skript stop:
 			loop-value is not armor stand
 			(loop-value).remove()
 
-every 1 second:
-every 2 ticks:
+every 10 ticks:
 	loop all players:
-		wait 3 ticks
 		attemptMobSpawn(loop-player)
 
 function attemptMobSpawn(ply: player):
@@ -83,8 +81,7 @@ function attemptMobSpawn(ply: player):
 		loop ...({pillars}.values()):
 			set {_pillar} to loop-value
 			if distance between location of {_ply} and location of {_pillar} < 150:
-				loop 3 times:
-					attemptPillarMobSpawn({_pillar}, {_ply})
+				attemptPillarMobSpawn({_pillar}, {_ply})
 				stop trigger
 	if y-coordinate of {_ply} is between 50 and 150:
 		if {event} is "冰霜月" or "南瓜月":
@@ -94,7 +91,7 @@ function attemptMobSpawn(ply: player):
 			stop trigger
 	chance of ({_mobLimit} * {_mobLimit} / 400)
 	if {BOSS}.size() > 0:
-		chance of 0.75
+		chance of 0.8
 		stop trigger
 	if "%world of {_ply}%" is "world_nether":
 		attemptSpawnType("underworld", {_ply})
@@ -114,13 +111,12 @@ function attemptMobSpawn(ply: player):
 			set {_spawnType} to "night"
 		else:
 			set {_spawnType} to "day"
-	if {_spawnType} is "day" or "night" or "space":
-		if {event} is not set:
-			chance of 0.5
-			stop trigger
-		if {_spawnType} is "day" or "night":
-			attemptSpawnType({event}, {_ply}) is true
-			stop trigger
+	if {event} is not set:
+		chance of 0.75
+		stop trigger
+	if {_spawnType} is "day" or "night":
+		attemptSpawnType({event}, {_ply}) is true
+		stop trigger
 	attemptSpawnType("%{_biome}%_%{_spawnType}%", {_ply}) is not true
 	attemptSpawnType({_biome}, {_ply}) is not true
 	attemptSpawnType({_spawnType}, {_ply})
@@ -244,7 +240,7 @@ function spawnMob(type: text, loc: location, ply: player):
 		y-coordinate of {_ply} < 150
 		add {event} to {_checkPrefixes::*}
 	if "%world of {_loc}%" is not "world_nether":
-		{_checkPrefixes::1} is not set 
+		{_checkPrefixes::1} is not set
 		if {_ply} is set:
 			set {_biome} to {_loc}.getWorld().getBiome({_ply}.getLocation().getBlockX(), {_ply}.getLocation().getBlockZ()).toString().toLowerCase()
 		else:
@@ -258,7 +254,10 @@ function spawnMob(type: text, loc: location, ply: player):
 		add "%{_biome}%" to {_checkPrefixes::*}
 		add "default" to {_checkPrefixes::*}
 	else:
-		add "hell" to {_checkPrefixes::*}
+		if {_allVariants::*} doesn't contain "hell1":
+			add "default" to {_checkPrefixes::*}
+		else:
+			add "hell" to {_checkPrefixes::*}
 	loop {_checkPrefixes::*}:
 		if {_allVariants::*} doesn't contain "%loop-value%1":
 			continue
@@ -266,7 +265,8 @@ function spawnMob(type: text, loc: location, ply: player):
 		while {_allVariants::*} contains "%loop-value%%{_index}%":
 			add "%loop-value%%{_index}%" to {_finalPool::*}
 			add 1 to {_index}
-	
+	if size of {_finalPool::*} < 1:
+		stop trigger
 	set {_parentNode} to "mobInfo.%{_type}%.variants.%a random element out of {_finalPool::*}%"
 	set {_name} to yml value "%{_parentNode}%.name" from file "plugins/Data/mobSpawning.yml"
 	set {_attributes::*} to yml nodes "%{_parentNode}%.attributes" from file "plugins/Data/mobSpawning.yml"
@@ -304,23 +304,20 @@ function spawnMob(type: text, loc: location, ply: player):
 		else if {_type} is "探测怪":
 			{_entity}.setSize(4)
 			{_entity}.setGravity(false)
-			set {_entity}.getHandle().noclip to true
 		else if {_type} is "雪花怪" or "礼物宝箱怪" or "精灵直升机" or "腐化宝箱怪" or "神圣宝箱怪":
 			{_entity}.setSize(3)
 			if {_type} is "精灵直升机":
 				{_entity}.setGravity(false)
-				set {_entity}.getHandle().noclip to true
 			else if {_type} is "雪花怪":
 				{_entity}.setGravity(false)
 		else if {_type} is "蛾怪":
 			{_entity}.setSize(6)
 			{_entity}.setGravity(false)
-			set {_entity}.getHandle().noclip to true
 		else:
 			{_entity}.setSize(2)
 			if {_type} is "陨石怪" or "地狱蝙蝠" or "丛林蝙蝠":
 				{_entity}.setGravity(false)
-		if {_type} is "巨型诅咒骷髅头" or "诅咒骷髅头" or "地牢幽魂" or "致命球" or "胡闹鬼":
+		if {_type} is "巨型诅咒骷髅头" or "诅咒骷髅头" or "地牢幽魂" or "致命球" or "胡闹鬼" or "探测怪" or "精灵直升机" or "蛾怪" or "陨石怪" or "克苏鲁的仆从":
 			set {_entity}.getHandle().noclip to true
 	else if {_type} is "哥布林弓箭手":
 		set helmet of {_entity} to a diamond helmet
@@ -683,7 +680,7 @@ function entityAI(entity: entity, target: entity, type: text):
 			if {_entity}.isDead() is true:
 				stop loop
 			if {_entity}.getWorld().getTime() is not between 13500 and 22500: 
-				set {_v} to vector(0, 1, 0)
+				set {_v} to vector(0, 0.33, 0)
 			else:
 				if {_type} is "克苏鲁的仆从":
 					if checkMobTarget({_target}, {_entity}) is false:
@@ -704,12 +701,11 @@ function entityAI(entity: entity, target: entity, type: text):
 				if {_target} is set:
 					if {_index} >= 12:
 						set {_v} to ({_target}.getLocation().subtract({_entity}.getLocation())).toVector()
-						set vector length of {_v} to 1
+						set vector length of {_v} to 0.33
 						set {_index} to 0
 				else:
-					set {_v} to vector(0, 1, 0)
-			{_entity}.teleport({_entity}.getLocation().add({_v}))
-			set velocity of {_entity} to vector(0, 0, 0)
+					set {_v} to vector(0, 0.33, 0)
+			set velocity of {_entity} to {_v}
 			add 1 to {_index}
 			wait 5 ticks
 	else if {_type} is "尖刺史莱姆" or "水晶史莱姆" or "弹力史莱姆":

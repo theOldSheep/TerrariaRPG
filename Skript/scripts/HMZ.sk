@@ -51,6 +51,7 @@ function handleHMZ(ply: player):
 	set {_bossbar} to new BossBattleServer(CraftChatMessage.fromString("毁灭者", true)[0], BarColor.GREEN, BarStyle.PROGRESS)
 	{_bossbar}.setVisible(true)
 	
+	set {_spawnLoc} to (location of {_ply}).add((40 * sin({_angle})), -30, (40 * cos({_angle})))
 	spawn a slime at {_spawnLoc}
 	set {_targets} to setupBossTarget((spawned entity), 4, {_ply}, true, {_bossbar})
 	(spawned entity).remove()
@@ -58,7 +59,6 @@ function handleHMZ(ply: player):
 	set {_health} to round(240000 * {_healthMulti})
 	set {_segList} to new ArrayList(50)
 	set {_angle} to a random number between 0 and 360
-	set {_spawnLoc} to (location of {_ply}).add((40 * sin({_angle})), -30, (40 * cos({_angle})))
 	loop 80 times:
 		spawn a slime at {_spawnLoc}
 		set {_hmz} to spawned entity

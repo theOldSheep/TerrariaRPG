@@ -126,6 +126,7 @@ on rightclick:
 				if {_tier} = 1:
 					set metadata "tier" of {_player} to 2
 					set yml value "stats.tier" from file "plugins/PlayerData/%name of {_player}%.yml" to 2
+					add "waitingForMeteorShower" to scoreboard tags of {_player}
 				if {_player} can hold {_drop}:
 					send "&a恭喜你击败了BOSS[&r世界吞噬者&a]!您的战利品已经放在背包里了。" to {_player}
 					give {_drop} to {_player}

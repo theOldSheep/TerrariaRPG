@@ -75,7 +75,12 @@ expression y[a]ml value [of ]%string% (in|from) [the][ ][file ]%string%:
 			set {_file} to new File({_filePath})
 			set {_config} to YamlConfiguration.loadConfiguration({_file})
 			{YMLcache}.put(expr-2, {_config})
-		return {_config}.get({_node})
+		set {_result} to {_config}.get({_node})
+		if {_result} is instance of ArrayList:
+			set {_result} to {_result}.clone()
+		else if {_result} is instance of HashMap:
+			set {_result} to {_result}.clone()
+		return {_result}
 	set:
 		set {_filePath} to expr-2
 		set {_node} to expr-1
@@ -587,11 +592,13 @@ function handleGrapplingHook(ply: player):
 	set {_hookAmount} to 0
 	set {_hookAmount} to yml value "%trimText(name of {_hookItem})%.amount" from file "plugins/Data/hooks.yml"
 	if {_hooks}.size() >= {_hookAmount}:
+		# removed the first hook on blocks if trying to launch more hooks than the player has
 		set {_removed} to false
-		loop {_hooks}.size() times:
-			if {_hooks}.get(loop-number - 1).getHandle().inGround is true:
-				{_hooks}.get(loop-number - 1).remove()
-				{_hooks}.remove(loop-number - 1)
+		loop ...{_hooks}:
+			set {_hook} to loop-value
+			if {_hook}.getHandle().inGround is true:
+				{_hook}.remove()
+				{_hooks}.remove({_hook})
 				set {_removed} to true
 				stop loop
 		if {_removed} is false:
@@ -601,7 +608,7 @@ function handleGrapplingHook(ply: player):
 	#velocity
 	set {_hookSpeed} to 10
 	set {_hookSpeed} to yml value "%trimText(name of {_hookItem})%.velocity" from file "plugins/Data/hooks.yml"
-	set {_hookSpeed} to sqrt({_hookSpeed}) * 0.6
+	set {_hookSpeed} to {_hookSpeed} / 6
 	set {_yaw} to {_ply}.getHandle().yaw
 	set {_pitch} to {_ply}.getHandle().pitch
 	set {_velocity} to new vector with yaw {_yaw} and pitch {_pitch}
@@ -643,7 +650,7 @@ function handleGrapplingHook(ply: player):
 			set {_hookedAmount} to 0
 			loop ...{_hooks}:
 				set {_hook} to loop-value
-				if distance between location of {_ply} and location of {_hook} > {_hookReach}:
+				if (distance between location of {_ply} and location of {_hook}) / 2 > {_hookReach}:
 					{_hook}.remove()
 				if {_hook}.isDead() is false:
 					if {_hook}.getHandle().inGround is true:
@@ -1033,7 +1040,7 @@ function threadRegen(ply: player):
 				
 			if metadata "effectTime生命星云" of {_ply} > 0:
 				set {_buffLevel} to ceil((metadata "effectTime生命星云" of {_ply}) / 160)
-				add (5 * {_buffLevel}) to {_totalHealAmount}
+				add (3 * {_buffLevel}) to {_totalHealAmount}
 			if {_ply} has metadata "effectTime再生":
 				add 4 to {_totalHealAmount}
 			if {_accessories}.contains("再生手环"):
@@ -1212,7 +1219,7 @@ function resetPlayerStats(ply: player):
 	set metadata "thrust" of {_ply} to 0
 	set metadata "thrustProgress" of {_ply} to 0
 	set metadata "statsGeneration" of {_ply} to 1
-	set metadata "team" of player to "red"
+	set metadata "team" of {_ply} to "red"
 	set {_ply}'s walk speed to 0.25
 	
 	if {_ply} has scoreboard tag "useLocalSprite":
@@ -1631,7 +1638,7 @@ function handleDeath(v: entity, dPly: entity, d: entity, damageCause: text):
 		remove invisibility from {_v}
 		remove water breathing from {_v}
 		if {BOSS}.size() > 0:
-			set {_respawnTime} to 30
+			set {_respawnTime} to 3
 			loop ...({BOSS}.values()):
 				set {_curr} to loop-value
 				if {_curr} is instance of ArrayList:
