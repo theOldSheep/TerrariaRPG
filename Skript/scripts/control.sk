@@ -804,9 +804,10 @@ function handlePlayerSwitchItem(ply: player, itemOld: item, itemNew: item):
 on PlayerItemDamageEvent:
 	cancel event
 on PlayerDropItemEvent:
-	if player is sneaking:
-		stop trigger
 	set {_item} to event.getItemDrop()
+	if player is sneaking:
+		set metadata "dropper" of {_item} to event.getPlayer()
+		stop trigger
 	{_item}.remove()
 	giveItem(player, {_item}.getItemStack())
 	send "&a请在潜行模式下扔出物品以免误扔" to player

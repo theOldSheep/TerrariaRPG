@@ -105,6 +105,7 @@ function handleSJR(ply: player):
 	set metadata "bossbar" of {_sjr} to {_bossbar}
 	
 	set {_targets} to setupBossTarget({_sjr}, 6, {_ply}, true, {_bossbar})
+	set {_target} to {_ply}
 	set metadata "targets" of {_sjr} to {_targets}
 	set metadata "targets" of {_head} to {_targets}
 	set {_healthMulti} to getBossHealthMulti({_targets}.size())

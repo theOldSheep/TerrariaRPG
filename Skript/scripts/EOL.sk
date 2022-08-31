@@ -56,6 +56,7 @@ function handleEOL(ply: player):
 	
 	set {_targets} to setupBossTarget({_eol}, 4, {_ply}, true, {_bossbar})
 	set metadata "targets" of {_eol} to {_targets}
+	set {_target} to {_ply}
 	set {_healthMulti} to getBossHealthMulti({_targets}.size())
 	{_eol}.setInvulnerable(true)
 	set name of {_eol} to "光之女皇"

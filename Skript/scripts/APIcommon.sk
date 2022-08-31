@@ -226,18 +226,21 @@ function checkMobTarget(target: entity, mob: entity) :: boolean:
 	return false
 function setupBossTarget(BOSS: entity, tier: integer, ply: player, hasDistanceRestriction: boolean, bossbar: object) :: object:
 	set {_targets} to new HashMap()
-	loop all players in {_BOSS}.getWorld():
-		if loop-player is not {_ply}:
-			metadata "tier" of loop-player >= {_tier}
-			(metadata "team" of loop-player) is (metadata "team" of {_ply})
+	loop all players:
+		set {_currPly} to loop-player
+		if world of {_currPly} is not world of {_BOSS}:
+			continue
+		if {_currPly} is not {_ply}:
+			metadata "tier" of {_currPly} >= {_tier}
+			(metadata "team" of {_currPly}) is (metadata "team" of {_ply})
 			if {_hasDistanceRestriction} is true:
-				if distance between loop-player and {_ply} > 192:
+				if distance between {_currPly} and {_ply} > 192:
 					continue
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
+			{_bossbar}.addPlayer({_currPly}.getHandle())
+			{_targets}.put(name of {_currPly}, 0)
 		else:
-			{_bossbar}.addPlayer(loop-player.getHandle())
-			{_targets}.put(name of loop-player, 0)
+			{_bossbar}.addPlayer({_currPly}.getHandle())
+			{_targets}.put(name of {_currPly}, 0)
 	broadcast "BOSS的挑战者为：%{_targets}.keySet()%"
 	return {_targets}
 function getBossHealthMulti(numPly: number) :: number:
@@ -1638,7 +1641,7 @@ function handleDeath(v: entity, dPly: entity, d: entity, damageCause: text):
 		remove invisibility from {_v}
 		remove water breathing from {_v}
 		if {BOSS}.size() > 0:
-			set {_respawnTime} to 3
+			set {_respawnTime} to 30
 			loop ...({BOSS}.values()):
 				set {_curr} to loop-value
 				if {_curr} is instance of ArrayList:

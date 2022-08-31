@@ -11,7 +11,7 @@ import:
 
 function handleSJZH(ply: player):
 	{BOSS}.containsKey("世纪之花") is false
-	spawn a slime 41 behind {_ply}
+	spawn a slime 32 behind {_ply}
 	set {_sjzh} to spawned entity
 	broadcast "&d&l世纪之花 苏醒了！"
 	play sound "entity.enderdragon.growl" with volume 10 and pitch 1 at location of {_sjzh}
@@ -49,7 +49,7 @@ function handleSJZH(ply: player):
 	{_attrMapTentacle}.put("knockbackResistance", 0.1)
 	
 	loop 3 times:
-		spawn a slime 41 behind {_ply}
+		spawn a slime 32 behind {_ply}
 		add spawned entity to {_sporeSac::*}
 		set metadata "attrMap" of spawned entity to {_attrMapSporeSac}
 		add "isMonster" to scoreboard tags of spawned entity
@@ -68,6 +68,7 @@ function handleSJZH(ply: player):
 	
 	set {_targets} to setupBossTarget({_sjzh}, 5, {_ply}, true, {_bossbar})
 	set metadata "targets" of {_sjzh} to {_targets}
+	set {_target} to {_ply}
 	set {_healthMulti} to getBossHealthMulti({_targets}.size())
 	{_sjzh}.setInvulnerable(true)
 	set name of {_sjzh} to "世纪之花"

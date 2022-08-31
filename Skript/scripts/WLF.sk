@@ -32,12 +32,17 @@ on EntityDamageEvent:
 	{NPC}.get("向导").getWorld().getChunkAt({NPC}.get("向导").getLocation()).load()
 	set {_player} to metadata "dropper" of {_victim}
 	if {_player} is not set:
-		loop all players in world of {_victim}:
-			distance between loop-player and {_victim} < 25
-			set {_player} to loop-player
-			stop loop
+		set {_minDist} to 999
+		loop all players:
+			set {_currPly} to loop-player
+			world of {_currPly} is world of {_victim}
+			distance between {_currPly} and {_victim} < {_minDist}
+			set {_player} to {_currPly}
+			set {_minDist} to distance between {_currPly} and {_victim}
 	set {_dVec} to (location of {_victim}).subtract(location of {_player}).toVector()
 	set y of {_dVec} to 0
+	if vector length of {_dVec} < 0.1:
+		set {_dVec} to vector(0, 0, 1)
 	set vector length of {_dVec} to 26
 	set {_loc} to (location of {_victim}).add({_dVec})
 	wait 5 ticks
