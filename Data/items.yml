@@ -421,7 +421,7 @@
   item: LEASH
   lore:
   - §r[饰品]
-  - §r允许短暂飞行
+  - §r按住V短暂飞行
   worth: 1000000
   rarity: 3
 蠕虫围巾:
@@ -633,63 +633,72 @@
   item: LEASH
   lore:
   - §r[饰品]
-  - §r允许飞行和缓慢降落
+  - §r按住V短暂飞行
+  - §r飞行时间结束后按住V缓降
   worth: 8000000
   rarity: 5
 喜庆之翼:
   item: LEASH
   lore:
   - §r[饰品]
-  - §r允许飞行和缓慢降落
+  - §r按住V短暂飞行
+  - §r飞行时间结束后按住V缓降
   worth: 8000000
   rarity: 5
 女皇之翼:
   item: LEASH
   lore:
   - §r[饰品]
-  - §r允许飞行和缓慢降落
+  - §r按住V短暂飞行
+  - §r飞行时间结束后按住V缓降
   worth: 8000000
   rarity: 9
 猪鲨之翼:
   item: LEASH
   lore:
   - §r[饰品]
-  - §r允许飞行和缓慢降落
+  - §r按住V短暂飞行
+  - §r飞行时间结束后按住V缓降
   worth: 1000000
   rarity: 8
 星云之翼:
   item: LEASH
   lore:
   - §r[饰品]
-  - §r允许飞行和缓慢降落
+  - §r按住V短暂飞行
+  - §r飞行时间结束后按住V缓降
   worth: 8000000
   rarity: 10
 星璇之翼:
   item: LEASH
   lore:
   - §r[饰品]
-  - §r允许飞行和缓慢降落
+  - §r按住V短暂飞行
+  - §r飞行时间结束后按住V缓降
   worth: 8000000
   rarity: 10
 日耀之翼:
   item: LEASH
   lore:
   - §r[饰品]
-  - §r允许飞行和缓慢降落
+  - §r按住V短暂飞行
+  - §r飞行时间结束后按住V缓降
   worth: 8000000
   rarity: 10
 星尘之翼:
   item: LEASH
   lore:
   - §r[饰品]
-  - §r允许飞行和缓慢降落
+  - §r按住V短暂飞行
+  - §r飞行时间结束后按住V缓降
   worth: 8000000
   rarity: 10
 天界之翼:
   item: LEASH
   lore:
   - §r[饰品]
-  - §r允许飞行和缓慢降落
+  - §r按住V短暂飞行
+  - §r飞行时间结束后按住V缓降
   worth: 10000000
   rarity: 10
 航鱼靴:
@@ -706,7 +715,7 @@
   lore:
   - §r[饰品]
   - §r+10% 移动速度
-  - §r允许短暂飞行
+  - §r按住V短暂飞行
   attributes:
   - 'speedMulti: 0.1'
   worth: 2000000
@@ -715,7 +724,7 @@
   item: LEASH
   lore:
   - §r[饰品]
-  - §r允许二段跳
+  - §r按V释放二段跳
   worth: 500000
   rarity: 1
 岩浆石:
@@ -5805,26 +5814,38 @@
   rarity: 0
 钩爪:
   item: LEASH
+  lore:
+  - §r放置在副手，按R射出钩爪，按C或V收回钩爪
   worth: 400000
   rarity: 1
 失谐钩爪:
   item: LEASH
+  lore:
+  - §r放置在副手，按R射出钩爪，按C或V收回钩爪
   worth: 5000000
   rarity: 4
 刺钩:
   item: LEASH
+  lore:
+  - §r放置在副手，按R射出钩爪，按C或V收回钩爪
   worth: 6000000
   rarity: 5
 阴森钩:
   item: LEASH
+  lore:
+  - §r放置在副手，按R射出钩爪，按C或V收回钩爪
   worth: 4000000
   rarity: 7
 圣诞钩:
   item: LEASH
+  lore:
+  - §r放置在副手，按R射出钩爪，按C或V收回钩爪
   worth: 4000000
   rarity: 7
 月钩:
   item: LEASH
+  lore:
+  - §r放置在副手，按R射出钩爪，按C或V收回钩爪
   worth: 10000000
   rarity: 4
 蛛丝:
