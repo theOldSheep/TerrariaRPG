@@ -492,6 +492,7 @@ on inventory click:
 					set slot 4 of {_currInv} to randomPrefix({_item})
 					play sound "block.anvil.use" with volume 2 and pitch 1 at location of (event-player) for (event-player)
 					set {_item} to 1 of slot 4 of {_currInv}
+					applyCD(event-player, 5)
 			else:
 				wait 1 tick
 				set {_cursor} to 1 of cursor slot of (event-player)
@@ -512,11 +513,35 @@ on inventory click:
 			renderShop({_currInv}, coinConversion(getWorth(trimText(name of {_item})) * 0.0125), coinConversion(floor((event-player)'s money / 100)), false)
 		else if "%click type%" contains "shift":
 			cancel event
+			event-slot is not air
 			if slot 4 of {_currInv} is air:
 				set slot 4 of {_currInv} to 1 of event-slot
 				set {_item} to 1 of event-slot
 				remove 1 of event-slot from event-slot
 				renderShop({_currInv}, coinConversion(getWorth(trimText(name of {_item})) * 0.0125), coinConversion(floor((event-player)'s money / 100)), false)
+		clear {_name}
+		clear {_lores::*}
+		set {_name} to name of slot 4 of {_currInv}
+		if {_name} is set:
+			if {_name} contains "的 ":
+				set {_prefix} to {_name}.split("的 ")[0]
+				set {_itemType} to {_name}.split("的 ")[1]
+				set {_addLore} to yml value "prefixInfo.%trimText({_prefix})%.lore" from file "plugins/Data/prefix.yml"
+				if {_addLore} is set:
+					add (...{_addLore}) to {_lores::*}
+					set {_lores::1} to "&r前缀预览："
+				set {_prefix} to "%{_prefix}%的"
+			else:
+				set {_prefix} to ""
+				set {_itemType} to {_name}
+		else:
+			set {_name} to ""
+			set {_prefix} to ""
+			set {_itemType} to {_name}
+		add "&r点我重铸" to {_lores::*}
+		set slot 3 of {_currInv} to a light gray stained glass pane named "%{_name}%&a→" with lore {_lores::*}
+		set slot 5 of {_currInv} to a light gray stained glass pane named "&a←%{_name}%" with lore {_lores::*}
+		set slot 13 of {_currInv} to a light gray stained glass pane named "&a%{_prefix}%↑%{_itemType}%" with lore {_lores::*}
 	else if trimText({_currInv}.getTitle()) is "商店":
 		cancel event
 		set {_item} to 1 of event-slot

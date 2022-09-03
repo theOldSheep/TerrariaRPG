@@ -1077,6 +1077,7 @@ on VehicleEntityCollisionEvent:
 	set {_attrMap} to metadata "attrMap" of {_vehicle}
 	handleDamage({_damaged}, {_vehicle}, ({_attrMap}.get("damage") * {_speed} * {_speed}), "Melee")
 on inventory click:
+	set {_currInv} to try (event-player).getOpenInventory().getTopInventory()
 	if index of event-slot is between 0 and 4:
 		"%(event-inventory).getType()%" contains "craft"
 		handleCrafting(event-player, "AIR")
@@ -1092,7 +1093,8 @@ on inventory click:
 	if metadata "autoSwing" of event-player is true:
 		cancel event
 		stop trigger
-	applyCD(event-player, 2)
+	if trimText({_currInv}.getTitle()) is not "重铸":
+		applyCD(event-player, 2)
 	if index of event-slot is between 37 and 39:
 		slot 53 of event-inventory is not set
 		add helmet of event-player to {_armor::*}
