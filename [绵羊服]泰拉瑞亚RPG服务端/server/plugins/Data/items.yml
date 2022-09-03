@@ -3282,7 +3282,7 @@
   - 'knockback: 4'
   - 'useTime: 25'
   - 'manaUse: 20'
-  - 'penetration: 99'
+  - 'penetration: 9'
   - 'bounce: 9'
   worth: 5000000
   rarity: 8
