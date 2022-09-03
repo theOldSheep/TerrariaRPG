@@ -2042,8 +2042,6 @@ function handleDamage(v: entity, d: entity, dmg: number, damageCause: text):
 		else:
 			stop trigger
 
-	if entityDamageEvent({_d}, {_dPly}, {_v}, {_damageTaker}, {_dmg}, {_damageCause}) is false:
-		stop trigger
 	if {_fixedDamage} is not true:
 		set {_damageTakenMulti} to {_attrMapV}.getOrDefault("damageTakenMulti", 1)
 		set {_dmg} to {_dmg} * a random number between 0.9 and 1.1
@@ -2052,13 +2050,11 @@ function handleDamage(v: entity, d: entity, dmg: number, damageCause: text):
 			set {_defence} to {_attrMapV}.get("defence")
 			if {_attrMapV}.getOrDefault("defenceMulti", 1) >= 0:
 				set {_defence} to {_defence} * ({_attrMapV}.getOrDefault("defenceMulti", 1))
-		
 		if {_d} has scoreboard tag "isMinion":
 			set {_dmgBonus} to metadata "minionWhipBonusDamage" of {_v}
 			set {_critBonus} to metadata "minionWhipBonusCrit" of {_v}
 			if {_dmgBonus} is set:
 				add {_dmgBonus} to {_dmg}
-		
 		if {_attrMapD} is set:
 			if {_v} is a player:
 				set {_crit} to false
@@ -2074,7 +2070,6 @@ function handleDamage(v: entity, d: entity, dmg: number, damageCause: text):
 					set {_crit} to true
 				else:
 					set {_crit} to false
-		
 		if {_v} is a player:
 			{_accessories}.contains("圣骑士护盾") is false
 			{_accessories}.contains("冰冻护盾") is false
@@ -2101,6 +2096,9 @@ function handleDamage(v: entity, d: entity, dmg: number, damageCause: text):
 		remove ({_defence} * 0.75) from {_dmg}
 		if {_damageTakenMulti} is set:
 			set {_dmg} to {_dmg} * {_damageTakenMulti}
+	
+	if entityDamageEvent({_d}, {_dPly}, {_v}, {_damageTaker}, {_dmg}, {_damageCause}) is false:
+		stop trigger
 		
 	set {_dmg} to round({_dmg})
 	if {_dmg} <= 1:

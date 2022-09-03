@@ -198,7 +198,7 @@ effects:
     伤害星云:
         isBuff: true
         attributes:
-            - "damageMulti: 0.15"
+            - "damageMulti: 0.1"
     伤害星云1:
         icon: "https://static.wikia.nocookie.net/terraria_gamepedia/images/3/3f/Wrath"
     伤害星云2:
@@ -216,7 +216,7 @@ effects:
     魔力星云:
         isBuff: true
         attributes:
-            - "manaRegenMulti: 0.167"
+            - "manaRegenMulti: 0.05"
     魔力星云1:
         icon: "https://static.wikia.nocookie.net/terraria_gamepedia/images/7/77/Mana_Regeneration"
     魔力星云2:
