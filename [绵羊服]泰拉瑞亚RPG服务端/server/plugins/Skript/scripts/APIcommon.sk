@@ -1273,7 +1273,7 @@ function randomPrefix(item: item) :: item:
 				clear {_toAdd}
 			if {_weaponType} is "STAB" or "SWING" or "WHIP" or "BOOMERANG" or "YOYO":
 				set {_toAdd} to yml value "prefixList.Melee" from file "plugins/Data/prefix.yml"
-			else if {_weaponType} is "MAGIC" or "SUMMON":
+			else if {_weaponType} is "MAGIC_PROJECTILE" or "MAGIC_SPECIAL" or "SUMMON":
 				set {_toAdd} to yml value "prefixList.Magic" from file "plugins/Data/prefix.yml"
 			else if {_weaponType} is "BOW" or "GUN" or "SPECIAL_AMMO" or "ROCKET":
 				set {_toAdd} to yml value "prefixList.Ranged" from file "plugins/Data/prefix.yml"
