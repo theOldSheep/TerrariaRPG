@@ -178,7 +178,7 @@ on ProjectileCollideEvent:
 	if {_collided}.contains({_entity}) is true:
 		stop trigger
 	else:
-		damageCD({_collided}, {_entity}, 20)
+		damageCD({_collided}, {_entity}, 12)
 	set {_penetration} to metadata "penetration" of {_arrow}
 	set {_penetration} to {_penetration} parsed as integer
 	if {_penetration} is not set:
@@ -275,6 +275,7 @@ on projectile hit:
 		set metadata "collided" of {_newArrow} to metadata "collided" of {_arrow}
 		set metadata "penetration" of {_newArrow} to metadata "penetration" of {_arrow}
 		set metadata "Bounce" of {_newArrow} to metadata "Bounce" of {_arrow}
+		{_newArrow}.setTicksLived({_arrow}.getTicksLived())
 		projectileAI({_newArrow}, metadata "pType" of {_arrow})
 	else:
 		set {_bounce} to metadata "Bounce" of {_arrow}
@@ -360,6 +361,7 @@ on projectile hit:
 			set metadata "collided" of {_newArrow} to new ArrayList()
 			set metadata "penetration" of {_newArrow} to metadata "penetration" of {_arrow}
 			set metadata "Bounce" of {_newArrow} to {_bounce}
+			{_newArrow}.setTicksLived({_arrow}.getTicksLived())
 			projectileAI({_newArrow}, metadata "pType" of {_arrow})
 		else:
 			handleProjectileDestroy({_arrow})

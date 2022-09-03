@@ -352,7 +352,7 @@ function applyEffect(entity: entity, effect: text, time: integer):
 	set {_current} to 0
 	set {_current} to metadata "effectTime%{_effect}%" of {_entity}
 	if {_effect} is "魔力疾病":
-		set {_time} to round(min({_current} + 100, 200))
+		set {_time} to round(min({_current} + 200, 400))
 	else if {_effect} is "破晓" or "伤害星云" or "生命星云" or "魔力星云":
 		if {_effect} is "破晓":
 			set {_maxLevel} to 8
@@ -547,7 +547,7 @@ function tickEffect(entity: entity, effect: text, time: integer):
 					set {_statsGen} to {_generation}
 				else:
 					tweakAttribute({_attrMap}, "damageMagicMulti", {_lastManaMulti}, false)
-				set {_lastManaMulti} to "%{_time} / -400%"
+				set {_lastManaMulti} to "%{_time} / -800%"
 				tweakAttribute({_attrMap}, "damageMagicMulti", {_lastManaMulti}, true)
 			else:
 				if {_statsGen} != {_generation}:

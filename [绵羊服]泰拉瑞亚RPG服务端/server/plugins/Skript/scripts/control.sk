@@ -2043,6 +2043,7 @@ function projectileAI(arrow: entity, weaponType: text):
 	set metadata "pSpeed" of {_arrow} to {_speed}
 	set {_loopTime} to 33
 	set {_waitTime} to 6 tick
+	set {_maxLiveTime} to 200
 	set {_resetVelocity} to true
 	set {_arrowName} to {_arrow}.getCustomName()
 	#see if the projectile automatically tracks enemy
@@ -2052,36 +2053,46 @@ function projectileAI(arrow: entity, weaponType: text):
 	if {_arrowName} is "小火花" or "烈焰箭" or "希腊烈火" or "火焰":
 		set {_loopTime} to 100
 		set {_waitTime} to 2 ticks
+		set {_maxLiveTime} to 200
 	else if {_arrowName} is "手榴弹" or "炸弹" or "粘性炸弹" or "雷管" or "粘性雷管":
 		set {_loopTime} to 1
 		set {_waitTime} to 5 seconds
+		set {_maxLiveTime} to 100
 		set {_resetVelocity} to false
 	else if {_arrowName} is "种子弯刀坚果" or "装饰":
 		set {_loopTime} to 1
 		set {_waitTime} to 15 ticks
+		set {_maxLiveTime} to 15
 		set {_resetVelocity} to false
 	else if {_arrowName} is "夜明箭":
 		set {_loopTime} to 10
 		set {_waitTime} to 10 ticks
+		set {_maxLiveTime} to 100
 	else if {_arrowName} is "孢子球":
 		set {_loopTime} to 75
 		set {_waitTime} to 4 ticks
-	else if {_arrowName} is "冰雪碎块" or "死神镰刀" or "火焰锄刀" or "彩虹水晶" or "星云奥秘":
+		set {_maxLiveTime} to 300
+	else if {_arrowName} is "冰雪碎块" or "死神镰刀" or "火焰锄刀" or "星云奥秘":
 		set {_loopTime} to 25
 		set {_waitTime} to 4 ticks
+		set {_maxLiveTime} to 100
 	else if {_arrowName} is "气泡弹":
 		set {_loopTime} to 20
 		set {_waitTime} to 3 ticks
-	else if {_arrowName} is "台风":
-		set {_loopTime} to 50
+		set {_maxLiveTime} to 60
+	else if {_arrowName} is "台风" or "彩虹水晶":
+		set {_loopTime} to 30
 		set {_waitTime} to 2 ticks
+		set {_maxLiveTime} to 60
 	else if {_arrowName} is "北极长矛":
 		set {_loopTime} to 100
 		set {_waitTime} to 2 ticks
+		set {_maxLiveTime} to 200
 		set {_attrMap} to metadata "attrMap" of {_arrow}
 	else if {_arrowName} is "泰拉悠悠球光束":
 		set {_loopTime} to 10
 		set {_waitTime} to 3 ticks
+		set {_maxLiveTime} to 30
 	else if {_arrowName} ends with "强化焰":
 		loop 240 times:
 			if {_arrow}.getHandle().dead:
@@ -2128,8 +2139,12 @@ function projectileAI(arrow: entity, weaponType: text):
 			set {_resetVelocity} to false
 	set {_v} to velocity of {_arrow}
 	if {_arrowName} is "彩虹水晶":
-		set {_speed} to {_speed} * 2
-		wait 1 second
+		if {_arrow}.getTicksLived() < 2:
+			set {_speed} to {_speed} * 3
+			set metadata "pSpeed" of {_arrow} to {_speed}
+			wait 15 ticks
+	if vector length of {_v} > 0:
+		set vector length of {_v} to {_speed}
 	loop {_loopTime} times:
 		if {_arrowName} is "夜明箭":
 			loop-number = 2
@@ -2156,13 +2171,14 @@ function projectileAI(arrow: entity, weaponType: text):
 		set {_lastLoc} to location of {_arrow}
 		if {_arrow}.getHandle().dead:
 			stop trigger
+		if {_arrow}.getTicksLived() > {_maxLiveTime}:
+			stop loop
 		if block at location of {_arrow} is water:
 			if {_arrowName} is "小火花" or "希腊烈火" or "火焰":
 				stop loop
 			else if {_arrowName} is "烈焰箭":
 				{_arrow}.setCustomName("木箭")
 		if {_autoTrace}:
-			set {_v} to velocity of {_arrow}
 			if {_arrow} has scoreboard tag "reflected":
 				clear {_autoTrace}
 			else:
@@ -2178,22 +2194,25 @@ function projectileAI(arrow: entity, weaponType: text):
 						clear metadata "followTarget" of {_arrow}
 				if {_target} is not set:
 					clear {_candidate::*}
-					loop all living entities in radius 8 of {_arrow}:
-						loop-value-2 is not a player
-						loop-value-2 is not {_arrow}.getShooter()
-						checkCanDamage(shooter of {_arrow}, loop-value-2) is true
-						health of loop-value-2 > 0
-						if (try (metadata "collided" of {_arrow}).contains(loop-value-2)) is true:
-							add loop-value-2 to {_candidate::*}
+					loop all living entities in radius 12 of {_arrow}:
+						set {_currEntity} to loop-value-2
+						{_currEntity} is not a player
+						{_currEntity} is not {_arrow}.getShooter()
+						checkCanDamage(shooter of {_arrow}, {_currEntity}) is true
+						{_currEntity}.hasLineOfSight({_arrow})
+						health of {_currEntity} > 0
+						if (try (metadata "collided" of {_arrow}).contains({_currEntity})) is true:
+							add {_currEntity} to {_candidate::*}
 						else:
-							set {_target} to loop-value-2
-							set metadata "followTarget" of {_arrow} to loop-value-2
+							set {_target} to {_currEntity}
+							set metadata "followTarget" of {_arrow} to {_currEntity}
 							stop loop
 					if {_target} is not set:
 						{_candidate::1} is set
 						set {_target} to a random element out of {_candidate::*}
 						set metadata "followTarget" of {_arrow} to {_target}
 				if {_target} is set:
+					set {_v} to velocity of {_arrow}
 					set {_dV} to (eye location of {_target}).subtract(location of {_arrow}).toVector()
 					vector length of {_dV} > 0
 					if vector length of {_v} > 0:

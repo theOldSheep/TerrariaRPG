@@ -792,7 +792,7 @@ function pillarMobAI(pillar: entity, mob: entity, ply: entity):
 					{_attrMap}.put("damage", 280)
 					{_attrMap}.put("defence", 0)
 					{_attrMap}.put("knockbackResistance", 0.64)
-				if {_indexAI} = 120:
+				if {_indexAI} = 40:
 					slimeResize({_mob}, 4)
 					{_attrMap}.put("damage", 480)
 					{_attrMap}.put("defence", 100)
