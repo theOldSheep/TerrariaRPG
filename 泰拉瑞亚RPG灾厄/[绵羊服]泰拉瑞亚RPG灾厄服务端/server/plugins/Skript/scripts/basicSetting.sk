@@ -46,11 +46,11 @@ on papi placeholder request with prefix "skript":
 			if {_stackSize%{_plyName}%::1} > 0:
 				set {_result%{_plyName}%} to "&f%{_stackSize%{_plyName}%::1}%铂金币 "
 			if {_stackSize%{_plyName}%::2} > 0:
-				set {_result%{_plyName}%} to "%{_result}%&e%{_stackSize%{_plyName}%::2}%金币 "
+				set {_result%{_plyName}%} to "%{_result%{_plyName}%}%&e%{_stackSize%{_plyName}%::2}%金币 "
 			if {_stackSize%{_plyName}%::3} > 0:
-				set {_result%{_plyName}%} to "%{_result}%&7%{_stackSize%{_plyName}%::3}%银币 "
+				set {_result%{_plyName}%} to "%{_result%{_plyName}%}%&7%{_stackSize%{_plyName}%::3}%银币 "
 			if {_stackSize%{_plyName}%::4} > 0:
-				set {_result%{_plyName}%} to "%{_result}%&c%{_stackSize%{_plyName}%::4}%铜币 "
+				set {_result%{_plyName}%} to "%{_result%{_plyName}%}%&c%{_stackSize%{_plyName}%::4}%铜币 "
 		set placeholder result to {_result%{_plyName}%}
 	else:
 		set {_attrMap%{_plyName}%} to metadata "attrMap" of event-player
