@@ -150,7 +150,7 @@ every 5 ticks:
 			{eventInfo}.put("progress", 0)
 			{eventInfo}.put("progressMax", 3000)
 
-function handleFallenStar(spawnLoc: location, attrMapFallenStar: object):
+function handleFallenStar(spawnLoc: location):
 	set {_velocity} to vector((a random number between 0.5 and -0.5), -2, (a random number between 0.5 and -0.5))
 	set {_star} to (world of {_spawnLoc}).spawnEntity({_spawnLoc}, EntityType.SPLASH_POTION)
 	{_star}.setCustomName("坠星")
