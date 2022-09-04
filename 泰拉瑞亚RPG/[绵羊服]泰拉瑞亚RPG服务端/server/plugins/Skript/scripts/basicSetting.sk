@@ -35,26 +35,28 @@ on join:
 on server list ping:
 	set the motd to "&a欢迎来到&6泰拉瑞亚§%a random integer between 2 and 9%R§%a random integer between 2 and 9%P§%a random integer between 2 and 9%G&a!"
 on papi placeholder request with prefix "skript":
+	set {_plyName} to name of event-player
+	# glitch happens if variables between different players are not distinguished
 	if the identifier is "money":
 		if event-player's money < 100:
-			set {_result} to "笑死，身无分文"
+			set {_result%{_plyName}%} to "笑死，身无分文"
 		else:
-			set {_result} to ""
-			set {_stackSize::*} to coinConversion(floor((event-player)'s money / 100))
-			if {_stackSize::1} > 0:
-				set {_result} to "&f%{_stackSize::1}%铂金币 "
-			if {_stackSize::2} > 0:
-				set {_result} to "%{_result}%&e%{_stackSize::2}%金币 "
-			if {_stackSize::3} > 0:
-				set {_result} to "%{_result}%&7%{_stackSize::3}%银币 "
-			if {_stackSize::4} > 0:
-				set {_result} to "%{_result}%&c%{_stackSize::4}%铜币 "
-		set placeholder result to {_result}
+			set {_result%{_plyName}%} to ""
+			set {_stackSize%{_plyName}%::*} to coinConversion(floor((event-player)'s money / 100))
+			if {_stackSize%{_plyName}%::1} > 0:
+				set {_result%{_plyName}%} to "&f%{_stackSize%{_plyName}%::1}%铂金币 "
+			if {_stackSize%{_plyName}%::2} > 0:
+				set {_result%{_plyName}%} to "%{_result}%&e%{_stackSize%{_plyName}%::2}%金币 "
+			if {_stackSize%{_plyName}%::3} > 0:
+				set {_result%{_plyName}%} to "%{_result}%&7%{_stackSize%{_plyName}%::3}%银币 "
+			if {_stackSize%{_plyName}%::4} > 0:
+				set {_result%{_plyName}%} to "%{_result}%&c%{_stackSize%{_plyName}%::4}%铜币 "
+		set placeholder result to {_result%{_plyName}%}
 	else:
-		set {_attrMap} to metadata "attrMap" of event-player
+		set {_attrMap%{_plyName}%} to metadata "attrMap" of event-player
 		if the identifier is "defence":
-			set {_result} to round(({_attrMap}.get("defence")) * ({_attrMap}.get("defenceMulti")))
-			set placeholder result to "%{_result}%"
+			set {_result%{_plyName}%} to round(({_attrMap%{_plyName}%}.get("defence")) * ({_attrMap%{_plyName}%}.get("defenceMulti")))
+			set placeholder result to "%{_result%{_plyName}%}%"
 		
 
 on script load:
