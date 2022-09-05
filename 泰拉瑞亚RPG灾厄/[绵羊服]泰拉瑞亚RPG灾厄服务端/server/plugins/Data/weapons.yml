@@ -1,3 +1,5 @@
+南瓜榴弹:
+  radius: 2
 狱炎箭:
   radius: 3.5
 爆炸弹:
@@ -441,6 +443,14 @@
   autoSwing: true
   shots: 3
   offSet: 40
+气泵枪:
+  type: SPECIAL_AMMO
+  ammo: _南瓜榴弹
+  autoSwing: true
+  isGranade: true
+  maxLoad: 5
+  loadTimeMulti: 0.6
+  offSet: 10
 骨头手套:
   type: SPECIAL_AMMO
   ammo: 骨头
@@ -550,11 +560,11 @@
 荆棘旋刃:
   type: BOOMERANG
   distance: 7.25
-  velocity: 11
+  velocity: 14
 烈焰回旋镖:
   type: BOOMERANG
   distance: 7.5
-  velocity: 11
+  velocity: 14
 疯狂飞斧:
   autoSwing: true
   type: STAB

@@ -1209,7 +1209,9 @@ function resetPlayerStats(ply: player):
 	
 	set metadata "craftingStation" of {_ply} to "CLOSED"
 	set metadata "recipeNumber" of {_ply} to -1
+	set metadata "isLoadingWeapon" of {_ply} to false
 	set metadata "autoSwing" of {_ply} to false
+	set metadata "swingAmount" of {_ply} to 0
 	set metadata "minions" of {_ply} to new ArrayList()
 	set metadata "hooks" of {_ply} to new ArrayList()
 	set metadata "nextMinionIndex" of {_ply} to 0
@@ -1218,7 +1220,6 @@ function resetPlayerStats(ply: player):
 	set metadata "useCD" of {_ply} to false
 	clear metadata "damageCD" of {_ply}
 	clear metadata "dashCD" of {_ply}
-	set metadata "swingAmount" of {_ply} to 0
 	set metadata "thrust" of {_ply} to 0
 	set metadata "thrustProgress" of {_ply} to 0
 	set metadata "statsGeneration" of {_ply} to 1
@@ -1413,6 +1414,8 @@ function dropMoney(loc: location, amount: integer):
 function applyCD(ply: player, cd: number):
 	set {_cd} to ceil({_cd})
 	set metadata "useCD" of {_ply} to true
+	set {_lastCDapply} to Calendar.getInstance().getTimeInMillis()
+	set metadata "useCDInternal" of {_ply} to {_lastCDapply}
 	if {_cd} <= 0:
 		set {_tool} to {_ply}'s tool
 		if {_tool} is not air:
@@ -1425,6 +1428,7 @@ function applyCD(ply: player, cd: number):
 			{_ply}.getHandle().playerConnection.sendPacket({_packet})
 		wait ("%{_cd}% ticks" parsed as timespan)
 		{_ply} is online
+		metadata "useCDInternal" of {_ply} is {_lastCDapply}
 		set metadata "useCD" of {_ply} to false
 		if {_ply} has scoreboard tag "unauthorized":
 			set metadata "autoSwing" of {_ply} to false
@@ -1674,7 +1678,7 @@ function handleDeath(v: entity, dPly: entity, d: entity, damageCause: text):
 				set {_moneyMSG} to "%{_moneyMSG}%&c&l %{_m::4}% 铜"
 			send title "&c&l你死了！" with subtitle "&c&l掉了%{_moneyMSG}%" to {_v} for ("%{_respawnTime}% seconds" parsed as timespan) with fade-in 0 second and fade-out 0 second
 		else:
-			send title "&c&l你死了！" to {_v} for ("%{_respawnTime}% seconds" parsed as timespan) with fade-in 0 second and fade-out 0 second
+			send title "&c&l你死了！" with subtitle "" to {_v} for ("%{_respawnTime}% seconds" parsed as timespan) with fade-in 0 second and fade-out 0 second
 		close {_v}'s inventory
 		if {_d} is set:
 			set {_killer} to name of {_d}
@@ -1723,6 +1727,7 @@ function handleDeath(v: entity, dPly: entity, d: entity, damageCause: text):
 			set {_spawnLoc} to {_v}.getBedSpawnLocation()
 		teleport {_v} to {_spawnLoc}
 		threadRegen({_v})
+		set metadata "isLoadingWeapon" of {_ply} to false
 		set metadata "nextMinionIndex" of {_v} to 0
 	else:
 		if {_dPly} is a player:

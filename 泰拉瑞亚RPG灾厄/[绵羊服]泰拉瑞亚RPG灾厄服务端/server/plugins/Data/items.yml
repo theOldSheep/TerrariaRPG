@@ -79,12 +79,6 @@
   item: COAL
   worth: 100
   rarity: 0
-明胶水晶:
-  item: COAL
-  lore:
-  - §r召唤史莱姆皇后
-  worth: 1000000
-  rarity: 5
 水晶碎块:
   item: CLAY_BALL
   worth: 100
@@ -96,6 +90,12 @@
 火药:
   item: SULPHUR
   worth: 24000
+  rarity: 0
+非法枪械部件:
+  item: CLAY_BALL
+  lore:
+  - §r“在大多数地方禁用”
+  worth: 4000000
   rarity: 0
 草种:
   item: CLAY_BALL
@@ -243,6 +243,12 @@
 虫饵:
   item: ROTTEN_FLESH
   rarity: 1
+明胶水晶:
+  item: COAL
+  lore:
+  - §r召唤史莱姆皇后
+  worth: 1000000
+  rarity: 5
 机械骷髅头:
   item: IRON_NUGGET
   lore:
@@ -2458,6 +2464,23 @@
   - 'useTime: 30'
   worth: 16000000
   rarity: 10
+气泵枪:
+  item: BOW
+  lore:
+  - §r54 远程伤害
+  - §r4% 暴击率
+  - §r普通的使用速度
+  - §r极弱的击退威力
+  - §r将至多5枚南瓜榴弹装填后一次性射出
+  attributes:
+  - 'damage: 54'
+  - 'damageType: Bullet'
+  - 'crit: 4'
+  - 'projectileSpeed: 11'
+  - 'knockback: 1.25'
+  - 'useTime: 30'
+  worth: 400000
+  rarity: 2
 骨头手套:
   item: BOW
   lore:

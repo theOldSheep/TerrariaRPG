@@ -390,18 +390,23 @@ on KeyBoardPressEvent:
 			if (loop-value).getHandle().inGround is true:
 				(loop-value).remove()
 		#Charge
-		{_accessory}.contains("克苏鲁之眼盾") is true
 		player doesn't have scoreboard tag "temp_dashCD"
-		add "temp_dashCD" to scoreboard tags of player
-		set {_dir} to new vector with yaw (player.getHandle().yaw) and pitch 0
-		set {_playerVelocity} to velocity of player
-		set {_dashSpeed} to 1
-		set {_dashSpeed} to try (metadata "attrMap" of player).getOrDefault("speedMulti", 1)
-		set vector length of {_dir} to {_dashSpeed}
-		set y of {_dir} to ((y of {_playerVelocity}) * -1) + y of {_dir}
-		push player {_dir}
-		wait 1.25 seconds
-		remove "temp_dashCD" from scoreboard tags of player
+		set {_dashSpeed} to -1
+		loop ...{_accessory}:
+			if loop-value is "克苏鲁之眼盾":
+				set {_dashSpeed} to 1
+				set {_dashCD} to 1.75 seconds
+				stop loop
+		if {_dashSpeed} > 0:
+			add "temp_dashCD" to scoreboard tags of player
+			set {_dir} to new vector with yaw (player.getHandle().yaw) and pitch 0
+			set {_playerVelocity} to velocity of player
+			set {_dashSpeed} to {_dashSpeed} * (try (metadata "attrMap" of player).getOrDefault("speedMulti", 1))
+			set vector length of {_dir} to {_dashSpeed}
+			set y of {_dir} to ((y of {_playerVelocity}) * -1) + y of {_dir}
+			push player {_dir}
+			wait {_dashCD}
+			remove "temp_dashCD" from scoreboard tags of player
 	else if event.getKey() is 41:
 		open (metadata "inventories" of player).get("accessory") for player
 
@@ -2417,10 +2422,12 @@ function shootBoomerang(ply: player, itemType: text, item: item):
 	set {_velocity} to new vector with yaw {_yaw} and pitch {_pitch}
 	set {_penetration} to yml value "%{_itemType}%.penetration" from file "plugins/Data/weapons.yml"
 	set {_speed} to yml value "%{_itemType}%.velocity" from file "plugins/Data/weapons.yml"
-	set {_speed} to sqrt({_speed}) * 0.35
-	set {_maxDistance} to yml value "%{_itemType}%.distance" from file "plugins/Data/weapons.yml"
+	set {_speed} to ({_speed} / 5) / ({_attrMap}.getOrDefault("useTimeMeleeMulti", 1))
+	set {_lastWaited} to true
+	set {_distTraveled} to 0
+	set {_maxDistance} to {_speed} * 12
 	set {_maxDistance} to {_maxDistance} * ({_attrMap}.getOrDefault("meleeReachMulti", 1))
-	set vector length of {_velocity} to {_speed}
+	set vector length of {_velocity} to 1
 	set {_loc} to {_ply}.getEyeLocation()
 	set {_damagedEntities} to new ArrayList()
 	set {_dmg} to {_attrMap}.get("damage")
@@ -2429,7 +2436,7 @@ function shootBoomerang(ply: player, itemType: text, item: item):
 	while {_ply} is online:
 		if world of {_loc} is not world of {_ply}:
 			stop loop
-		set {_toLoop} to {_loc}.getWorld().getNearbyEntities({_loc}, 0.2, 0.2, 0.2)
+		set {_toLoop} to {_loc}.getWorld().getNearbyEntities({_loc}, 0.5, 0.5, 0.5)
 		set {_iterator} to {_toLoop}.iterator()
 		while {_iterator}.hasNext() is true:
 			set {_damage} to true
@@ -2448,6 +2455,7 @@ function shootBoomerang(ply: player, itemType: text, item: item):
 						set {_damagedEntities} to new ArrayList()
 					{_damagedEntities}.add({_entity1})
 		set {_locNext} to {_loc}.clone().add({_velocity})
+		add 1 to {_distTraveled}
 		if {_return} is false:
 			set {_block} to (block at {_locNext})
 			if {_block}.getType().isSolid() is true:
@@ -2457,13 +2465,20 @@ function shootBoomerang(ply: player, itemType: text, item: item):
 				set {_return} to true
 				set {_damagedEntities} to new ArrayList()
 		else:
-			set {_velocity} to {_ply}.getEyeLocation().subtract({_loc}).toVector()
-			set vector length of {_velocity} to {_speed}
-			if distance between {_ply}.getEyeLocation() and {_loc} <= (1.5 + {_speed}):
+			if {_lastWaited} is true:
+				set {_velocity} to (eye location of {_ply}).subtract({_loc}).toVector()
+				set vector length of {_velocity} to 1
+			
+			if distance between eye location of {_ply} and {_loc} <= 1.5:
 				stop loop
 		set {_loc} to {_locNext}
 		draw 5 itemcrack particles made of {_item} at {_loc}, speed 0, offset 0.1, 0.1, 0.1, visibleRange 64, keepFor 1 tick
-		wait 3 ticks
+		if {_distTraveled} > {_speed}:
+			subtract {_speed} from {_distTraveled}
+			set {_lastWaited} to true
+			wait 2 ticks
+		else:
+			set {_lastWaited} to false
 	applyCD({_ply}, {_useTime})
 function minionAI(minion: entity, owner: player, nameMinion: text):
 	add "noDamage" to scoreboard tags of {_minion}
