@@ -1167,6 +1167,7 @@ function playerUseItem(ply: player, item: item):
 	set {_weaponType} to yml value "%{_itemType}%.type" from file "plugins/Data/weapons.yml"
 	{_weaponType} is set
 	set {_autoSwing} to yml value "%{_itemType}%.autoSwing" from file "plugins/Data/weapons.yml"
+	set {_projectileThruWall} to yml value "%{_itemType}%.thruWall" from file "plugins/Data/weapons.yml"
 	set {_maxLoad} to yml value "%{_itemType}%.maxLoad" from file "plugins/Data/weapons.yml"
 	set {_isLoading} to false
 	if {_itemType} is "终极棱镜":
@@ -1262,6 +1263,8 @@ function playerUseItem(ply: player, item: item):
 						add "isGranade" to scoreboard tags of {_arrowE}
 					else if {_arrowType} is "夜明箭":
 						set gravity of {_arrowE} to off
+					if {_projectileThruWall} is true:
+						add "thruWall" to scoreboard tags of {_arrowE}
 					projectileAI({_arrowE}, {_weaponType})
 			else if {_itemType} is "代达罗斯风暴弓":
 				if {_ply} has metadata "target":
@@ -1291,6 +1294,8 @@ function playerUseItem(ply: player, item: item):
 						add "isGranade" to scoreboard tags of {_arrowE}
 					else if {_arrowType} is "夜明箭":
 						set gravity of {_arrowE} to off
+					if {_projectileThruWall} is true:
+						add "thruWall" to scoreboard tags of {_arrowE}
 					projectileAI({_arrowE}, {_weaponType})
 			else:
 				set {_shots} to 1
@@ -1317,6 +1322,8 @@ function playerUseItem(ply: player, item: item):
 						add "isGranade" to scoreboard tags of {_arrowE}
 					else if {_arrowType} is "夜明箭":
 						set gravity of {_arrowE} to off
+					if {_projectileThruWall} is true:
+						add "thruWall" to scoreboard tags of {_arrowE}
 					if {_itemType} is "幻象弓":
 						add "isVortex" to scoreboard tags of {_arrowE}
 					else if {_itemType} is "日暮":
@@ -1389,6 +1396,8 @@ function playerUseItem(ply: player, item: item):
 				set metadata "Bounce" of {_bulletE} to {_attrMapBullet}.getOrDefault("bounce", 0)
 				if trimText(name of {_bullet}) is "爆炸弹":
 					add "isGranade" to scoreboard tags of {_bulletE}
+				if {_projectileThruWall} is true:
+					add "thruWall" to scoreboard tags of {_bulletE}
 				projectileAI({_bulletE}, {_weaponType})
 				if {_itemType} is "发条突击步枪":
 					play sound "item.gunfire" with volume 3 and pitch 1.2 at location of {_ply}
@@ -1483,6 +1492,8 @@ function playerUseItem(ply: player, item: item):
 				if {_projectileInfo}.get("bounce") is set:
 					set metadata "Bounce" of {_swordProjectile} to {_projectileInfo}.get("bounce")
 				set metadata "damageSourcePlayer" of {_swordProjectile} to {_ply}
+				if {_projectileThruWall} is true:
+					add "thruWall" to scoreboard tags of {_swordProjectile}
 				projectileAI({_swordProjectile}, "ARROW")
 		if {_weaponType} is "SWING":
 			set {_toDamage} to new ArrayList()
@@ -1530,6 +1541,7 @@ function playerUseItem(ply: player, item: item):
 						set vector length of {_velocity} to 2
 						set {_projectile} to spawnProjectile({_ply}, {_velocity}, {_attrMapStar}, "狂星之怒", {_spawnLoc})
 						set gravity of {_projectile} to off
+						add "thruWall" to scoreboard tags of {_projectile}
 						projectileAI({_projectile}, "MAGIC")
 				loop {_loopTime} times:
 					if gamemode of {_ply} is spectator:
@@ -1646,6 +1658,8 @@ function playerUseItem(ply: player, item: item):
 			set metadata "penetration" of {_throwItemE} to {_attrMapItem}.getOrDefault("penetration", 0)
 			set metadata "Bounce" of {_throwItemE} to {_attrMapItem}.getOrDefault("bounce", 0)
 			disguiseProjectile({_throwItemE})
+			if {_projectileThruWall} is true:
+				add "thruWall" to scoreboard tags of {_throwItemE}
 			projectileAI({_throwItemE}, {_weaponType})
 		else if {_weaponType} is "THROW_GRENADE":
 			remove 1 of {_throwItem} from {_ply}'s tool
@@ -1761,6 +1775,8 @@ function playerUseItem(ply: player, item: item):
 					set gravity of {_magicProjectile} to off
 				if {_itemType} is "星云奥秘" or "狱火叉":
 					add "isGranade" to scoreboard tags of {_magicProjectile}
+				if {_projectileThruWall} is true:
+					add "thruWall" to scoreboard tags of {_magicProjectile}
 				projectileAI({_magicProjectile}, {_weaponType})
 				if {_itemType} is "利刃台风":
 					wait 10 ticks
@@ -1805,6 +1821,8 @@ function playerUseItem(ply: player, item: item):
 					if {_itemType} is "月之耀斑":
 						add "isGranade" to scoreboard tags of {_magicProjectile}
 					disguiseProjectile({_magicProjectile})
+					if {_projectileThruWall} is true:
+						add "thruWall" to scoreboard tags of {_magicProjectile}
 					projectileAI({_magicProjectile}, {_weaponType})
 					wait 3 ticks
 			else if {_itemType} is "爆裂藤蔓":
@@ -1931,6 +1949,8 @@ function playerUseItem(ply: player, item: item):
 				set metadata "penetration" of {_arrowE} to {_attrMap}.getOrDefault("penetration", 0)
 				set metadata "Bounce" of {_arrowE} to {_attrMap}.getOrDefault("bounce", 0)
 				disguiseProjectile({_arrowE})
+				if {_projectileThruWall} is true:
+					add "thruWall" to scoreboard tags of {_arrowE}
 				projectileAI({_arrowE}, {_weaponType})
 				if {_itemType} is "精灵熔枪":
 					wait 2 ticks
@@ -2018,6 +2038,8 @@ function playerUseItem(ply: player, item: item):
 				set metadata "penetration" of {_rocketE} to {_attrMap}.getOrDefault("penetration", 0)
 				set metadata "Bounce" of {_rocketE} to {_attrMap}.getOrDefault("bounce", 0)
 				add "isGranade" to scoreboard tags of {_rocketE}
+				if {_projectileThruWall} is true:
+					add "thruWall" to scoreboard tags of {_rocketE}
 				projectileAI({_rocketE}, {_weaponType})
 			applyCD({_ply}, ceil({_attrMap}.get("useTime") * ({_attrMap}.get("useTimeMulti")) * ({_attrMap}.get("useTimeRangedMulti")) * 0.75))
 		else:
@@ -2111,6 +2133,10 @@ function projectileAI(arrow: entity, weaponType: text):
 	#see if the projectile automatically tracks enemy
 	if (yml value "%{_arrowName}%.autoTrace" from file "plugins/Data/entities.yml") is true:
 		set {_autoTrace} to true
+	if (yml value "%{_arrowName}%.thruWall" from file "plugins/Data/entities.yml") is true:
+		add "thruWall" to scoreboard tags of {_arrow}
+	if {_arrow} has scoreboard tag "thruWall":
+		set {_arrow}.getHandle().noclip to true
 	set {_trailColor} to yml value "%{_arrowName}%.trailColor" from file "plugins/Data/entities.yml"
 	if {_arrowName} is "小火花" or "烈焰箭" or "希腊烈火" or "火焰":
 		set {_loopTime} to 100
@@ -2190,6 +2216,10 @@ function projectileAI(arrow: entity, weaponType: text):
 		else if {_weaponType} is "GUN":
 			set {_loopTime} to 50
 			set {_waitTime} to 4 tick
+		else if {_weaponType} is "BOW":
+			set {_loopTime} to 50
+			set {_waitTime} to 4 ticks
+			set {_resetVelocity} to false
 		if {_autoTrace}:
 			set {_loopTime} to 100
 			set {_waitTime} to 2 tick

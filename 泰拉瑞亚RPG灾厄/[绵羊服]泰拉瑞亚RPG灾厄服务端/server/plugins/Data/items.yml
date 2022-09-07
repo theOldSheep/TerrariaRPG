@@ -2465,7 +2465,7 @@
   worth: 16000000
   rarity: 10
 气泵枪:
-  item: BOW
+  item: BLAZE_ROD
   lore:
   - §r54 远程伤害
   - §r4% 暴击率

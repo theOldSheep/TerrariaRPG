@@ -69,6 +69,7 @@
   size: 2.2
 木弓:
   type: BOW
+  thruWall: true
 仙人掌镐:
   type: SWING
   size: 2.2
@@ -475,6 +476,7 @@
   gravity: false
 燧发枪:
   type: GUN
+  thruWall: true
 左轮手枪:
   type: GUN
 迷你鲨:
