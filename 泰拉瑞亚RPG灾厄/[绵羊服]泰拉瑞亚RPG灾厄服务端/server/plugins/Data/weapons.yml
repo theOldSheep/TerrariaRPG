@@ -4,6 +4,7 @@
   radius: 3.5
 爆炸弹:
   radius: 2.99
+  damageShooter: true
 孢子球:
   radius: 1.5
 玛瑙能量:
@@ -20,20 +21,28 @@
   radius: 6
 幻影眼:
   radius: 4
+七彩水晶:
+  radius: 5
 集束破片:
   radius: 1.25
+  damageShooter: true
 初级雪人火箭:
   radius: 2.25
+  damageShooter: true
 二级雪人火箭:
   radius: 2.75
+  damageShooter: true
   destroyBlock: true
 三级雪人火箭:
   radius: 3.25
+  damageShooter: true
 四级雪人火箭:
   radius: 3.5
+  damageShooter: true
   destroyBlock: true
 集束雪人火箭:
   radius: 2
+  damageShooter: true
 红烟花火箭:
   radius: 8
 绿烟花火箭:
@@ -44,16 +53,21 @@
   radius: 8
 初级榴弹:
   radius: 2.5
+  damageShooter: true
 二级榴弹:
   radius: 2.9
+  damageShooter: true
   destroyBlock: true
 三级榴弹:
   radius: 3.6
+  damageShooter: true
 四级榴弹:
   radius: 4.25
+  damageShooter: true
   destroyBlock: true
 集束榴弹:
   radius: 2.35
+  damageShooter: true
 捕虫网:
   type: SWING
   size: 3
@@ -67,9 +81,6 @@
 木剑:
   type: SWING
   size: 2.2
-木弓:
-  type: BOW
-  thruWall: true
 仙人掌镐:
   type: SWING
   size: 2.2
@@ -157,30 +168,52 @@
 仙人掌剑:
   type: SWING
   size: 2.7
+  particleColor:
+  - 0|150|0
+钨钢刀:
+  type: SWING
+  autoSwing: true
+  size: 3
+  particleColor:
+  - 125|200|125
 光之驱逐:
   type: SWING
   size: 2.4
+  particleColor:
+  - 80|0|150
 妖刀村正:
   type: SWING
   autoSwing: true
   size: 3.6
+  particleColor:
+  - 0|0|175
 陨星光剑:
   type: SWING
   size: 3.6
+  particleColor:
+  - 255|255|0
 紫挥棒鱼:
   type: SWING
   autoSwing: true
   size: 3.5
+  particleColor:
+  - 80|0|150
 草薙剑:
   type: SWING
   size: 3.7
+  particleColor:
+  - 0|150|0
 烈焰剑:
   type: SWING
   size: 4
+  particleColor:
+  - 255|150|0
 永夜之刃:
   type: SWING
   autoSwing: true
   size: 4.5
+  particleColor:
+  - 0|0|175
 剑鱼:
   type: STAB
   size: 4
@@ -402,6 +435,11 @@
   - 0|0|255
   - 75|0|130
   - 143|0|255
+木弓:
+  type: BOW
+  thruWall: true
+钨钢弓:
+  type: BOW
 铁弓:
   type: BOW
 银弓:
@@ -641,26 +679,36 @@
   type: THROW_PROJECTILE
 手榴弹:
   type: THROW_GRENADE
+  damageShooter: true
   radius: 4
 炸弹:
   type: THROW_GRENADE
+  damageShooter: true
   radius: 2.5
   destroyBlock: true
 粘性炸弹:
   type: THROW_GRENADE
+  damageShooter: true
   radius: 2.5
   destroyBlock: true
 雷管:
   type: THROW_GRENADE
+  damageShooter: true
   radius: 4
   destroyBlock: true
 粘性雷管:
   type: THROW_GRENADE
+  damageShooter: true
   radius: 4
   destroyBlock: true
 火花魔棒:
   type: MAGIC_PROJECTILE
   projectileName: 小火花
+钨钢法杖:
+  type: MAGIC_PROJECTILE
+  projectileName: 钨钢光球
+  gravity: false
+  autoSwing: true
 钻石法杖:
   type: MAGIC_PROJECTILE
   projectileName: 钻石射线
@@ -783,10 +831,26 @@
 终极棱镜:
   type: MAGIC_SPECIAL
   autoSwing: true
+蜘蛛女王法杖:
+  type: SENTRY
+  damageType: Arrow
+  minionName: 蜘蛛女王
+七彩水晶法杖:
+  type: SENTRY
+  damageType: Magic
+  minionName: 七彩水晶
+月亮传送门法杖:
+  type: SENTRY
+  damageType: Magic
+  minionName: 月亮传送门
 史莱姆法杖:
   type: SUMMON
   damageType: Melee
   minionName: 史莱姆宝宝
+钨钢控制器:
+  type: SUMMON
+  damageType: Magic
+  minionName: 钨钢无人机
 小鬼法杖:
   type: SUMMON
   damageType: Arrow

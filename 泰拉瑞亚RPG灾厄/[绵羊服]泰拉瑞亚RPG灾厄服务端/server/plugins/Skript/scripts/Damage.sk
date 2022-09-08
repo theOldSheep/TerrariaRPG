@@ -261,24 +261,24 @@ on projectile hit:
 		stop trigger
 	if "%{_block}.getType()%" is "LONG_GRASS" or "DOUBLE_PLANT" or "VINE" or "YELLOW_FLOWER" or "RED_ROSE" or "SNOW":
 		set block at location of {_block} to air
-		set {_newArrow} to {_arrow}.getWorld().spawnEntity({_arrow}.getLocation(), {_arrow}.getType())
-		{_newArrow}.setCustomName({_arrow}.getCustomName())
-		set metadata "attrMap" of {_newArrow} to metadata "attrMap" of {_arrow}
-		disguiseProjectile({_newArrow})
-		{_newArrow}.setVelocity(velocity of {_arrow})
-		{_newArrow}.setShooter({_arrow}.getShooter())
-		if gravity of {_arrow} is off:
-			set gravity of {_newArrow} to off
-		set scoreboard tags of {_newArrow} to scoreboard tags of {_arrow}
-		set metadata "pSpeed" of {_newArrow} to metadata "pSpeed" of {_arrow}
-		set metadata "pType" of {_newArrow} to metadata "pType" of {_arrow}
-		set metadata "followTarget" of {_newArrow} to metadata "followTarget" of {_arrow}
-		set metadata "collided" of {_newArrow} to metadata "collided" of {_arrow}
-		set metadata "penetration" of {_newArrow} to metadata "penetration" of {_arrow}
-		set metadata "Bounce" of {_newArrow} to metadata "Bounce" of {_arrow}
-		{_newArrow}.setTicksLived({_arrow}.getTicksLived())
-		projectileAI({_newArrow}, metadata "pType" of {_arrow})
+		set {_arrow}.getHandle().dead to false
 	else:
+		if {_arrow} has scoreboard tag "thruWall":
+			if {_arrow} has metadata "thruWallHeight":
+				set {_height} to metadata "thruWallHeight" of {_arrow}
+				if y-coordinate of {_arrow} > {_height}:
+					y component of (velocity of {_arrow}) < 0
+					set {_arrow}.getHandle().dead to false
+					stop trigger
+				else:
+					y component of (velocity of {_arrow}) > 0
+					set {_arrow}.getHandle().dead to false
+					stop trigger
+			else:
+				set {_arrow}.getHandle().dead to false
+				stop trigger
+		else:
+			{_arrow}.remove()
 		set {_bounce} to metadata "Bounce" of {_arrow}
 		set {_bounce} to {_bounce} parsed as integer
 		remove 1 from {_bounce}
@@ -366,10 +366,6 @@ on projectile hit:
 			projectileAI({_newArrow}, metadata "pType" of {_arrow})
 		else:
 			handleProjectileDestroy({_arrow})
-	if {_arrow} has scoreboard tag "thruWall":
-		set {_arrow}.getHandle().dead to false
-	else:
-		{_arrow}.remove()
 
 function handleProjectileDestroy(arrow: entity):
 	if {_arrow}.getCustomName() is "圣箭":

@@ -70,7 +70,13 @@ on skript stop:
 
 every 10 ticks:
 	loop all players:
-		attemptMobSpawn(loop-player)
+		set {_spawnRate} to ((metadata "attrMap" of loop-player).get("mobSpawnRate")) * ((metadata "attrMap" of loop-player).get("mobSpawnRateMulti"))
+		if chance of ({_spawnRate} - floor({_spawnRate})):
+			set {_spawnRate} to ceil({_spawnRate})
+		else:
+			set {_spawnRate} to floor({_spawnRate})
+		loop {_spawnRate} times:
+			attemptMobSpawn(loop-player)
 
 function attemptMobSpawn(ply: player):
 	set {_attrMap} to metadata "attrMap" of {_ply}
@@ -89,7 +95,6 @@ function attemptMobSpawn(ply: player):
 			set {_eventTier} to {eventInfo}.getOrDefault("tier", 1)
 			attemptSpawnType("%{event}%%{_eventTier}%", {_ply})
 			stop trigger
-	chance of ({_mobLimit} * {_mobLimit} / 400)
 	if {BOSS}.size() > 0:
 		chance of 0.8
 		stop trigger
@@ -173,19 +178,20 @@ function attemptSpawnType(spawnType: text, ply: player) :: boolean:
 		return true
 	if {_useCave} is not true:
 		set {_adjustHeight} to 30
-		set {_xOffset} to a random integer between -30 and 30
-		set {_zOffset} to 30 - abs({_xOffset})
-		if chance of 0.5:
-			set {_zOffset} to {_zOffset} * -1
+		set {_xOffset} to a random number between -48 and 48
+		set {_zOffset} to a random number between -48 and 48
+		while ({_xOffset} * {_xOffset}) + ({_zOffset} * {_zOffset}) < 225:
+			set {_xOffset} to a random number between -48 and 48
+			set {_zOffset} to a random number between -48 and 48
 		set {_loc} to {_ply}.getLocation().add({_xOffset}, 0, {_zOffset})
 	else:
 		set {_adjustHeight} to 8
 		set {_loc} to location of {_ply}
-		set {_xOffset} to a random number between -20 and 20
-		set {_zOffset} to a random number between -20 and 20
+		set {_xOffset} to a random number between -32 and 32
+		set {_zOffset} to a random number between -32 and 32
 		while ({_xOffset} * {_xOffset}) + ({_zOffset} * {_zOffset}) < 100:
-			set {_xOffset} to a random number between -20 and 20
-			set {_zOffset} to a random number between -20 and 20
+			set {_xOffset} to a random number between -32 and 32
+			set {_zOffset} to a random number between -32 and 32
 		{_loc}.add({_xOffset}, a random number between -4 and 8, {_zOffset})
 	set {_offSet} to 1
 	set {_foundLoc} to false

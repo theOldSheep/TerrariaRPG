@@ -109,6 +109,16 @@
   - §r右键土壤可以播撒邪恶
   worth: 10000
   rarity: 0
+钨钢金属废料:
+  item: CLAY_BALL
+  worth: 8000
+  rarity: 1
+能源核心:
+  item: CLAY_BALL
+  lore:
+  - §r能量在其中脉动
+  worth: 8000
+  rarity: 1
 骨头:
   item: BONE
   worth: 1000
@@ -508,6 +518,7 @@
   - 'projectileSpeedArrowMulti: 0.5'
   - 'arrowConsumptionRate: 0.8'
   - 'mobLimit: -1'
+  - 'mobSpawnRateMulti: -0.1'
   worth: 15000000
   rarity: 5
 冰冻海龟壳:
@@ -587,6 +598,7 @@
   - 'damageRangedMulti: 0.1'
   - 'critRanged: 10'
   - 'mobLimit: -1'
+  - 'mobSpawnRateMulti: -0.1'
   worth: 15000000
   rarity: 5
 闪亮石:
@@ -750,6 +762,7 @@
   - §r伤害和暴击率各增加5%
   attributes:
   - 'mobLimit: -1'
+  - 'mobSpawnRateMulti: -0.1'
   - 'damageMulti: 0.05'
   - 'crit: 5'
   worth: 8000000
@@ -1266,6 +1279,21 @@
   - 'useTime: 32'
   worth: 36000
   rarity: 0
+钨钢刀:
+  item: IRON_SWORD
+  lore:
+  - §r24 近战伤害
+  - §r4% 暴击率
+  - §r很快的使用速度
+  - §r较弱的击退威力
+  attributes:
+  - 'damage: 24'
+  - 'damageType: Melee'
+  - 'crit: 4'
+  - 'knockback: 3.75'
+  - 'useTime: 19'
+  worth: 200000
+  rarity: 1
 铜质短剑:
   item: IRON_SWORD
   lore:
@@ -2171,6 +2199,22 @@
   - 'useTime: 30'
   worth: 2000
   rarity: 0
+钨钢弓:
+  item: BOW
+  lore:
+  - §r22 远程伤害
+  - §r4% 暴击率
+  - §r快的使用速度
+  - §r很弱的击退威力
+  attributes:
+  - 'damage: 22'
+  - 'damageType: Arrow'
+  - 'crit: 4'
+  - 'projectileSpeed: 12'
+  - 'knockback: 2.25'
+  - 'useTime: 25'
+  worth: 200000
+  rarity: 1
 铜质短弓:
   item: BOW
   lore:
@@ -2890,6 +2934,26 @@
   - 'manaUse: 4'
   worth: 100000
   rarity: 1
+钨钢法杖:
+  item: STICK
+  lore:
+  - §r26 魔法伤害
+  - §r4% 暴击率
+  - §r很快的使用速度
+  - §r很弱的击退威力
+  - §r魔法 消耗2
+  - §r发射钨钢光球
+  attributes:
+  - 'damage: 26'
+  - 'damageType: Magic'
+  - 'crit: 4'
+  - 'projectileSpeed: 9'
+  - 'knockback: 3'
+  - 'useTime: 20'
+  - 'manaUse: 2'
+  - 'penetration: 1'
+  worth: 200000
+  rarity: 1
 钻石法杖:
   item: DIAMOND_SWORD
   lore:
@@ -3386,6 +3450,59 @@
   - 'manaUse: 12'
   worth: 10000000
   rarity: 10
+蜘蛛女王法杖:
+  item: DIAMOND_SWORD
+  lore:
+  - §r150 召唤伤害
+  - §r普通的使用速度
+  - §r很强的击退威力
+  - §r魔法 消耗10
+  - §r召唤哨兵
+  - §r召唤蜘蛛女王来朝敌人吐蜘蛛卵
+  - §r“啊↗啊↑啊→啊→啊↓啊↓啊↓”
+  attributes:
+  - 'damage: 150'
+  - 'damageType: Summon'
+  - 'knockback: 7.5'
+  - 'useTime: 30'
+  - 'manaUse: 10'
+  worth: 5000000
+  rarity: 4
+月亮传送门法杖:
+  item: DIAMOND_SWORD
+  lore:
+  - §r100 召唤伤害
+  - §r普通的使用速度
+  - §r很强的击退威力
+  - §r魔法 消耗10
+  - §r召唤哨兵
+  - §r召唤月亮传送门，向敌人发射激光
+  attributes:
+  - 'damage: 100'
+  - 'damageType: Summon'
+  - 'knockback: 7.5'
+  - 'useTime: 30'
+  - 'manaUse: 10'
+  worth: 10000000
+  rarity: 10
+七彩水晶法杖:
+  item: DIAMOND_SWORD
+  lore:
+  - §r260 召唤伤害
+  - §r普通的使用速度
+  - §r很强的击退威力
+  - §r魔法 消耗10
+  - §r召唤哨兵
+  - §r召唤用来驱逐敌人的放射水晶
+  - §r“公爵，多么缤纷的颜色！”
+  attributes:
+  - 'damage: 260'
+  - 'damageType: Summon'
+  - 'knockback: 7.5'
+  - 'useTime: 30'
+  - 'manaUse: 10'
+  worth: 10000000
+  rarity: 10
 史莱姆法杖:
   item: WOOD_SWORD
   lore:
@@ -3403,6 +3520,23 @@
   - 'manaUse: 20'
   worth: 2000000
   rarity: 4
+钨钢控制器:
+  item: WOOD_SWORD
+  lore:
+  - §r20 召唤伤害
+  - §r慢的使用速度
+  - §r极弱的击退威力
+  - §r魔法 消耗10
+  - §r召唤钨钢机器人为你而战
+  attributes:
+  - 'damage: 20'
+  - 'damageType: Summon'
+  - 'projectileSpeed: 10'
+  - 'knockback: 0.5'
+  - 'useTime: 34'
+  - 'manaUse: 10'
+  worth: 2000000
+  rarity: 1
 小鬼法杖:
   item: WOOD_SWORD
   lore:
@@ -3427,7 +3561,7 @@
   - §r很弱的击退威力
   - §r魔法 消耗10
   - §r召唤蜘蛛来为你战斗
-  - §r“啊↗啊↑啊→啊→啊↓啊↓啊↓”
+  - §r“这个好像……是一个……蜘蛛！”
   attributes:
   - 'damage: 52'
   - 'damageType: Summon'
@@ -4135,33 +4269,6 @@
   - §r“小僵尸成精了！”
   worth: 4000000
   rarity: 1
-铜头盔:
-  item: IRON_HELMET
-  lore:
-  - §r[装备]
-  - §r2 防御
-  attributes:
-  - 'defence: 2'
-  worth: 25000
-  rarity: 0
-铜链甲:
-  item: IRON_CHESTPLATE
-  lore:
-  - §r[装备]
-  - §r4 防御
-  attributes:
-  - 'defence: 4'
-  worth: 20000
-  rarity: 0
-铜护胫:
-  item: IRON_LEGGINGS
-  lore:
-  - §r[装备]
-  - §r2 防御
-  attributes:
-  - 'defence: 2'
-  worth: 15000
-  rarity: 0
 木头盔:
   item: LEATHER_HELMET
   lore:
@@ -4209,6 +4316,98 @@
   attributes:
   - 'defence: 2'
   worth: 5000
+  rarity: 0
+钨钢战盔:
+  item: IRON_HELMET
+  lore:
+  - §r[装备]
+  - §r6 防御
+  - §r增加10%近战伤害
+  attributes:
+  - 'defence: 6'
+  - 'damageMeleeMulti: 0.1'
+  worth: 150000
+  rarity: 1
+钨钢头饰:
+  item: IRON_HELMET
+  lore:
+  - §r[装备]
+  - §r4 防御
+  - §r增加10%远程伤害
+  attributes:
+  - 'defence: 4'
+  - 'damageRangedMulti: 0.1'
+  worth: 150000
+  rarity: 1
+钨钢兜帽:
+  item: IRON_HELMET
+  lore:
+  - §r[装备]
+  - §r2 防御
+  - §r增加10%魔法伤害
+  attributes:
+  - 'defence: 2'
+  - 'damageMagicMulti: 0.1'
+  worth: 150000
+  rarity: 1
+钨钢头罩:
+  item: IRON_HELMET
+  lore:
+  - §r[装备]
+  - §r0 防御
+  - §r增加10%召唤伤害
+  attributes:
+  - 'damageSummonMulti: 0.1'
+  worth: 150000
+  rarity: 1
+钨钢盔甲:
+  item: IRON_CHESTPLATE
+  lore:
+  - §r[装备]
+  - §r4 防御
+  - §r增加3%暴击率
+  attributes:
+  - 'defence: 4'
+  - 'crit: 3'
+  worth: 100000
+  rarity: 1
+钨钢护胫:
+  item: IRON_LEGGINGS
+  lore:
+  - §r[装备]
+  - §r2 防御
+  - §r提高5%移动速度
+  attributes:
+  - 'defence: 2'
+  - 'speedMulti: 0.05'
+  worth: 50000
+  rarity: 1
+铜头盔:
+  item: IRON_HELMET
+  lore:
+  - §r[装备]
+  - §r2 防御
+  attributes:
+  - 'defence: 2'
+  worth: 25000
+  rarity: 0
+铜链甲:
+  item: IRON_CHESTPLATE
+  lore:
+  - §r[装备]
+  - §r4 防御
+  attributes:
+  - 'defence: 4'
+  worth: 20000
+  rarity: 0
+铜护胫:
+  item: IRON_LEGGINGS
+  lore:
+  - §r[装备]
+  - §r2 防御
+  attributes:
+  - 'defence: 2'
+  worth: 15000
   rarity: 0
 铁头盔:
   item: IRON_HELMET
@@ -4809,6 +5008,7 @@
   - 'defence: 46'
   - 'damageMeleeMulti: 0.06'
   - 'mobLimit: 2'
+  - 'mobSpawnRateMulti: 0.2'
   worth: 6000000
   rarity: 8
 甲虫铠甲:
@@ -4838,6 +5038,7 @@
   - 'damageMeleeMulti: 0.05'
   - 'crit: 5'
   - 'mobLimit: 2'
+  - 'mobSpawnRateMulti: 0.2'
   worth: 4800000
   rarity: 8
 甲虫护腿:
@@ -4852,6 +5053,7 @@
   - 'useTimeMeleeMulti: -0.06'
   - 'speedMulti: 0.06'
   - 'mobLimit: 2'
+  - 'mobSpawnRateMulti: 0.2'
   worth: 3600000
   rarity: 8
 蘑菇矿头饰:
@@ -5131,6 +5333,7 @@
   - 'crit: 26'
   - 'regenMulti: 0.167'
   - 'mobLimit: 2'
+  - 'mobSpawnRateMulti: 0.2'
   worth: 7000000
   rarity: 10
 耀斑胸甲:
@@ -5146,6 +5349,7 @@
   - 'damageMeleeMulti: 0.29'
   - 'regenMulti: 0.167'
   - 'mobLimit: 2'
+  - 'mobSpawnRateMulti: 0.2'
   worth: 14000000
   rarity: 10
 耀斑护腿:
@@ -5161,6 +5365,7 @@
   - 'useTimeMeleeMulti: -0.15'
   - 'regenMulti: 0.167'
   - 'mobLimit: 2'
+  - 'mobSpawnRateMulti: 0.2'
   worth: 10500000
   rarity: 10
 星尘头盔:

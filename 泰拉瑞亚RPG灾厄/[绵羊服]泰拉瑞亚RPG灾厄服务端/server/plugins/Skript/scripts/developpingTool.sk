@@ -38,9 +38,13 @@ on inventory click:
 			add 1 to {_i}
 		open {_inspectionInv} for event-player
 
-
+command /testParticleColor [<text>]:
+	trigger:
+		command sender is op
+		handleParticleCircle(eye location of command sender, 5, 0.25, 0, 0, arg-1)
 command /generatePrefixRarity:
 	trigger:
+		command sender is op
 		set {_prefixes::*} to yml nodes "prefixInfo" from file "plugins/Data/prefixOriginal.yml"
 		set yml value "prefixList" from file "plugins/Data/prefix.yml" to yml value "prefixList" from file "plugins/Data/prefixOriginal.yml"
 		set yml value "prefixInfo" from file "plugins/Data/prefix.yml" to yml value "prefixInfo" from file "plugins/Data/prefixOriginal.yml"
@@ -62,6 +66,7 @@ command /generatePrefixRarity:
 			set yml value "prefixInfo.%{_prefix}%.rarity" from file "plugins/Data/prefix.yml" to {_rarity}
 command /generateItemRarity:
 	trigger:
+		command sender is op
 		set {_items::*} to yml nodes "" from file "plugins/Data/itemsOriginal.yml"
 		broadcast "%{_items::*}%"
 		loop {_items::*}:
@@ -81,6 +86,7 @@ command /generateItemRarity:
 			set yml value "%{_item}%.rarity" from file "plugins/Data/items.yml" to {_rarity}
 command /regulateRecipeIndex:
 	trigger:
+		command sender is op
 		set {_stations::*} to yml nodes "" from file "plugins/Data/recipes.yml"
 		broadcast "%{_stations::*}%"
 		loop {_stations::*}:
@@ -104,9 +110,11 @@ command /inspectAllItems:
 		open {_inspectionInv} for command sender
 command /getInfo:
 	trigger:
+		command sender is op
 		send "%metadata ""attrMap"" of command sender%" to command sender
 command /reforge:
 	trigger:
+		command sender is op
 		set command sender's tool to randomPrefix(command sender's tool)
 command /getItem <text> [<integer>]:
 	trigger:
@@ -117,10 +125,6 @@ command /getItem <text> [<integer>]:
 			arg-2 > 0
 			set {_item} to arg-2 of {_item}
 		give {_item} to {_ply}
-command /getOP:
-	trigger:
-		"%command sender%" is "laomianyang" or "skyDongTian"
-		op command sender
 command /spawnMob [<text>] <integer> <player>:
 	trigger:
 		command sender is op

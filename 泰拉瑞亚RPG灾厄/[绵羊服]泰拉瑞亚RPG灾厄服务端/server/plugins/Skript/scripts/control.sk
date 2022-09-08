@@ -72,7 +72,10 @@ on skript start:
 	{playerAttrMap}.put("manaUseMulti", 1)
 	{playerAttrMap}.put("meleeReachMulti", 1)
 	{playerAttrMap}.put("minionLimit", 2)
-	{playerAttrMap}.put("mobLimit", 10)
+	{playerAttrMap}.put("mobLimit", 15)
+	{playerAttrMap}.put("mobSpawnRate", 0.3)
+	{playerAttrMap}.put("mobSpawnRateMulti", 1)
+	{playerAttrMap}.put("sentryLimit", 1)
 	{playerAttrMap}.put("penetration", 0)
 	{playerAttrMap}.put("powerPickaxe", 0)
 	{playerAttrMap}.put("projectileSpeed", 0)
@@ -1251,7 +1254,7 @@ function playerUseItem(ply: player, item: item):
 					set {_offSet} to new vector with yaw {_yaw} and pitch {_pOffset}
 					set vector length of {_offSet} to 1.5
 					add 12.5 to {_pOffset}
-					set {_arrowE} to (world of {_ply}).spawnEntity({_ply}.getEyeLocation().add({_offSet}), EntityType.ARROW)
+					set {_arrowE} to (world of {_ply}).spawnEntity({_ply}.getEyeLocation().add({_offSet}), EntityType.SNOWBALL)
 					
 					{_arrowE}.setCustomName({_arrowType})
 					{_arrowE}.setVelocity({_velocity})
@@ -1282,7 +1285,7 @@ function playerUseItem(ply: player, item: item):
 				loop {_shootAmount} times:
 					set {_spawnLoc} to {_destination}.clone().add(a random number between -10 and 10, a random number between 22 and 26, a random number between -10 and 10)
 					set {_velocity} to {_destination}.clone().add(0, a random number between -3 and 3, 0).subtract({_spawnLoc}).toVector()
-					set {_arrowE} to (world of {_ply}).spawnEntity({_spawnLoc}, EntityType.ARROW)
+					set {_arrowE} to (world of {_ply}).spawnEntity({_spawnLoc}, EntityType.SNOWBALL)
 					set vector length of {_velocity} to {_projectileSpeed}
 					{_arrowE}.setCustomName({_arrowType})
 					{_arrowE}.setVelocity({_velocity})
@@ -1306,7 +1309,7 @@ function playerUseItem(ply: player, item: item):
 					if {_offSet} is set:
 						set vector length of {_velocity} to {_offSet}
 						{_velocity}.add(vector(a random number between -1 and 1, a random number between -1 and 1, a random number between -1 and 1))
-					set {_arrowE} to (world of {_ply}).spawnEntity({_ply}.getEyeLocation(), EntityType.ARROW)
+					set {_arrowE} to (world of {_ply}).spawnEntity({_ply}.getEyeLocation(), EntityType.SNOWBALL)
 					
 					set vector length of {_velocity} to {_projectileSpeed}
 					if {_itemType} is "幻象弓":
@@ -1384,7 +1387,6 @@ function playerUseItem(ply: player, item: item):
 				set vector length of {_velocity} to {_projectileSpeed}
 				{_bulletE}.setCustomName(trimText(name of {_bullet}))
 				set metadata "attrMap" of {_bulletE} to {_map}
-				disguiseProjectile({_bulletE})
 				{_bulletE}.setVelocity({_velocity})
 				{_bulletE}.setShooter({_ply})
 				set gravity of {_bulletE} to off
@@ -1416,7 +1418,6 @@ function playerUseItem(ply: player, item: item):
 				{_bulletE}.setVelocity({_velocity})
 				{_bulletE}.setShooter({_ply})
 				set gravity of {_bulletE} to off
-				disguiseProjectile({_bulletE})
 				
 				set {_list} to new ArrayList()
 				{_list}.add({_ply})
@@ -1447,7 +1448,6 @@ function playerUseItem(ply: player, item: item):
 				set metadata "penetration" of {_bulletE} to 0
 				set metadata "Bounce" of {_bulletE} to 0
 				add "isGranade" to scoreboard tags of {_bulletE}
-				disguiseProjectile({_bulletE})
 				projectileAI({_bulletE}, {_weaponType})
 		else:
 			set metadata "autoSwing" of {_ply} to false
@@ -1657,7 +1657,6 @@ function playerUseItem(ply: player, item: item):
 			set metadata "collided" of {_throwItemE} to {_list}
 			set metadata "penetration" of {_throwItemE} to {_attrMapItem}.getOrDefault("penetration", 0)
 			set metadata "Bounce" of {_throwItemE} to {_attrMapItem}.getOrDefault("bounce", 0)
-			disguiseProjectile({_throwItemE})
 			if {_projectileThruWall} is true:
 				add "thruWall" to scoreboard tags of {_throwItemE}
 			projectileAI({_throwItemE}, {_weaponType})
@@ -1684,7 +1683,6 @@ function playerUseItem(ply: player, item: item):
 			set metadata "collided" of {_throwItemE} to {_list}
 			set metadata "Bounce" of {_throwItemE} to 4
 			add "isGranade" to scoreboard tags of {_throwItemE}
-			disguiseProjectile({_throwItemE})
 			projectileAI({_throwItemE}, {_weaponType})
 		if item amount of {_throwItem} is 1:
 			handlePlayerSwitchItem({_ply}, {_throwItem}, air)
@@ -1763,7 +1761,6 @@ function playerUseItem(ply: player, item: item):
 				set {_magicProjectile} to (world of {_ply}).spawnEntity({_ply}.getEyeLocation(), EntityType.SPLASH_POTION)
 				{_magicProjectile}.setCustomName({_pName})
 				set metadata "attrMap" of {_magicProjectile} to {_map}
-				disguiseProjectile({_magicProjectile})
 				{_magicProjectile}.setVelocity({_velocity})
 				{_magicProjectile}.setShooter({_ply})
 				set {_list} to new ArrayList()
@@ -1820,7 +1817,8 @@ function playerUseItem(ply: player, item: item):
 					set gravity of {_magicProjectile} to off
 					if {_itemType} is "月之耀斑":
 						add "isGranade" to scoreboard tags of {_magicProjectile}
-					disguiseProjectile({_magicProjectile})
+						add "thruWall" to scoreboard tags of {_magicProjectile}
+						set metadata "thruWallHeight" of {_magicProjectile} to y-coordinate of {_destination}
 					if {_projectileThruWall} is true:
 						add "thruWall" to scoreboard tags of {_magicProjectile}
 					projectileAI({_magicProjectile}, {_weaponType})
@@ -1948,7 +1946,6 @@ function playerUseItem(ply: player, item: item):
 				set metadata "attrMap" of {_arrowE} to {_map}
 				set metadata "penetration" of {_arrowE} to {_attrMap}.getOrDefault("penetration", 0)
 				set metadata "Bounce" of {_arrowE} to {_attrMap}.getOrDefault("bounce", 0)
-				disguiseProjectile({_arrowE})
 				if {_projectileThruWall} is true:
 					add "thruWall" to scoreboard tags of {_arrowE}
 				projectileAI({_arrowE}, {_weaponType})
@@ -1960,9 +1957,14 @@ function playerUseItem(ply: player, item: item):
 					set {_pitch} to {_ply}.getHandle().pitch
 		else:
 			set metadata "autoSwing" of {_ply} to false
-	else if {_weaponType} is "SUMMON":
+	else if {_weaponType} is "SUMMON" or "SENTRY":
 		set {_manaCost} to round(({_attrMap}.get("manaUse")) * ({_attrMap}.getOrDefault("manaUseMulti", 1)))
 		if level of {_ply} < {_manaCost}:
+			set metadata "autoSwing" of {_ply} to false
+			stop trigger
+		set {_minionSlot} to 1
+		set {_minionSlot} to yml value "%{_itemType}%.minionSlot" from file "plugins/Data/weapons.yml"
+		if {_minionSlot} > ({_attrMap}.get("minionLimit")):
 			set metadata "autoSwing" of {_ply} to false
 			stop trigger
 		set level of {_ply} to level of {_ply} - {_manaCost}
@@ -1978,10 +1980,13 @@ function playerUseItem(ply: player, item: item):
 			slimeResize({_minion}, 1)
 		{_attrMapMinion}.put("damageType", yml value "%{_itemType}%.damageType" from file "plugins/Data/weapons.yml")
 		set metadata "attrMap" of {_minion} to {_attrMapMinion}
-		minionAI({_minion}, {_ply}, {_nameMinion})
+		if {_weaponType} is "SUMMON":
+			minionAI({_minion}, {_ply}, {_nameMinion}, {_minionSlot})
+		else:
+			sentryAI({_minion}, {_ply}, {_nameMinion})
 		set max health of {_minion} to 222
 		set health of {_minion} to 222
-		applyCD({_ply}, ceil({_attrMap}.get("useTime") * ({_attrMap}.get("useTimeMulti")) * ({_attrMap}.get("useTimeRangedMulti"))))
+		applyCD({_ply}, ceil({_attrMap}.get("useTime") * ({_attrMap}.get("useTimeMulti"))))
 	else if {_weaponType} is "ROCKET":
 		set {_map} to {_attrMap}.clone()
 		set {_chanceConsumption} to {_attrMap}.get("ammoConsumptionRate")
@@ -2119,6 +2124,7 @@ function handleZenith(ply: player, colorSword: text, destination: location, item
 			wait 2 ticks
 
 function projectileAI(arrow: entity, weaponType: text):
+	disguiseProjectile({_arrow})
 	set {_speed} to vector length of (velocity of {_arrow})
 	set {_speed} to metadata "pSpeed" of {_arrow}
 	set {_target} to metadata "followTarget" of {_arrow}
@@ -2213,10 +2219,10 @@ function projectileAI(arrow: entity, weaponType: text):
 		if {_weaponType} starts with "MAGIC":
 			set {_loopTime} to 50
 			set {_waitTime} to 4 tick
-		else if {_weaponType} is "GUN":
+		else if {_weaponType} is "GUN" or "Bullet":
 			set {_loopTime} to 50
 			set {_waitTime} to 4 tick
-		else if {_weaponType} is "BOW":
+		else if {_weaponType} is "BOW" or "Arrow":
 			set {_loopTime} to 50
 			set {_waitTime} to 4 ticks
 			set {_resetVelocity} to false
@@ -2243,7 +2249,7 @@ function projectileAI(arrow: entity, weaponType: text):
 			set {_spawnLoc} to {_arrow}.getOrigin()
 			set {_shooter} to shooter of {_arrow}
 			set {_attrMap} to metadata "attrMap" of {_arrow}
-			set {_arrowE} to (world of {_arrow}).spawnEntity({_spawnLoc}, EntityType.ARROW)
+			set {_arrowE} to (world of {_arrow}).spawnEntity({_spawnLoc}, EntityType.SNOWBALL)
 			{_arrowE}.setCustomName("光束箭")
 			set glowing of {_arrowE} to on
 			set gravity of {_arrowE} to off
@@ -2564,22 +2570,198 @@ function shootBoomerang(ply: player, itemType: text, item: item):
 		else:
 			set {_lastWaited} to false
 	applyCD({_ply}, {_useTime})
-function minionAI(minion: entity, owner: player, nameMinion: text):
+function sentryAI(sentry: entity, owner: player, nameSentry: text):
+	add "noDamage" to scoreboard tags of {_sentry}
+	add "isMinion" to scoreboard tags of {_sentry}
+	add "noMelee" to scoreboard tags of {_sentry}
+	set {_sentryList} to metadata "sentries" of {_owner}
+	set {_sentryIndex} to metadata "nextSentryIndex" of {_owner}
+	set {_sentryLimit} to (metadata "attrMap" of {_owner}).get("sentryLimit")
+	if {_sentryList}.size() < {_sentryLimit}:
+		set {_sentryIndex} to {_sentryList}.size()
+	else:
+		set {_sentryIndex} to mod({_sentryIndex}, {_sentryLimit})
+	if {_sentryIndex} < {_sentryList}.size():
+		try {_sentryList}.get({_sentryIndex}).remove()
+		{_sentryList}.set({_sentryIndex}, {_sentry})
+	else:
+		{_sentryList}.add({_sentry})
+	set metadata "nextSentryIndex" of {_owner} to mod({_sentryIndex} + 1, {_sentryLimit})
+	set metadata "damageSourcePlayer" of {_sentry} to {_owner}
+	set {_attrMap} to metadata "attrMap" of {_sentry}
+	{_sentry}.setRemoveWhenFarAway(false)
+	{_sentry}.setCustomName("%{_nameSentry}%")
+	{_sentry}.setCustomNameVisible(true)
+	set AI of {_sentry} to false
+	set {_index} to 0
+	set {_idx} to 0
+	set {_damageType} to {_attrMap}.get("damageType")
+	if {_damageType} is "Melee":
+		set {_meleeCD} to new ArrayList()
+	set {_staffMulti} to metadata "toolDmgMulti" of {_owner}
+	{_attrMap}.put("damage%{_damageType}%Multi", {_attrMap}.getOrDefault("damageSummonMulti", 1))
+	{_attrMap}.put("crit", 0)
+	
+	set {_slimeSize} to 3
+	set {_targetRange} to 48
+	if {_nameSentry} is "七彩水晶":
+		set {_particleColor} to new ArrayList(6)
+		{_particleColor}.add("255|0|0")
+		{_particleColor}.add("255|255|0")
+		{_particleColor}.add("0|255|0")
+		{_particleColor}.add("0|255|255")
+		{_particleColor}.add("0|0|255")
+		{_particleColor}.add("255|0|255")
+		set gravity of {_sentry} to off
+	else if {_nameSentry} is "月亮传送门":
+		set {_particleColor} to new ArrayList(1)
+		{_particleColor}.add("0|225|125")
+		set {_advanced} to new HashMap(3)
+		{_advanced}.put("particleInterval", 1)
+		set {_meleeCD} to new ArrayList()
+		set gravity of {_sentry} to off
+		set {_targetRange} to 64
+	else if {_nameSentry} is "蜘蛛女王":
+		set {_targetRange} to 24
+	slimeResize({_sentry}, {_slimeSize})
+		
+	set {_target} to {_owner}
+	set {_sentryLoc} to location of {_sentry}
+	
+	# alive for at most 2 minutes
+	loop 800 times:
+		if {_owner} is not online:
+			stop loop
+		if {_owner} has scoreboard tag "unauthorized":
+			stop loop
+		if mod({_idx}, 3) = 0:
+			set {_currToolMulti} to 0
+			set {_currToolMulti} to metadata "toolDmgMulti" of {_owner}
+			set {_attrMapOwner} to new HashMap(1)
+			set {_attrMapOwner} to metadata "attrMap" of {_owner}
+			{_attrMap}.put("damageMulti", {_attrMapOwner}.getOrDefault("damageMulti", 1))
+			{_attrMap}.put("damage%{_damageType}%Multi", {_attrMapOwner}.getOrDefault("damageSummonMulti", 1))
+			tweakAttribute({_attrMap}, "damageMulti", {_currToolMulti}, false)
+			tweakAttribute({_attrMap}, "damageMulti", {_staffMulti}, true)
+			if health of {_sentry} <= 0:
+				stop loop
+			if {_sentry}.isDead() is true:
+				stop loop
+			if gamemode of {_owner} is spectator:
+				stop loop
+			if {_sentryIndex} >= (metadata "attrMap" of {_owner}).getOrDefault("sentryLimit", 1):
+				wait 10 ticks
+				{_sentryIndex} >= (metadata "attrMap" of {_owner}).getOrDefault("sentryLimit", 1)
+				stop loop
+			if {_sentryList}.get({_sentryIndex}) is not {_sentry}:
+				stop loop
+		if checkCanDamage({_owner}, {_target}) is false:
+			{_owner} is not {_target}
+			set {_clearTarget} to true
+		else if health of {_target} <= 0:
+			set {_clearTarget} to true
+		else if {_target}.isDead() is true:
+			set {_clearTarget} to true
+		else if {_sentry}.hasLineOfSight({_target}) is false:
+			set {_clearTarget} to true
+		if {_clearTarget} is true:
+			set {_clearTarget} to false
+			set {_target} to {_owner}
+		else:
+			if {_target} is not set:
+				set {_target} to {_owner}
+			
+			set {_reTarget} to false
+			if {_target} is {_owner}:
+				set {_reTarget} to true
+			if {_reTarget} is true:
+				set {_dist} to 999
+				loop all living entities in radius 48 of {_sentry}:
+					set {_currCheckTarget} to loop-value-2
+					health of {_currCheckTarget} > 0
+					{_currCheckTarget} is not a player
+					{_currCheckTarget} doesn't have scoreboard tag "isNPC"
+					checkCanDamage({_owner}, {_currCheckTarget}) is true
+					set {_hasSight} to false
+					if {_sentry}.hasLineOfSight({_currCheckTarget}) is true:
+						set {_hasSight} to true
+					if {_hasSight}:
+						set {_distance} to distance between {_currCheckTarget} and {_sentry}
+						if {_distance} < {_dist}:
+							set {_target} to {_currCheckTarget}
+							set {_dist} to {_distance}
+			if {_nameSentry} is "蜘蛛女王":
+				if mod({_index}, 7) = 0:
+					{_target} is not {_owner}
+					set {_v} to (eye location of {_target}).subtract(eye location of {_sentry}).toVector()
+					vector length of {_v} > 0
+					set vector length of {_v} to 2.5
+					set {_bulletE} to (world of {_sentry}).spawnEntity((eye location of {_sentry}), EntityType.SPLASH_POTION)
+					set metadata "attrMap" of {_bulletE} to {_attrMap}
+					{_bulletE}.setVelocity({_v})
+					{_bulletE}.setShooter({_sentry})
+					{_bulletE}.setCustomName("蜘蛛卵")
+					projectileAI({_bulletE}, "ARROW")
+			else if {_nameSentry} is "月亮传送门":
+				if {_target} is {_owner}:
+					mod({_index}, 17) > 13
+					clear {_yaw}
+					clear {_pitch}
+				else:
+					if mod({_index}, 17) = 0:
+						set {_v} to (eye location of {_target}).subtract(eye location of {_sentry}).toVector()
+						if vector length of {_v} < 0.01:
+							set {_v} to vector(0, -1, 0)
+						set {_yaw} to vector yaw of {_v}
+						set {_pitch} to vector pitch of {_v} + 10
+				if mod({_index}, 17) <= 13:
+					{_yaw} is set
+					handleStrikeLine({_sentry}, {_yaw}, {_pitch}, 64, (a diamond), {_particleColor}, {_meleeCD}, false, {_advanced})
+					subtract 2 from {_pitch}
+			else if {_nameSentry} is "七彩水晶":
+				if mod({_index}, 5) = 0:
+					if mod(({_index} / 5), 2) = 0:
+						set {_loopInd} to 1
+					else:
+						set {_loopInd} to 5
+					loop 4 times:
+						set {_loopIdx} to {_loopInd} + loop-number-2
+						if {_locationExplode::%{_loopIdx}%} is set:
+							handleEntityExplodeAtLoc({_sentry}, {_sentry}, {_locationExplode::%{_loopIdx}%})
+							clear {_locationExplode::%{_loopIdx}%}
+					if {_target} is not {_owner}:
+						set {_color} to new ArrayList(1)
+						{_color}.add({_particleColor}.get(a random integer between 0 and (({_particleColor}.size()) - 1)))
+						loop (a random integer between 2 and 4) times:
+							set {_targetLoc} to (eye location of {_target}).add((a random number between -8 and 8), (a random number between -8 and 8), (a random number between -8 and 8))
+							set {_locationExplode::%{_loopInd}%} to {_targetLoc}
+							add 1 to {_loopInd}
+							set {_v} to {_targetLoc}.clone().subtract(eye location of {_sentry}).toVector()
+							handleParticleLine({_v}, (vector length of {_v}), 0.25, (eye location of {_sentry}), {_color})
+		add 1 to {_index}
+		add 1 to {_idx}
+		wait 3 ticks
+	
+	{_sentryList}.remove({_sentry})
+	{_sentry}.remove()
+function minionAI(minion: entity, owner: player, nameMinion: text, minionSlot: number):
 	add "noDamage" to scoreboard tags of {_minion}
 	add "isMinion" to scoreboard tags of {_minion}
 	set {_minionList} to metadata "minions" of {_owner}
 	set {_minionIndex} to metadata "nextMinionIndex" of {_owner}
 	set {_minionLimit} to (metadata "attrMap" of {_owner}).get("minionLimit")
-	if {_minionList}.size() < {_minionLimit}:
-		set {_minionIndex} to {_minionList}.size()
-	else:
-		set {_minionIndex} to mod({_minionIndex}, {_minionLimit})
-	if {_minionIndex} < {_minionList}.size():
-		try {_minionList}.get({_minionIndex}).remove()
-		{_minionList}.set({_minionIndex}, {_minion})
-	else:
-		{_minionList}.add({_minion})
-	set metadata "nextMinionIndex" of {_owner} to mod({_minionIndex} + 1, {_minionLimit})
+	loop {_minionSlot} times:
+		if {_minionList}.size() < {_minionLimit}:
+			set {_minionIndex} to {_minionList}.size()
+		else:
+			set {_minionIndex} to mod({_minionIndex}, {_minionLimit})
+		if {_minionIndex} < {_minionList}.size():
+			try {_minionList}.get({_minionIndex}).remove()
+			{_minionList}.set({_minionIndex}, {_minion})
+		else:
+			{_minionList}.add({_minion})
+		add 1 to {_minionIndex}
+	set metadata "nextMinionIndex" of {_owner} to mod({_minionIndex}, {_minionLimit})
 	set metadata "damageSourcePlayer" of {_minion} to {_owner}
 	set {_attrMap} to metadata "attrMap" of {_minion}
 	{_minion}.setRemoveWhenFarAway(false)
@@ -2632,7 +2814,7 @@ function minionAI(minion: entity, owner: player, nameMinion: text):
 				{_trailColor}.add("102|204|255")
 		else if {_nameMinion} is "致命球":
 			set gravity of {_minion} to off
-		else if {_nameMinion} is "小鬼":
+		else if {_nameMinion} is "小鬼" or "钨钢无人机":
 			set gravity of {_minion} to off
 			set {_minion}.getHandle().noclip to true
 		else:
@@ -2785,26 +2967,32 @@ function minionAI(minion: entity, owner: player, nameMinion: text):
 							if {_protectOwner} is false:
 								set {_dist} to -1
 								stop loop
-			if {_nameMinion} is "小鬼":
-				{_minion}.setCustomName("小鬼§%floor(mod({_index}, 8) / 2)%")
+			if {_nameMinion} is "小鬼" or "钨钢无人机":
+				if {_nameMinion} is "小鬼":
+					{_minion}.setCustomName("小鬼§%floor(mod({_index}, 8) / 2)%")
 				set {_targetLoc} to (eye location of {_target}).add(0, 3, 0)
 				set {_dVec} to {_targetLoc}.subtract(location of {_minion}).toVector()
 				vector length of {_dVec} > 0
-				set vector length of {_dVec} to min((vector length of {_dVec} / 8), 1.5)
+				set vector length of {_dVec} to min((vector length of {_dVec} / 12), 1)
 				set velocity of {_minion} to {_dVec}
 				
 				if {_index} >= 0:
 					{_target} is not {_owner}
 					set {_v} to (eye location of {_target}).subtract(location of {_minion}).toVector()
 					vector length of {_v} > 0
-					set vector length of {_v} to 1.5
+					if {_nameMinion} is "小鬼":
+						set vector length of {_v} to 1.5
+					else:
+						set vector length of {_v} to 1
 					set {_bulletE} to {_minion}.getWorld().spawnEntity({_minion}.getEyeLocation(), EntityType.SPLASH_POTION)
-					{_bulletE}.setCustomName("小火花")
 					set metadata "attrMap" of {_bulletE} to {_attrMap}
-					disguiseProjectile({_bulletE})
 					{_bulletE}.setVelocity({_v})
 					{_bulletE}.setShooter({_minion})
-					set metadata "penetration" of {_bulletE} to 1
+					if {_nameMinion} is "小鬼":
+						{_bulletE}.setCustomName("小火花")
+						set metadata "penetration" of {_bulletE} to 1
+					else:
+						{_bulletE}.setCustomName("钨钢光球")
 					set gravity of {_bulletE} to off
 					projectileAI({_bulletE}, "GUN")
 					set {_index} to a random integer between -5 and -10
@@ -2877,7 +3065,7 @@ function minionAI(minion: entity, owner: player, nameMinion: text):
 				set {_time} to {_dist} / 40
 				set {_offSet} to {_time} * {_time} / 2
 				add {_offSet} to y component of {_v}
-				set {_bulletE} to {_minion}.getWorld().spawnEntity({_minion}.getEyeLocation(), EntityType.ARROW)
+				set {_bulletE} to {_minion}.getWorld().spawnEntity({_minion}.getEyeLocation(), EntityType.SNOWBALL)
 				{_bulletE}.setCustomName("投矛")
 				set metadata "attrMap" of {_bulletE} to {_attrMap}
 				{_bulletE}.setVelocity({_v})

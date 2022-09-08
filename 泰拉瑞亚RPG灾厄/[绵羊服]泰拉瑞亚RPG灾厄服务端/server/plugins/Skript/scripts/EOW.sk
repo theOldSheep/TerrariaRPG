@@ -31,7 +31,7 @@ on rightclick:
 		play sound "entity.enderdragon.growl" with volume 10 and pitch 1 at {_spawnLoc}
 		set {_attrMap} to new HashMap()
 		{_attrMap}.put("crit", 0.04)
-		{_attrMap}.put("damage", 96)
+		{_attrMap}.put("damage", 144)
 		{_attrMap}.put("damageMeleeMulti", 1)
 		{_attrMap}.put("damageMulti", 1)
 		{_attrMap}.put("damageType", "Melee")
@@ -60,7 +60,7 @@ on rightclick:
 		spawn a slime at {_spawnLoc}
 		set {_eow} to spawned entity
 		set {_eow}.getHandle().goalSelector to {_goalSel}
-		set {_targets} to setupBossTarget({_eow}, 1, player, true, {_bossbar})
+		set {_targets} to setupBossTarget({_eow}, 0, player, true, {_bossbar})
 		{BOSS}.put("世界吞噬者", {_arlst})
 		set metadata "attrMap" of {_eow} to {_attrMap}.clone()
 		set metadata "targets" of {_eow} to {_targets}
@@ -68,10 +68,11 @@ on rightclick:
 		set name of {_eow} to "世界吞噬者"
 		{_arlst}.add(spawned entity)
 		handleEOW({_eow}, player, 0, {_attrMapBullet})
-		{_attrMap}.put("damage", 40)
+		{_attrMap}.put("damage", 56)
 		{_attrMap}.put("defence", 12)
 		set {_index} to 0
-		loop 70 times:
+		set {_length} to 70
+		loop ({_length} - 2) times:
 			spawn a slime at {_spawnLoc}
 			set {_eow} to spawned entity
 			set {_eow}.getHandle().goalSelector to {_goalSel}
@@ -82,7 +83,7 @@ on rightclick:
 			{_arlst}.add(spawned entity)
 			add 1 to {_index}
 			handleEOW({_eow}, player, {_index}, {_attrMapBullet})
-		{_attrMap}.put("damage", 34)
+		{_attrMap}.put("damage", 46)
 		{_attrMap}.put("defence", 20)
 		spawn a slime at {_spawnLoc}
 		set {_eow} to spawned entity
@@ -92,7 +93,7 @@ on rightclick:
 		set metadata "bossbar" of {_eow} to {_bossbar}
 		set name of {_eow} to "世界吞噬者"
 		{_arlst}.add(spawned entity)
-		handleEOW({_eow}, player, 29, {_attrMapBullet})
+		handleEOW({_eow}, player, ({_length} - 1), {_attrMapBullet})
 		
 		wait 3 ticks
 		set {_totalHealth} to 0
@@ -123,7 +124,7 @@ on rightclick:
 			name of {_player} is {_ply}
 			set {_tier} to metadata "tier" of {_player}
 			if {_targets}.get({_ply}) * 5 > ({_totalHealth}) / ({_targets}.size()):
-				if {_tier} = 1:
+				if {_tier} <= 1:
 					set metadata "tier" of {_player} to 2
 					set yml value "stats.tier" from file "plugins/PlayerData/%name of {_player}%.yml" to 2
 					add "waitingForMeteorShower" to scoreboard tags of {_player}
@@ -163,8 +164,8 @@ function handleEOW(eow: entity, ply: player, index: integer, bulletAttrMap: obje
 	
 	wait 1 tick
 	{_eow}.setInvulnerable(false)
-	set max health of {_eow} to round(420 * {_healthMulti})
-	set health of {_eow} to round(420 * {_healthMulti})
+	set max health of {_eow} to round(700 * {_healthMulti})
+	set health of {_eow} to round(700 * {_healthMulti})
 	
 	set {_target} to {_ply}
 	set {_totalTickSeg} to {_segments}.size() - 1
@@ -180,16 +181,16 @@ function handleEOW(eow: entity, ply: player, index: integer, bulletAttrMap: obje
 			if health of {_segments}.get({_index} - 1) > 0:
 				set {_AIType} to "Follow"
 		if {_AIType} is "Head":
-			{_attrMap}.put("damage", 96)
+			{_attrMap}.put("damage", 114)
 			{_attrMap}.put("defence", 8)
 		set {_isTail} to false
 		if {_index} = {_segments}.size() - 1:
 			set {_isTail} to true
-			{_attrMap}.put("damage", 34)
+			{_attrMap}.put("damage", 46)
 			{_attrMap}.put("defence", 20)
 		else if health of {_segments}.get({_index} + 1) <= 0:
 			set {_isTail} to true
-			{_attrMap}.put("damage", 34)
+			{_attrMap}.put("damage", 46)
 			{_attrMap}.put("defence", 20)
 		
 		if {_AIType} is "Head":

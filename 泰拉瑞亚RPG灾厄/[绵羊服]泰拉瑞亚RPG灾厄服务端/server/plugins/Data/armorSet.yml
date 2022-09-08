@@ -11,6 +11,22 @@ pieces:
         - 仙人掌套装
     仙人掌护腿:
         - 仙人掌套装
+    钨钢战盔:
+        - 钨钢近战套装
+    钨钢头饰:
+        - 钨钢远程魔法套装
+    钨钢兜帽:
+        - 钨钢远程魔法套装
+    钨钢头罩:
+        - 钨钢召唤套装
+    钨钢盔甲:
+        - 钨钢近战套装
+        - 钨钢远程魔法套装
+        - 钨钢召唤套装
+    钨钢护胫:
+        - 钨钢近战套装
+        - 钨钢远程魔法套装
+        - 钨钢召唤套装
     忍者头盔:
         - 忍者套装
     忍者胸甲:
@@ -228,6 +244,29 @@ sets:
             - "§a套装效果： +2 防御"
         attributes:
             - "defence: 2"
+    钨钢近战套装:
+        lore:
+            - ""
+            - "§a套装效果： +6 防御"
+            - "§a增加刷怪量和刷怪率"
+        attributes:
+            - "defence: 6"
+            - "mobLimit: 1"
+            - "mobSpawnRateMulti: 0.1"
+    钨钢远程魔法套装:
+        lore:
+            - ""
+            - "§a套装效果： +6 防御"
+        attributes:
+            - "defence: 6"
+    钨钢召唤套装:
+        lore:
+            - ""
+            - "§a套装效果： +6 防御"
+            - "§a+1召唤栏"
+        attributes:
+            - "defence: 6"
+            - "minionLimit: 1"
     忍者套装:
         lore:
             - ""
@@ -417,6 +456,7 @@ sets:
             - "critRanged: 10"
             - "speed: -0.075"
             - "mobLimit: -1"
+            - "mobSpawnRateMulti: -0.1"
     寒霜套装:
         lore:
             - ""
@@ -466,3 +506,4 @@ sets:
             - "critRanged: 20"
             - "speed: -0.05"
             - "mobLimit: -2"
+            - "mobSpawnRateMulti: -0.2"

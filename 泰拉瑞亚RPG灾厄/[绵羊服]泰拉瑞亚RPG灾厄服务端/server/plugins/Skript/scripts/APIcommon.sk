@@ -15,7 +15,9 @@ import:
 	lk.vexview.tag.TagDirection
 	me.libraryaddict.disguise.DisguiseAPI
 	me.libraryaddict.disguise.disguisetypes.DisguiseType
+	me.libraryaddict.disguise.disguisetypes.MiscDisguise
 	me.libraryaddict.disguise.disguisetypes.MobDisguise
+	me.libraryaddict.disguise.disguisetypes.watchers.SplashPotionWatcher
 	net.minecraft.server.v1_11_R1.EntitySlime
 	net.minecraft.server.v1_11_R1.Items
 	net.minecraft.server.v1_11_R1.PacketPlayOutSetCooldown
@@ -140,17 +142,20 @@ function getMoonPhase() :: number:
 	set {_day} to floor({_world}.getFullTime() / 24000)
 	return mod({_day}, 8)
 function disguiseProjectile(projectile: entity):
-	"%{_projectile}.getType()%" is "SPLASH_POTION"
-	set {_name} to {_projectile}.getCustomName()
-	{_name} is set
-	set {_disguiseItem} to new ItemStack(Material.SPLASH_POTION)
-	set {_itemMeta} to {_disguiseItem}.getItemMeta()
-	{_itemMeta}.setDisplayName({_name})
-	{_itemMeta}.setColor(BukkitColor.fromRGB(255, 255, 255))
-	{_disguiseItem}.setItemMeta({_itemMeta})
-	{_projectile}.setItem({_disguiseItem})
-	if {_name} contains "激光":
-		set glowing of {_projectile} to on
+	if "%{_projectile}.getType()%" is "SPLASH_POTION":
+		set {_name} to {_projectile}.getCustomName()
+		{_name} is set
+		set {_disguiseItem} to new ItemStack(Material.SPLASH_POTION)
+		set {_itemMeta} to {_disguiseItem}.getItemMeta()
+		{_itemMeta}.setDisplayName({_name})
+		{_itemMeta}.setColor(BukkitColor.fromRGB(255, 255, 255))
+		{_disguiseItem}.setItemMeta({_itemMeta})
+		{_projectile}.setItem({_disguiseItem})
+		if {_name} contains "激光":
+			set glowing of {_projectile} to on
+	else if "%{_projectile}.getType()%" is "SNOWBALL":
+		set {_disguise} to new MiscDisguise(DisguiseType.ARROW)
+		DisguiseAPI.disguiseEntity({_projectile}, {_disguise})
 function getWorth(name: text) :: integer:
 	if {_name} contains "的 ":
 		set {_prefix} to {_name}.split("的 ")[0]
@@ -217,10 +222,10 @@ function checkMobTarget(target: entity, mob: entity) :: boolean:
 		{_target} doesn't have scoreboard tag "unauthorized"
 		gamemode of {_target} is survival
 		world of {_target} is world of {_mob}
-		set {_distX} to (x-coordinate of {_mob}) - (x-coordinate of {_target})
-		set {_distZ} to (z-coordinate of {_mob}) - (z-coordinate of {_target})
-		set {_horDist} to sqrt({_distX} * {_distX} + {_distZ} * {_distZ})
-		if {_horDist} > 64:
+		set {_distX} to abs((x-coordinate of {_mob}) - (x-coordinate of {_target}))
+		set {_distZ} to abs((z-coordinate of {_mob}) - (z-coordinate of {_target}))
+		set {_horDist} to max({_distX}, {_distZ})
+		if {_horDist} > 48:
 			return false
 		return true
 	return false
@@ -1213,8 +1218,10 @@ function resetPlayerStats(ply: player):
 	set metadata "autoSwing" of {_ply} to false
 	set metadata "swingAmount" of {_ply} to 0
 	set metadata "minions" of {_ply} to new ArrayList()
+	set metadata "sentries" of {_ply} to new ArrayList()
 	set metadata "hooks" of {_ply} to new ArrayList()
 	set metadata "nextMinionIndex" of {_ply} to 0
+	set metadata "nextSentryIndex" of {_ply} to 0
 	set metadata "mobAmount" of {_ply} to 0
 	set metadata "toolChanged" of {_ply} to false
 	set metadata "useCD" of {_ply} to false
@@ -1439,6 +1446,67 @@ function applyCD(ply: player, cd: number):
 			else:
 				set metadata "autoSwing" of {_ply} to false
 
+function createTracingBullet(dPly: entity, loc: location, num: number, healingOrDamage: boolean, color: text):
+	set {_particleColor} to new ArrayList(1)
+	{_particleColor}.add({_color})
+	if {_healingOrDamage} is true:
+		set {_targetHealth} to 100000
+		loop all players:
+			world of loop-player is world of {_dPly}
+			distance between loop-player and {_loc} <= 48
+			gamemode of loop-player is survival
+			health of loop-player < {_targetHealth}
+			health of loop-player < max health of loop-player
+			(metadata "team" of loop-player) is (metadata "team" of {_dPly})
+			set {_targetHealth} to health of loop-player
+			set {_target} to loop-player
+	else:
+		loop all entities in radius 24 of {_loc}:
+			loop-value has scoreboard tag "isMonster"
+			health of loop-value > 0
+			checkCanDamage({_dPly}, loop-value) is true
+			set {_target} to loop-value
+			stop loop
+	{_target} is set
+	set {_v} to a random vector
+	set {_vLength} to 0.5
+	set {_world} to world of {_target}
+	loop 240 times:
+		if world of {_target} is not {_world}:
+			stop trigger
+		if health of {_target} <= 0:
+			stop trigger
+		
+		if loop-number > 5:
+			if loop-number = 6:
+				set {_vLength} to 4
+			set {_dist} to distance between {_loc} and eye location of {_target}
+			if {_dist} < {_vLength}:
+				set {_v} to (eye location of {_target}).subtract({_loc}).toVector()
+				set {_vLength} to {_dist}
+				set {_dist} to -1
+			else:
+				set {_dV} to (eye location of {_target}).subtract({_loc}).toVector()
+				vector length of {_dV} > 0
+				if vector length of {_v} > 0:
+					set vector length of {_v} to min(sqrt(vector length of {_dV}), 4)
+				set vector length of {_dV} to 4
+				{_v}.add({_dV})
+				add 0.25 to {_vLength}
+			if {_dist} < 0:
+				if {_healingOrDamage} is true:
+					gamemode of {_target} is survival
+					heal {_target} by {_num}
+					displayHolo({_target}, {_num}, false, "回血")
+				else:
+					handleDamage({_target}, {_dPly}, {_num}, "spectre")
+				stop trigger
+		else:
+			add 0.1 to {_vLength}
+		set vector length of {_v} to {_vLength}
+		handleParticleLine({_v}, {_vLength}, 0.01, {_loc}, {_particleColor})
+		{_loc}.add({_v})
+		wait 2 ticks
 function playerMagicArmorEvent(dPly: entity, v: entity, dmg: number):
 	{_v} has scoreboard tag "isMonster"
 	set {_armorSet} to metadata "armorSet" of {_dPly}
@@ -1470,69 +1538,9 @@ function playerMagicArmorEvent(dPly: entity, v: entity, dmg: number):
 		{_dPly} is online
 		remove "tempSpectreCD" from scoreboard tags of {_dPly}
 		if {_armorSet} is "幽灵吸血套装":
-			if {BOSS}.containsKey("月球领主"):
-				stop trigger
-			set {_num} to ceil({_dmg} * 0.06)
-			set {_targetHealth} to 100000
-			loop all players:
-				world of loop-player is world of {_dPly}
-				distance between loop-player and location of {_v} <= 48
-				gamemode of loop-player is survival
-				health of loop-player < {_targetHealth}
-				(metadata "team" of loop-player) is (metadata "team" of {_dPly})
-				set {_targetHealth} to health of loop-player
-				set {_target} to loop-player
+			createTracingBullet({_dPly}, (eye location of {_v}), ceil({_dmg} * 0.06), true, "255|255|255")
 		else:
-			set {_num} to ceil({_dmg} / 2)
-			loop all entities in radius 24 of {_v}:
-				loop-value has scoreboard tag "isMonster"
-				health of loop-value > 0
-				checkCanDamage({_dPly}, loop-value) is true
-				loop-value is not {_v}
-				set {_target} to loop-value
-				stop loop
-		{_target} is set
-		set {_loc} to eye location of {_v}
-		set {_v} to a random vector
-		set {_vLength} to 4
-		set {_world} to world of {_target}
-		set {_particleColor} to new ArrayList(1)
-		{_particleColor}.add("255|255|255")
-		loop 240 times:
-			if world of {_target} is not {_world}:
-				stop trigger
-			if health of {_target} <= 0:
-				stop trigger
-			
-			set {_dist} to distance between {_loc} and eye location of {_target}
-			if {_dist} < {_vLength}:
-				set {_v} to (eye location of {_target}).subtract({_loc}).toVector()
-				set {_vLength} to {_dist}
-				set {_dist} to -1
-			else:
-				set {_dV} to (eye location of {_target}).subtract({_loc}).toVector()
-				vector length of {_dV} > 0
-				if vector length of {_v} > 0:
-					set vector length of {_v} to min(sqrt(vector length of {_dV}), 4)
-				set vector length of {_dV} to 4
-				{_v}.add({_dV})
-				{_vLength} = {_vLength} + 0.25
-			
-			set vector length of {_v} to {_vLength}
-			handleParticleLine({_v}, {_vLength}, 0.01, {_loc}, {_particleColor})
-			{_loc}.add({_v})
-			
-			if {_dist} < 0:
-				if {_armorSet} is "幽灵吸血套装":
-					gamemode of {_target} is survival
-					heal {_target} by {_num}
-					displayHolo({_target}, {_num}, false, "回血")
-				else:
-					handleDamage({_target}, {_dPly}, {_num}, "spectre")
-				stop trigger
-			
-			wait 2 ticks
-			
+			createTracingBullet({_dPly}, (eye location of {_v}), ceil({_dmg} / 2), false, "255|255|255")
 
 function entityDamageEvent(d: entity, dPly: entity, v: entity, damageTaker: entity, dmg: number, damageCause: text) :: boolean:
 	if {_d} is not set:
@@ -1729,6 +1737,7 @@ function handleDeath(v: entity, dPly: entity, d: entity, damageCause: text):
 		threadRegen({_v})
 		set metadata "isLoadingWeapon" of {_ply} to false
 		set metadata "nextMinionIndex" of {_v} to 0
+		set metadata "nextSentryIndex" of {_v} to 0
 	else:
 		if {_dPly} is a player:
 			if trimText({_v}.getCustomName()) is "七彩草蛉":
@@ -2336,22 +2345,28 @@ function handleStrikeLine(ply: entity, yaw: number, pitch: number, length: numbe
 		else:
 			{_world}.spawnParticle(Particle.REDSTONE, {_loc}, 0, ({_c1}.getRed() / 255 - 1), ({_c1}.getGreen() / 255), ({_c1}.getBlue() / 255))
 	return {_damage}
-function handleEntityExplode(entity: entity, exception: entity):
+function handleEntityExplodeAtLoc(entity: entity, exception: entity, loc: location):
 	set {_radius} to 2
 	set {_radius} to yml value "%{_entity}.getCustomName()%.radius" from file "plugins/Data/weapons.yml"
+	set {_damageShooter} to false
+	set {_damageShooter} to yml value "%{_entity}.getCustomName()%.damageShooter" from file "plugins/Data/weapons.yml"
 	set {_damage} to (metadata "attrMap" of {_entity}).get("damage")
 	set {_damagetype} to (metadata "attrMap" of {_entity}).get("damageType")
 	set {_destroyBlock} to yml value "%{_entity}.getCustomName()%.destroyBlock" from file "plugins/Data/weapons.yml"
 	if {_radius} < 3:
-		play large explosion on {_entity}
+		play large explosion at {_loc}
+	else if {_radius} < 5:
+		play huge explosion at {_loc}
 	else:
-		play huge explosion on {_entity}
-	play sound "entity.generic.explode" with volume 1 and pitch 1 at location of {_entity}
-	set {_entities} to {_entity}.getWorld().getNearbyEntities({_entity}.getLocation(), {_radius}, {_radius}, {_radius})
-	if name of {_entity} is "爆炸弹" or "手榴弹" or "炸弹" or "粘性炸弹" or "雷管" or "粘性雷管":
-		set {_damageShooter} to true
-	else:
-		set {_damageShooter} to false
+		set {_rangeParticlePositive} to {_radius} - 4
+		set {_rangeParticleNegative} to 4 - {_radius}
+		set {_loopTime} to ceil({_radius} * {_radius} / 4)
+		loop {_loopTime} times:
+			set {_locParticle} to {_loc}.clone().add((a random number between {_rangeParticlePositive} and {_rangeParticleNegative}), (a random number between {_rangeParticlePositive} and {_rangeParticleNegative}), (a random number between {_rangeParticlePositive} and {_rangeParticleNegative}))
+			play huge explosion at {_locParticle}
+	play sound "entity.generic.explode" with volume 1 and pitch 1 at {_loc}
+	
+	set {_entities} to (world of {_entity}).getNearbyEntities({_loc}, {_radius}, {_radius}, {_radius})
 	loop ...{_entities}:
 		set {_victim} to loop-value
 		if {_victim} is not living entity:
@@ -2372,9 +2387,11 @@ function handleEntityExplode(entity: entity, exception: entity):
 		{_ply} is a player
 		set {_ply} to {_ply} parsed as player
 		
-		loop all blocks in radius {_radius} of {_entity}:
+		loop all blocks in radius {_radius} of {_loc}:
 			loop-block is not bedrock
 			loop-block is solid
 			set {_breakEvent} to new BlockBreakEvent(loop-block, {_ply})
 			if {_breakEvent}.callEvent() is true:
 				loop-block.breakNaturally()
+function handleEntityExplode(entity: entity, exception: entity):
+	handleEntityExplodeAtLoc({_entity}, {_exception}, (location of {_entity}))

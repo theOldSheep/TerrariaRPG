@@ -57,12 +57,14 @@ effects:
         icon: "https://static.wikia.nocookie.net/terraria_gamepedia/images/7/70/Battle"
         isBuff: true
         attributes:
-            - "mobLimit: 5"
+            - "mobLimit: 10"
+            - "mobSpawnRateMulti: 1"
     冷静:
         icon: "https://static.wikia.nocookie.net/terraria_gamepedia/images/2/20/Calm"
         isBuff: true
         attributes:
             - "mobLimit: -1"
+            - "mobSpawnRateMulti: -0.2"
     耐力:
         icon: "https://static.wikia.nocookie.net/terraria_gamepedia/images/0/0a/Endurance"
         isBuff: true
@@ -76,6 +78,7 @@ effects:
         isBuff: true
         attributes:
             - "mobLimit: -1"
+            - "mobSpawnRateMulti: -0.1"
     铁皮:
         icon: "https://static.wikia.nocookie.net/terraria_gamepedia/images/3/3d/Ironskin"
         isBuff: true

@@ -156,139 +156,195 @@ FURNACE:
 ANVIL:
   '1':
     requireLevel: 1
+    resultItem: 钨钢刀
+    requireItem:
+    - 钨钢金属废料:12
+  '2':
+    requireLevel: 1
+    resultItem: 钨钢法杖
+    requireItem:
+    - 钨钢金属废料:12
+  '3':
+    requireLevel: 1
+    resultItem: 钨钢弓
+    requireItem:
+    - 钨钢金属废料:10
+  '4':
+    requireLevel: 1
+    resultItem: 钨钢控制器
+    requireItem:
+    - 钨钢金属废料:9
+  '5':
+    requireLevel: 1
+    resultItem: 钨钢战盔
+    requireItem:
+    - 钨钢金属废料:5
+    - 能源核心
+  '6':
+    requireLevel: 1
+    resultItem: 钨钢头饰
+    requireItem:
+    - 钨钢金属废料:5
+    - 能源核心
+  '7':
+    requireLevel: 1
+    resultItem: 钨钢兜帽
+    requireItem:
+    - 钨钢金属废料:5
+    - 能源核心
+  '8':
+    requireLevel: 1
+    resultItem: 钨钢头罩
+    requireItem:
+    - 钨钢金属废料:5
+    - 能源核心
+  '9':
+    requireLevel: 1
+    resultItem: 钨钢盔甲
+    requireItem:
+    - 钨钢金属废料:12
+    - 能源核心
+  '10':
+    requireLevel: 1
+    resultItem: 钨钢护胫
+    requireItem:
+    - 钨钢金属废料:8
+    - 能源核心
+  '11':
+    requireLevel: 1
     resultItem: 铜质短剑
     requireItem:
     - 铜锭:9
-  '2':
+  '12':
     requireLevel: 1
     resultItem: 铜质阔剑
     requireItem:
     - 铜锭:16
-  '3':
+  '13':
     requireLevel: 1
     resultItem: 铜质短弓
     requireItem:
     - 铜锭:9
-  '4':
+  '14':
     requireLevel: 1
     resultItem: 铁弓
     requireItem:
     - 铁锭:9
-  '5':
+  '15':
     requireLevel: 1
     resultItem: 铁短剑
     requireItem:
     - 铁锭:9
-  '6':
+  '16':
     requireLevel: 1
     resultItem: 铁阔剑
     requireItem:
     - 铁锭:16
-  '7':
+  '17':
     requireLevel: 1
     resultItem: 银短剑
     requireItem:
     - 银锭:9
-  '8':
+  '18':
     requireLevel: 1
     resultItem: 银阔剑
     requireItem:
     - 银锭:17
-  '9':
+  '19':
     requireLevel: 1
     resultItem: 银弓
     requireItem:
     - 银锭:9
-  '10':
+  '20':
     requireLevel: 1
     resultItem: 金弓
     requireItem:
     - 金锭:10
-  '11':
+  '21':
     requireLevel: 1
     resultItem: 金短剑
     requireItem:
     - 金锭:10
-  '12':
+  '22':
     requireLevel: 1
     resultItem: 金阔剑
     requireItem:
     - 金锭:18
-  '13':
+  '23':
     requireLevel: 1
     resultItem: 光之驱逐
     requireItem:
     - 恶魔锭:18
-  '14':
+  '24':
     requireLevel: 1
     resultItem: 陨星光剑
     requireItem:
     - 陨星锭:18
     - 钻石:10
-  '15':
+  '25':
     requireLevel: 1
     resultItem: 草薙剑
     requireItem:
     - 毒刺:12
     - 丛林孢子:18
-  '16':
+  '26':
     requireLevel: 1
     resultItem: 烈焰剑
     requireItem:
     - 狱炎锭:25
-  '17':
+  '27':
     requireLevel: 1
     resultItem: 恶魔弓
     requireItem:
     - 恶魔锭:16
-  '18':
+  '28':
     requireLevel: 1
     resultItem: 钻石法杖
     requireItem:
     - 金锭:20
     - 钻石:10
-  '19':
+  '29':
     requireLevel: 1
     resultItem: 银子弹:70
     requireItem:
     - 银锭
     - 火枪子弹:70
-  '20':
+  '30':
     requireLevel: 1
     resultItem: 陨星弹:70
     requireItem:
     - 陨星锭
     - 火枪子弹:70
-  '21':
+  '31':
     requireLevel: 1
     resultItem: 邪箭:25
     requireItem:
     - 木箭:25
     - 恶魔锭
-  '22':
+  '32':
     requireLevel: 1
     resultItem: 狱炎箭:100
     requireItem:
     - 木箭:100
     - 狱炎锭
-  '23':
+  '33':
     requireLevel: 1
     resultItem: 荆棘旋刃
     requireItem:
     - 毒刺:12
     - 丛林孢子:18
-  '24':
+  '34':
     requireLevel: 1
     resultItem: 烈焰回旋镖
     requireItem:
     - 附魔回力镖
     - 狱炎锭:15
-  '25':
+  '35':
     requireLevel: 1
     resultItem: 抑郁球
     requireItem:
     - 恶魔锭:18
-  '26':
+  '36':
     requireLevel: 1
     resultItem: 亚马逊悠悠球
     requireItem:
@@ -296,366 +352,371 @@ ANVIL:
     - 木材:17
     - 丛林孢子:7
     - 毒刺:6
-  '27':
+  '37':
     requireLevel: 1
     resultItem: 铜头盔
     requireItem:
     - 铜锭:20
-  '28':
+  '38':
     requireLevel: 1
     resultItem: 铜链甲
     requireItem:
     - 铜锭:30
-  '29':
+  '39':
     requireLevel: 1
     resultItem: 铜护胫
     requireItem:
     - 铜锭:25
-  '30':
+  '40':
     requireLevel: 1
     resultItem: 铁头盔
     requireItem:
     - 铁锭:25
-  '31':
+  '41':
     requireLevel: 1
     resultItem: 铁链甲
     requireItem:
     - 铁锭:35
-  '32':
+  '42':
     requireLevel: 1
     resultItem: 铁护胫
     requireItem:
     - 铁锭:30
-  '33':
+  '43':
     requireLevel: 1
     resultItem: 银头盔
     requireItem:
     - 银锭:25
-  '34':
+  '44':
     requireLevel: 1
     resultItem: 银链甲
     requireItem:
     - 银锭:35
-  '35':
+  '45':
     requireLevel: 1
     resultItem: 银护胫
     requireItem:
     - 银锭:30
-  '36':
+  '46':
     requireLevel: 1
     resultItem: 金头盔
     requireItem:
     - 金锭:30
-  '37':
+  '47':
     requireLevel: 1
     resultItem: 金链甲
     requireItem:
     - 金锭:40
-  '38':
+  '48':
     requireLevel: 1
     resultItem: 金护胫
     requireItem:
     - 金锭:35
-  '39':
+  '49':
     requireLevel: 1
     resultItem: 流星头盔
     requireItem:
     - 陨星锭:10
-  '40':
+  '50':
     requireLevel: 1
     resultItem: 流星护甲
     requireItem:
     - 陨星锭:20
-  '41':
+  '51':
     requireLevel: 1
     resultItem: 流星护腿
     requireItem:
     - 陨星锭:15
-  '42':
+  '52':
     requireLevel: 1
     resultItem: 暗影头盔
     requireItem:
     - 恶魔锭:20
     - 暗影鳞片:15
-  '43':
+  '53':
     requireLevel: 1
     resultItem: 暗影鳞甲
     requireItem:
     - 恶魔锭:30
     - 暗影鳞片:25
-  '44':
+  '54':
     requireLevel: 1
     resultItem: 暗影护胫
     requireItem:
     - 恶魔锭:25
     - 暗影鳞片:20
-  '45':
+  '55':
     requireLevel: 1
     resultItem: 熔岩头盔
     requireItem:
     - 狱炎锭:20
-  '46':
+  '56':
     requireLevel: 1
     resultItem: 熔岩胸甲
     requireItem:
     - 狱炎锭:30
-  '47':
+  '57':
     requireLevel: 1
     resultItem: 熔岩护胫
     requireItem:
     - 狱炎锭:25
-  '48':
+  '58':
     requireLevel: 1
     resultItem: 空桶
     requireItem:
     - 铁锭:3
-  '49':
+  '59':
     requireLevel: 1
     resultItem: 铜镐
     requireItem:
     - 铜锭:8
     - 木材:4
-  '50':
+  '60':
     requireLevel: 1
     resultItem: 铁镐
     requireItem:
     - 铁锭:8
     - 木材:4
-  '51':
+  '61':
     requireLevel: 1
     resultItem: 银镐
     requireItem:
     - 银锭:8
     - 木材:4
-  '52':
+  '62':
     requireLevel: 1
     resultItem: 金镐
     requireItem:
     - 金锭:8
     - 木材:4
-  '53':
+  '63':
     requireLevel: 1
     resultItem: 恶魔镐
     requireItem:
     - 恶魔锭:12
     - 暗影鳞片:6
-  '54':
+  '64':
     requireLevel: 1
     resultItem: 熔火镐
     requireItem:
     - 狱炎锭:20
-  '55':
+  '65':
     requireLevel: 1
     resultItem: 地狱熔炉
     requireItem:
     - 石头:32
     - 狱炎矿:16
-  '56':
+  '66':
     requireLevel: 1
     resultItem: 太空枪
     requireItem:
     - 陨星锭:20
-  '57':
+  '67':
     requireLevel: 1
     resultItem: 气泵枪
     requireItem:
     - 南瓜:30
     - 非法枪械部件
     - 南瓜种子:5
-  '58':
+  '68':
     requireLevel: 1
     resultItem: 凤凰爆破枪
     requireItem:
     - 手枪
     - 狱炎锭:15
-  '59':
+  '69':
     requireLevel: 1
     resultItem: 熔火之怒
     requireItem:
     - 狱炎锭:20
-  '60':
+  '70':
     requireLevel: 1
     resultItem: 小鬼法杖
     requireItem:
     - 狱炎锭:20
-  '61':
+  '71':
     requireLevel: 1
     resultItem: 铁轨:50
     requireItem:
     - 铁锭:2
     - 木材:2
-  '62':
+  '72':
     requireLevel: 1
     resultItem: 蜘蛛法杖
     requireItem:
     - 蜘蛛牙:16
-  '63':
+  '73':
+    requireLevel: 1
+    resultItem: 蜘蛛女王法杖
+    requireItem:
+    - 蜘蛛牙:24
+  '74':
     requireLevel: 1
     resultItem: 蜘蛛面具
     requireItem:
     - 蜘蛛牙:8
-  '64':
+  '75':
     requireLevel: 1
     resultItem: 蜘蛛胸甲
     requireItem:
     - 蜘蛛牙:16
-  '65':
+  '76':
     requireLevel: 1
     resultItem: 蜘蛛护胫
     requireItem:
     - 蜘蛛牙:12
-  '66':
+  '77':
     requireLevel: 2
     resultItem: 精金熔炉
     requireItem:
     - 精金矿:30
     - 地狱熔炉
-  '67':
+  '78':
     requireLevel: 1
     resultItem: 秘银砧
     requireItem:
     - 秘银锭:10
-  '68':
+  '79':
     requireLevel: 1
     resultItem: 钴镐
     requireItem:
     - 钴锭:15
-  '69':
+  '80':
     requireLevel: 1
     resultItem: 钴剑
     requireItem:
     - 钴锭:10
-  '70':
+  '81':
     requireLevel: 1
     resultItem: 钴连弩
     requireItem:
     - 钴锭:10
-  '71':
+  '82':
     requireLevel: 1
     resultItem: 钴帽
     requireItem:
     - 钴锭:10
-  '72':
+  '83':
     requireLevel: 1
     resultItem: 钴头盔
     requireItem:
     - 钴锭:10
-  '73':
+  '84':
     requireLevel: 1
     resultItem: 钴面具
     requireItem:
     - 钴锭:10
-  '74':
+  '85':
     requireLevel: 1
     resultItem: 钴胸甲
     requireItem:
     - 钴锭:20
-  '75':
+  '86':
     requireLevel: 1
     resultItem: 钴护腿
     requireItem:
     - 钴锭:15
-  '76':
+  '87':
     requireLevel: 2
     resultItem: 秘银镐
     requireItem:
     - 秘银锭:15
-  '77':
+  '88':
     requireLevel: 2
     resultItem: 秘银剑
     requireItem:
     - 秘银锭:10
-  '78':
+  '89':
     requireLevel: 2
     resultItem: 秘银连弩
     requireItem:
     - 秘银锭:10
-  '79':
+  '90':
     requireLevel: 2
     resultItem: 秘银帽
     requireItem:
     - 秘银锭:10
-  '80':
+  '91':
     requireLevel: 2
     resultItem: 秘银头盔
     requireItem:
     - 秘银锭:10
-  '81':
+  '92':
     requireLevel: 2
     resultItem: 秘银兜帽
     requireItem:
     - 秘银锭:10
-  '82':
+  '93':
     requireLevel: 2
     resultItem: 秘银链甲
     requireItem:
     - 秘银锭:20
-  '83':
+  '94':
     requireLevel: 2
     resultItem: 秘银护胫
     requireItem:
     - 秘银锭:15
-  '84':
+  '95':
     requireLevel: 2
     resultItem: 精金镐
     requireItem:
     - 精金锭:18
-  '85':
+  '96':
     requireLevel: 2
     resultItem: 精金剑
     requireItem:
     - 精金锭:12
-  '86':
+  '97':
     requireLevel: 2
     resultItem: 精金连弩
     requireItem:
     - 精金锭:12
-  '87':
+  '98':
     requireLevel: 2
     resultItem: 精金头饰
     requireItem:
     - 精金锭:12
-  '88':
+  '99':
     requireLevel: 2
     resultItem: 精金头盔
     requireItem:
     - 精金锭:12
-  '89':
+  '100':
     requireLevel: 2
     resultItem: 精金面具
     requireItem:
     - 精金锭:12
-  '90':
+  '101':
     requireLevel: 2
     resultItem: 精金胸甲
     requireItem:
     - 精金锭:24
-  '91':
+  '102':
     requireLevel: 2
     resultItem: 精金护腿
     requireItem:
     - 精金锭:18
-  '92':
+  '103':
     requireLevel: 2
     resultItem: 巨兽鲨
     requireItem:
     - 迷你鲨
     - 非法枪械部件
     - 力量之魂:20
-  '93':
+  '104':
     requireLevel: 2
     resultItem: 玛瑙爆破枪
     requireItem:
     - 四管猎枪
     - 暗黑碎块:2
     - 暗影之魂:10
-  '94':
+  '105':
     requireLevel: 2
     resultItem: 裂天剑
     requireItem:
     - 光明碎块:2
     - 光明之魂:16
-  '95':
+  '106':
     requireLevel: 2
     resultItem: 太极连枷
     requireItem:
@@ -663,13 +724,13 @@ ANVIL:
     - 光明碎块
     - 暗影之魂:7
     - 光明之魂:7
-  '96':
+  '107':
     requireLevel: 2
     resultItem: 水晶风暴
     requireItem:
     - 水晶碎块:20
     - 光明之魂:15
-  '97':
+  '108':
     requireLevel: 2
     resultItem: 魔眼法杖
     requireItem:
@@ -677,71 +738,71 @@ ANVIL:
     - 晶状体:2
     - 神圣锭:12
     - 视域之魂:20
-  '98':
+  '109':
     requireLevel: 2
     resultItem: 圣箭:100
     requireItem:
     - 木箭:100
     - 独角兽角
     - 妖精尘:3
-  '99':
+  '110':
     requireLevel: 2
     resultItem: 诅咒箭:64
     requireItem:
     - 木箭:64
     - 诅咒焰
-  '100':
+  '111':
     requireLevel: 2
     resultItem: 叶绿箭:96
     requireItem:
     - 叶绿锭
-  '101':
+  '112':
     requireLevel: 2
     resultItem: 毒液箭:35
     requireItem:
     - 木箭:35
     - 小瓶毒液
-  '102':
+  '113':
     requireLevel: 2
     resultItem: 绿藻弹:64
     requireItem:
     - 叶绿锭
-  '103':
+  '114':
     requireLevel: 2
     resultItem: 水晶子弹:100
     requireItem:
     - 火枪子弹:100
     - 水晶碎块
-  '104':
+  '115':
     requireLevel: 2
     resultItem: 诅咒弹:100
     requireItem:
     - 火枪子弹:100
     - 诅咒焰
-  '105':
+  '116':
     requireLevel: 2
     resultItem: 寒霜头盔
     requireItem:
     - 神圣锭:10
     - 寒霜核
-  '106':
+  '117':
     requireLevel: 2
     resultItem: 寒霜胸甲
     requireItem:
     - 神圣锭:20
     - 寒霜核
-  '107':
+  '118':
     requireLevel: 2
     resultItem: 寒霜护腿
     requireItem:
     - 神圣锭:16
     - 寒霜核
-  '108':
+  '119':
     requireLevel: 2
     resultItem: 迪朗达尔
     requireItem:
     - 神圣锭:12
-  '109':
+  '120':
     requireLevel: 2
     resultItem: 镐斧
     requireItem:
@@ -749,52 +810,52 @@ ANVIL:
     - 恐惧之魂
     - 力量之魂
     - 视域之魂
-  '110':
+  '121':
     requireLevel: 2
     resultItem: 永恒之枪
     requireItem:
     - 神圣锭:12
-  '111':
+  '122':
     requireLevel: 2
     resultItem: 圣剑
     requireItem:
     - 神圣锭:12
-  '112':
+  '123':
     requireLevel: 2
     resultItem: 神圣连弩
     requireItem:
     - 神圣锭:12
-  '113':
+  '124':
     requireLevel: 2
     resultItem: 神圣头饰
     requireItem:
     - 神圣锭:12
-  '114':
+  '125':
     requireLevel: 2
     resultItem: 神圣头盔
     requireItem:
     - 神圣锭:12
-  '115':
+  '126':
     requireLevel: 2
     resultItem: 神圣兜帽
     requireItem:
     - 神圣锭:12
-  '116':
+  '127':
     requireLevel: 2
     resultItem: 神圣面具
     requireItem:
     - 神圣锭:12
-  '117':
+  '128':
     requireLevel: 2
     resultItem: 神圣板甲
     requireItem:
     - 神圣锭:24
-  '118':
+  '129':
     requireLevel: 2
     resultItem: 神圣护胫
     requireItem:
     - 神圣锭:18
-  '119':
+  '130':
     requireLevel: 2
     resultItem: 机械骷髅头
     requireItem:
@@ -802,21 +863,21 @@ ANVIL:
     - 铁锭:5
     - 光明之魂:3
     - 暗影之魂:3
-  '120':
+  '131':
     requireLevel: 2
     resultItem: 机械魔眼
     requireItem:
     - 晶状体:3
     - 铁锭:5
     - 光明之魂:6
-  '121':
+  '132':
     requireLevel: 2
     resultItem: 机械蠕虫
     requireItem:
     - 腐肉:6
     - 铁锭:5
     - 暗影之魂:6
-  '122':
+  '133':
     requireLevel: 2
     resultItem: 真·永夜之刃
     requireItem:
@@ -824,41 +885,41 @@ ANVIL:
     - 恐惧之魂:20
     - 力量之魂:20
     - 视域之魂:20
-  '123':
+  '134':
     requireLevel: 2
     resultItem: 真·圣剑
     requireItem:
     - 圣剑
     - 叶绿锭:24
-  '124':
+  '135':
     requireLevel: 2
     resultItem: 泰拉之刃
     requireItem:
     - 真·永夜之刃
     - 真·圣剑
     - 断裂英雄剑
-  '125':
+  '136':
     requireLevel: 2
     resultItem: 机械矿车
     requireItem:
     - 机械电池片
     - 机械车轮片
     - 机械车体片
-  '126':
+  '137':
     requireLevel: 2
     resultItem: 南瓜月勋章
     requireItem:
     - 南瓜:8
     - 灵气:5
     - 神圣锭:10
-  '127':
+  '138':
     requireLevel: 2
     resultItem: 调皮礼物
     requireItem:
     - 丝绸:20
     - 灵气:5
     - 恐惧之魂:5
-  '128':
+  '139':
     requireLevel: 2
     resultItem: 天顶剑
     requireItem:
@@ -868,105 +929,105 @@ ANVIL:
     - 无头骑士剑
     - 种子弯刀
     - 铜质短剑
-  '129':
+  '140':
     requireLevel: 2
     resultItem: 叶绿头饰
     requireItem:
     - 叶绿锭:12
-  '130':
+  '141':
     requireLevel: 2
     resultItem: 叶绿头盔
     requireItem:
     - 叶绿锭:12
-  '131':
+  '142':
     requireLevel: 2
     resultItem: 叶绿面具
     requireItem:
     - 叶绿锭:12
-  '132':
+  '143':
     requireLevel: 2
     resultItem: 叶绿板甲
     requireItem:
     - 叶绿锭:24
-  '133':
+  '144':
     requireLevel: 2
     resultItem: 叶绿护胫
     requireItem:
     - 叶绿锭:18
-  '134':
+  '145':
     requireLevel: 2
     resultItem: 幽灵兜帽
     requireItem:
     - 幽灵锭:12
-  '135':
+  '146':
     requireLevel: 2
     resultItem: 幽灵面具
     requireItem:
     - 幽灵锭:12
-  '136':
+  '147':
     requireLevel: 2
     resultItem: 幽灵长袍
     requireItem:
     - 幽灵锭:24
-  '137':
+  '148':
     requireLevel: 2
     resultItem: 幽灵裤
     requireItem:
     - 幽灵锭:18
-  '138':
+  '149':
     requireLevel: 2
     resultItem: 甲虫头盔
     requireItem:
     - 甲虫外壳:4
     - 海龟壳
     - 叶绿面具
-  '139':
+  '150':
     requireLevel: 2
     resultItem: 甲虫铠甲
     requireItem:
     - 甲虫外壳:8
     - 海龟壳
     - 叶绿板甲
-  '140':
+  '151':
     requireLevel: 2
     resultItem: 甲虫壳
     requireItem:
     - 甲虫外壳:8
     - 海龟壳
     - 叶绿板甲
-  '141':
+  '152':
     requireLevel: 2
     resultItem: 甲虫护腿
     requireItem:
     - 甲虫外壳:6
     - 海龟壳
     - 叶绿护胫
-  '142':
+  '153':
     requireLevel: 2
     resultItem: 蘑菇矿头饰
     requireItem:
     - 蘑菇锭:12
-  '143':
+  '154':
     requireLevel: 2
     resultItem: 蘑菇矿头盔
     requireItem:
     - 蘑菇锭:12
-  '144':
+  '155':
     requireLevel: 2
     resultItem: 蘑菇矿面具
     requireItem:
     - 蘑菇锭:12
-  '145':
+  '156':
     requireLevel: 2
     resultItem: 蘑菇矿胸甲
     requireItem:
     - 蘑菇锭:24
-  '146':
+  '157':
     requireLevel: 2
     resultItem: 蘑菇矿护腿
     requireItem:
     - 蘑菇锭:18
-  '147':
+  '158':
     requireLevel: 2
     resultItem: 日耀碑牌
     requireItem:

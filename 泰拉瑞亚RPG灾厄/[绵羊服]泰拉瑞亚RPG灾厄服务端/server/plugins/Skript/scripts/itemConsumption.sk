@@ -296,7 +296,11 @@ on rightclick:
 			giveItem(player, getItem("夜明矿:%a random integer between 90 and 110%"))
 			if chance of 0.1:
 				giveItem(player, getItem("彩虹猫矿车"))
-			if chance of 1/7:
+			if chance of 1/9:
+				giveItem(player, getItem("月亮传送门法杖"))
+			if chance of 1/8:
+				giveItem(player, getItem("七彩水晶法杖"))
+			else if chance of 1/7:
 				giveItem(player, getItem("彩虹猫之刃"))
 			else if chance of 1/6:
 				giveItem(player, getItem("泰拉悠悠球"))
