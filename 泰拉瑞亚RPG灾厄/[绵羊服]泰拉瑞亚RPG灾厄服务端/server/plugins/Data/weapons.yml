@@ -22,7 +22,7 @@
 幻影眼:
   radius: 4
 七彩水晶:
-  radius: 5
+  radius: 2.5
 集束破片:
   radius: 1.25
   damageShooter: true

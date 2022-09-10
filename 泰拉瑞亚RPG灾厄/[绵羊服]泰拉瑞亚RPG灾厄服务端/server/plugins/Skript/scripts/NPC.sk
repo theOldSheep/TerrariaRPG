@@ -125,7 +125,7 @@ on chunk load:
 function NPCAttackTarget(NPC: entity, projectileVelocity: number, hasGravity: boolean):
 	set {_NPCType} to name of {_NPC}
 	if {_NPCType} is "护士":
-		set {_health} to 500
+		set {_health} to 2000
 		loop all living entities in radius 24 of {_NPC}:
 			if loop-entity has scoreboard tag "isNPC":
 				health of loop-entity < {_health}
@@ -134,7 +134,7 @@ function NPCAttackTarget(NPC: entity, projectileVelocity: number, hasGravity: bo
 				set {_health} to health of loop-entity
 				set {_target} to loop-entity
 		if {_target} is set:
-			set {_healAmount} to min(max health of {_target} - health of {_target}, 20)
+			set {_healAmount} to min(max health of {_target} - health of {_target}, 40)
 			heal {_target} by {_healAmount}
 			displayHolo({_target}, {_healAmount}, false, "回血")
 			play 25 happy villager 1 above location of {_target}
@@ -236,8 +236,8 @@ function handleNPC(NPC: entity):
 	{_NPCnms}.goalSelector.a(6f, new PathfinderGoalRandomLookaround({_NPCnms}))
 	
 	#attrMap
-	set max health of {_NPC} to 500
-	set health of {_NPC} to 500
+	set max health of {_NPC} to 2000
+	set health of {_NPC} to 2000
 	set {_attrMap} to new HashMap()
 	
 	set metadata "attrMap" of {_NPC} to {_attrMap}
@@ -250,7 +250,8 @@ function handleNPC(NPC: entity):
 	{NPC}.put({_type}, {_NPC})
 	
 	{_attrMap}.put("crit", 4)
-	{_attrMap}.put("defence", 15)
+	{_attrMap}.put("damageTakenMulti", 0.75)
+	{_attrMap}.put("defence", 40)
 	{_attrMap}.put("knockback", 2)
 	{_attrMap}.put("knockbackResistance", 0.5)
 	{_attrMap}.put("invulnerabilityTick", 10)
@@ -734,12 +735,13 @@ on rightclick:
 	else:
 		set {_tier} to yml value "NPC.messages.%{_type}%.tier" from file "plugins/Data/setting.yml"
 		if {_tier} is set:
-			if "%{_tier}%" parsed as number is not set:
-				if yml value "%{_tier}%" from file "plugins/PlayerData/%name of player%.yml" is true:
-					set {_tier} to 0
-				else:
-					set {_tier} to {_tierPly} + 1
-			if {_tierPly} >= {_tier}:
+			set {_canShop} to false
+			if ("%{_tier}%" parsed as number) is not set:
+				yml value "bossDefeated.%{_tier}%" from file "plugins/PlayerData/%name of player%.yml" is true
+				set {_canShop} to true
+			else if {_tierPly} >= {_tier}:
+				set {_canShop} to true
+			if {_canShop} is true:
 				set {_texts} to yml value "NPC.messages.%{_type}%.trade" from file "plugins/Data/setting.yml"
 				{_comps}.add(new VexButton("SHOP", "商店", {_bg}, {_bg}, 50, {_h} / 3 - 30, 26, 17))
 				{_comps}.add(new VexButton("CLOSE", "关闭", {_bg}, {_bg}, 100, {_h} / 3 - 30, 26, 17))
@@ -750,7 +752,7 @@ on rightclick:
 				if {_type} is "裁缝":
 					set {_canCurse} to false
 					if player.getWorld().getTime() is between 13500 and 22500:
-						{_tierPly} = 2
+						yml value "bossDefeated.Skeletron" from file "plugins/PlayerData/%name of player%.yml" is not true
 						set {_canCurse} to true
 					if {_canCurse} is true:
 						{_comps}.add(new VexButton("CURSE", "诅咒", {_bg}, {_bg}, 50, {_h} / 3 - 30, 26, 17))

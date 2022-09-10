@@ -276,13 +276,38 @@ function checkBossTarget(target: entity, boss: entity, ignoreDistance: boolean) 
 			return {_ignoreDistance}
 		return true
 	return false
-function renderSingleBossbar(boss: entity, bossbar: object):
+function renderSingleBossbarAdvanced(boss: entity, bossbar: object, shouldAlter: boolean):
+	set {_timeElapsed} to 0
+	set {_targetTime} to 900
+	set {_targetTime} to yml value "BossDefeatTime.%trimText(name of {_boss})%" from file "setting.yml"
+	set {_dynamicDR} to 1
 	while {_boss}.isDead() is not true:
+		if health of {_boss} <= 0:
+			stop trigger
 		if max health of {_boss} is 1:
 			stop trigger
-		{_bossbar}.setProgress[float](health of {_boss} / max health of {_boss})
+		if {_shouldAlter}:
+			set {_currProgress} to health of {_boss} / max health of {_boss}
+			{_bossbar}.setProgress[float]({_currProgress})
+		else:
+			set {_currProgress} to {_bossbar}.getProgress()
+		# setup dynamic DR
+		# timeprogress: 0->1
+		#  damagetaken       / timeConsumed *         timeLeft           *    DR     =  healthLeft                  
+		# (1 - currProgress) / timeElapsed  * (targetTime - timeElapsed) * dynamicDR = currProgress
+		if {_timeElapsed} < {_targetTime}:
+			{_timeElapsed} > 0
+			{_currProgress} < 1
+			set {_dynamicDR} to ({_currProgress} / (1 - {_currProgress})) * {_timeElapsed} / ({_targetTime} - {_timeElapsed})
+			set {_dynamicDR} to max(min({_dynamicDR}, 1), 0.005)
+		else if {_dynamicDR} < 1:
+			set {_dynamicDR} to min({_dynamicDR} + 0.0075, 1)
+		set metadata "dynamicDR" of {_boss} to {_dynamicDR}
+		add 2 to {_timeElapsed}
 		wait 2 ticks
 	{_bossbar}.setProgress[float](0)
+function renderSingleBossbar(boss: entity, bossbar: object):
+	renderSingleBossbarAdvanced({_boss}, {_bossbar}, true)
 function tweakAttribute(attrMap: object, key: object, value: text, addOrRemove: boolean):
 	if try {_attrMap}.containsKey({_key}) is false:
 		stop trigger
@@ -1825,7 +1850,7 @@ function handleDeath(v: entity, dPly: entity, d: entity, damageCause: text):
 							broadcast "&d&l%{event}%被击退了！"
 							if {event} is "哥布林军团":
 								loop all players:
-									set yml value "goblinDefeated" from file "plugins/PlayerData/%name of loop-player%.yml" to true
+									set yml value "bossDefeated.GoblinArmy" from file "plugins/PlayerData/%name of loop-player%.yml" to true
 							clear {event}
 			if metadata "motherType" of {_v} is "史莱姆":
 				"%world of {_v}%" is "world_nether"
@@ -2110,6 +2135,10 @@ function handleDamage(v: entity, d: entity, dmg: number, damageCause: text):
 		remove ({_defence} * 0.75) from {_dmg}
 		if {_damageTakenMulti} is set:
 			set {_dmg} to {_dmg} * {_damageTakenMulti}
+	if {_v} has scoreboard tag "isBOSS":
+		set {_dynamicDR} to 1
+		set {_dynamicDR} to metadata "dynamicDR" of {_v}
+		set {_dmg} to {_dmg} * {_dynamicDR}
 	
 	if entityDamageEvent({_d}, {_dPly}, {_v}, {_damageTaker}, {_dmg}, {_damageCause}) is false:
 		stop trigger

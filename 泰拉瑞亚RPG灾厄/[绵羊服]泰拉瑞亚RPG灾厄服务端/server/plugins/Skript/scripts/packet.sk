@@ -1,0 +1,60 @@
+import:
+	com.comphenix.protocol.events.PacketContainer
+
+on packet event play_server_mount with lowest priority:
+	set {_packet} to event-packet
+	broadcast "%{_packet}%"
+on packet event play_client_steer_vehicle with lowest priority:
+	gamemode of {_player} is not spectator
+	set {_packet} to event-packet
+	broadcast "%float field 0 of {_packet}%|%float field 1 of {_packet}%|%boolean field 0 of {_packet}%|%boolean field 1 of {_packet}%"
+on packet event play_client_position with lowest priority:
+	set {_player} to event-player
+	gamemode of {_player} is not spectator
+	set {_packet} to event-packet
+	set {_predictedLoc} to (location of {_player})
+	set {_predictedLoc} to (location of {_player}).add((velocity of {_player}).multiply(1.99999))
+	set {_direction} to vector(((double field 0 of {_packet}) - (x-coordinate of {_predictedLoc})), 0, ((double field 2 of {_packet}) - (z-coordinate of {_predictedLoc})))
+#	broadcast "%velocity of {_player}%"
+#	broadcast "P:%x-coordinate of {_predictedLoc}%	%z-coordinate of {_predictedLoc}%"
+#	broadcast "A:%double field 0 of {_packet}%	%double field 2 of {_packet}%"
+#	broadcast "%{_direction}%|%vector length of {_direction}%"
+#	broadcast "__________________"
+	set y component of {_direction} to 0
+	if vector length of {_direction} < 0.01:
+		clear metadata "moveDir" of {_player}
+	else:
+		set metadata "moveDir" of {_player} to {_direction}
+
+# on packet event play_server_world_particles with low priority:
+#	set {_packet} to event-packet
+#	broadcast "%particle field 0 of {_packet}%"
+	
+	
+
+#PacketContainer[type=WORLD_PARTICLES[
+#class=PacketPlayOutWorldParticles, id=36], structureModifier=StructureModifier[
+#fieldType=class java.lang.Object, data=[
+#private net.minecraft.server.v1_11_R1.EnumParticle net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles.a, 
+#private float net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles.b, 
+#private float net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles.c, 
+#private float net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles.d, 
+#private float net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles.e, 
+#private float net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles.f, 
+#private float net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles.g, 
+#private float net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles.h, 
+#private int net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles.i, 
+#private boolean net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles.j, 
+#private int[] net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles.k]]]
+
+#PacketContainer[type=POSITION[
+#class=PacketPlayInPosition, id=16], structureModifier=StructureModifier[
+#fieldType=class java.lang.Object, data=[
+#protected double net.minecraft.server.v1_11_R1.PacketPlayInFlying.x, 
+#protected double net.minecraft.server.v1_11_R1.PacketPlayInFlying.y, 
+#protected double net.minecraft.server.v1_11_R1.PacketPlayInFlying.z, 
+#protected float net.minecraft.server.v1_11_R1.PacketPlayInFlying.yaw, 
+#protected float net.minecraft.server.v1_11_R1.PacketPlayInFlying.pitch, 
+#protected boolean net.minecraft.server.v1_11_R1.PacketPlayInFlying.f, 
+#protected boolean net.minecraft.server.v1_11_R1.PacketPlayInFlying.hasPos, 
+#protected boolean net.minecraft.server.v1_11_R1.PacketPlayInFlying.hasLook]]]

@@ -1,0 +1,20 @@
+command /test:
+	trigger:
+		spawn a saddled pig
+		set {_slm} to spawned entity
+		set {_handle} to {_slm}.getHandle()
+		set {_handle}.width to 1
+		set {_handle}.length to 2
+		add "noDamage" to scoreboard tags of {_slm}
+		({_slm}).addPassenger(command sender)
+
+on shoot:
+	set {_p} to event-projectile
+	set {_handle} to {_p}.getHandle()
+	set {_handle}.width to 10
+	set {_handle}.length to 10
+	{_handle}.u({_handle})
+	broadcast "%{_p}%|%{_handle}.getBoundingBox()%"
+	loop 2 times:
+		wait 10 ticks
+		broadcast "%{_p}.getHandle().getBoundingBox()%|%{_p}.getHandle().width%|%{_handle}.length%"

@@ -93,7 +93,7 @@ every 5 ticks:
 			health of loop-player > 200
 			add 40 to {_progress}
 			metadata "tier" of loop-player >= 1
-			set {_completed} to yml value "goblinDefeated" from file "plugins/PlayerData/%name of loop-player%.yml"
+			set {_completed} to yml value "bossDefeated.GoblinArmy" from file "plugins/PlayerData/%name of loop-player%.yml"
 			if {_completed} is not true:
 				set {_chance} to 0.33
 				stop loop

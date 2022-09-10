@@ -68,11 +68,12 @@ on rightclick:
 		set name of {_eow} to "世界吞噬者"
 		{_arlst}.add(spawned entity)
 		handleEOW({_eow}, player, 0, {_attrMapBullet})
+		renderSingleBossbarAdvanced({_eow}, {_bossbar}, false)
 		{_attrMap}.put("damage", 56)
 		{_attrMap}.put("defence", 12)
 		set {_index} to 0
-		set {_length} to 70
-		loop ({_length} - 2) times:
+		set {_length} to 69
+		loop ({_length} - 1) times:
 			spawn a slime at {_spawnLoc}
 			set {_eow} to spawned entity
 			set {_eow}.getHandle().goalSelector to {_goalSel}
@@ -83,6 +84,7 @@ on rightclick:
 			{_arlst}.add(spawned entity)
 			add 1 to {_index}
 			handleEOW({_eow}, player, {_index}, {_attrMapBullet})
+			renderSingleBossbarAdvanced({_eow}, {_bossbar}, false)
 		{_attrMap}.put("damage", 46)
 		{_attrMap}.put("defence", 20)
 		spawn a slime at {_spawnLoc}
@@ -93,7 +95,8 @@ on rightclick:
 		set metadata "bossbar" of {_eow} to {_bossbar}
 		set name of {_eow} to "世界吞噬者"
 		{_arlst}.add(spawned entity)
-		handleEOW({_eow}, player, ({_length} - 1), {_attrMapBullet})
+		handleEOW({_eow}, player, {_length}, {_attrMapBullet})
+		renderSingleBossbarAdvanced({_eow}, {_bossbar}, false)
 		
 		wait 3 ticks
 		set {_totalHealth} to 0

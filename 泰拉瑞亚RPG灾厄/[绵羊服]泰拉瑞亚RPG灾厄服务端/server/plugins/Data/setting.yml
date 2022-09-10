@@ -58,13 +58,25 @@ effects:
         isBuff: true
         attributes:
             - "mobLimit: 10"
-            - "mobSpawnRateMulti: 1"
+            - "mobSpawnRateMulti: 1.5"
+    虫潮:
+        icon: "https://calamitymod.wiki.gg/images/5/5c/Zerg"
+        isBuff: true
+        attributes:
+            - "mobLimit: 5"
+            - "mobSpawnRate: 1"
     冷静:
         icon: "https://static.wikia.nocookie.net/terraria_gamepedia/images/2/20/Calm"
         isBuff: true
         attributes:
             - "mobLimit: -1"
             - "mobSpawnRateMulti: -0.2"
+    禅定:
+        icon: "https://calamitymod.wiki.gg/images/e/ee/Zen"
+        isBuff: true
+        attributes:
+            - "mobLimit: -2"
+            - "mobSpawnRate: -0.1"
     耐力:
         icon: "https://static.wikia.nocookie.net/terraria_gamepedia/images/0/0a/Endurance"
         isBuff: true
@@ -332,7 +344,7 @@ NPC:
                 - "BOSS会将当前世界所有达成挑战资格（达成前置进度）的玩家试做敌人并以此获得生命加成。因此请尽量邀请世界中所有符合挑战资格的玩家一同作战，这样会大大增强成功率。造成伤害足够的玩家都将自动获得一份战利品哦~"
                 - "在大部分情况下，挖掘草方块有几率掉落对应的草药：地表-太阳花，y坐标（按F3可查看）处于30~50-闪耀根，y坐标小于30-火焰花，血月或腐化之地（蘑菇地）地表-死亡草，针叶林地表-寒颤棘，沙漠或恶地地表-波浪叶。"
         哥布林工匠:
-            tier: "goblinDefeated"
+            tier: "GoblinArmy"
             deny:
                 - "<name>，你现在的装备还不值得我去重铸。打败外面追杀我的哥布林军团证明自己吧！"
                 - "至少帮我赶走我那群烦死个人的同胞再来找我吧……我现在很忙……忙着研究新产品，也忙着逃命！"
@@ -408,7 +420,7 @@ NPC:
                 - "不来买点方块吗？"
                 - "我这里可是有各种好玩的方块哦！"
         裁缝:
-            tier: 3
+            tier: "Skeletron"
             deny:
                 - "请帮我解除诅咒……太痛苦了……"
                 - "被诅咒的时候好无聊，只能做点针线活打发时间……"
@@ -499,6 +511,47 @@ settings:
     playerInventoryTitles:
         piggyBank: "§a存钱罐"
         voidBag: "§b虚空袋"
+
+BossDefeatTime:
+    史莱姆王: 1200
+    荒漠灾虫: 1200
+    克苏鲁之眼: 1800
+    菌生蟹: 1800
+    世界吞噬者: 2400
+    腐巢意志: 2400
+    骷髅王: 2400
+    史莱姆之神: 3600
+    血肉之墙: 2400
+    极地之灵: 3600
+    双子魔眼: 3600
+    硫磺火元素: 3600
+    毁灭者: 3600
+    渊海灾虫: 2400
+    机械骷髅王: 3600
+    灾厄之眼: 4800
+    世纪之花: 3600
+    阿娜希塔和利维坦: 3600
+    白金星舰: 3600
+    石巨人: 3000
+    瘟疫使者歌莉娅: 3600
+    猪鲨公爵: 3000
+    毁灭魔像: 3600
+    拜月教邪教徒: 3000
+    星神游龙: 2400
+    月球领主: 4800
+    亵渎守卫: 1800
+    痴愚金龙: 2400
+    亵渎天神: 4800
+    无尽虚空: 3600
+    风暴编织者: 2700
+    神之使徒西格纳斯: 2400
+    噬魂幽花: 3600
+    硫海遗爵: 3600
+    神明吞噬者: 4800
+    丛林龙，犽戎: 5100
+    星流巨械: 7200
+    至尊灾厄: 6000
+    成年幻海妖龙: 4800
 
 events:
     南瓜月:

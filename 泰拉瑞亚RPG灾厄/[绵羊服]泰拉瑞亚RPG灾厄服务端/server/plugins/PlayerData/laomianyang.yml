@@ -67,5 +67,8 @@ accessories:
 - 险恶的 神话护身符
 - 险恶的 毁灭者徽章
 - 幸运的 磁花
-- 幸运的 天界之翼
+- 锯齿的 鸟妖之翼
 goblinDefeated: true
+bossDefeated:
+  GoblinArmy: true
+  Skeletron: true

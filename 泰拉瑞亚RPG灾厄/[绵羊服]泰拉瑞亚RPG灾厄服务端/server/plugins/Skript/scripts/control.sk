@@ -73,9 +73,8 @@ on skript start:
 	{playerAttrMap}.put("meleeReachMulti", 1)
 	{playerAttrMap}.put("minionLimit", 2)
 	{playerAttrMap}.put("mobLimit", 15)
-	{playerAttrMap}.put("mobSpawnRate", 0.3)
+	{playerAttrMap}.put("mobSpawnRate", 0.25)
 	{playerAttrMap}.put("mobSpawnRateMulti", 1)
-	{playerAttrMap}.put("sentryLimit", 1)
 	{playerAttrMap}.put("penetration", 0)
 	{playerAttrMap}.put("powerPickaxe", 0)
 	{playerAttrMap}.put("projectileSpeed", 0)
@@ -83,7 +82,8 @@ on skript start:
 	{playerAttrMap}.put("projectileSpeedArrowMulti", 1)
 	{playerAttrMap}.put("regen", 2)
 	{playerAttrMap}.put("regenMulti", 1)
-	{playerAttrMap}.put("speed", 0.25)
+	{playerAttrMap}.put("sentryLimit", 1)
+	{playerAttrMap}.put("speed", 0.2)
 	{playerAttrMap}.put("speedMulti", 1)
 	{playerAttrMap}.put("useTime", 0)
 	{playerAttrMap}.put("useTimeMagicMulti", 1)
@@ -256,67 +256,63 @@ on hunger level change:
 	cancel event
 on PlayerLeashEntityEvent:
 	cancel event
+on dismount:
+	set {_mount} to (event-entity).getVehicle()
+	if {_mount} is a pig:
+		cancel event
+	else:
+		{_mount}.remove()
 on KeyBoardPressEvent:
-	gamemode of player is not spectator
-	set {_accessory} to metadata "accessory" of player
+	set {_ply} to event.getPlayer()
+	gamemode of {_ply} is not spectator
+	set {_accessory} to metadata "accessory" of {_ply}
 	if event.getKey() is 25:
-		gamemode of player is survival
-		open a new chest inventory with 1 row named "&a垃圾箱" for player
+		gamemode of {_ply} is survival
+		open a new chest inventory with 1 row named "&a垃圾箱" for {_ply}
 	else if event.getKey() is 47:
 		#thrust
-		gamemode of player is survival
-		if player.isOnGround() is true:
+		gamemode of {_ply} is survival
+		if {_ply}.isOnGround() is true:
 			stop trigger
-		set metadata "thrusting" of player to event.getEventKeyState()
+		set metadata "thrusting" of {_ply} to event.getEventKeyState()
 		event.getEventKeyState() is true
 		#remove all hooks
-		set {_hooks} to metadata "hooks" of player
+		set {_hooks} to metadata "hooks" of {_ply}
 		loop ...{_hooks}:
 			if (loop-value).getHandle().inGround is true:
 				(loop-value).remove()
-		set {_index} to metadata "thrust" of player
-		set {_thrustProgress} to metadata "thrustProgress" of player
+		set {_index} to metadata "thrust" of {_ply}
+		set {_thrustProgress} to metadata "thrustProgress" of {_ply}
 		while {_index} < {_accessory}.size():
-			if {_accessory}.get({_index}) is "跳跃之瓶":
-				set {_maxProgress} to 1
-				set {_maxVelocity} to 1.5
-				set {_maxAcceleration} to 0.8
-			else if {_accessory}.get({_index}) is "火箭靴" or "幽灵靴":
-				set {_maxProgress} to 12
-				set {_maxVelocity} to 1.3
-			else if {_accessory}.get({_index}) is "鸟妖之翼":
-				set {_maxProgress} to 14
-				set {_maxVelocity} to 1.2
-			else if {_accessory}.get({_index}) is "女皇之翼":
-				set {_maxProgress} to 16
-				set {_maxVelocity} to 1.65
-			else if {_accessory}.get({_index}) is "喜庆之翼":
-				set {_maxProgress} to 18
-				set {_maxVelocity} to 1.25
-			else if {_accessory}.get({_index}) is "日耀之翼" or "星尘之翼":
-				set {_maxProgress} to 25
-				set {_maxVelocity} to 1.75
-			else if {_accessory}.get({_index}) is "星云之翼" or "星璇之翼":
-				set {_maxProgress} to 25
-				set {_maxVelocity} to 1.6
-			else if {_accessory}.get({_index}) is "天界之翼":
-				set {_maxProgress} to 25
-				set {_maxVelocity} to 2
-			else if {_accessory}.get({_index}) is "猪鲨之翼":
-				set {_maxProgress} to 25
-				set {_maxVelocity} to 1.5
+			set {_currAcc} to {_accessory}.get({_index})
+			set {_maxProgress} to yml value "%{_currAcc}%.maxProgress" from file "plugins/Data/wings.yml"
 			if {_maxProgress} is set:
+				set {_maxVelocity} to yml value "%{_currAcc}%.maxVelocity" from file "plugins/Data/wings.yml"
+				set {_maxAcceleration} to yml value "%{_currAcc}%.maxAcceleration" from file "plugins/Data/wings.yml"
+				set {_horizontalVelocity} to yml value "%{_currAcc}%.horizontalVelocity" from file "plugins/Data/wings.yml"
+				set {_bounceTime} to yml value "%{_currAcc}%.bounceTime" from file "plugins/Data/wings.yml"
 				if {_accessory}.contains("翱翔徽章") is true:
 					set {_maxVelocity} to {_maxVelocity} * 1.25
 					set {_maxAcceleration} to {_maxAcceleration} * 1.25
-				set {_attrMap} to metadata "attrMap" of player
+					set {_horizontalVelocity} to {_horizontalVelocity} * 1.25
+					if {_maxProgress} > {_bounceTime}:
+						add ({_maxProgress} - {_bounceTime}) * 4 to {_maxProgress}
+				set {_attrMap} to metadata "attrMap" of {_ply}
 				if {_attrMap} is set:
 					set {_multi} to {_attrMap}.getOrDefault("speedMulti", 1)
 					set {_maxVelocity} to {_maxVelocity} * {_multi}
 					set {_maxAcceleration} to {_maxAcceleration} * {_multi}
+					set {_horizontalVelocity} to {_horizontalVelocity} * {_multi}
 				stop loop
 			add 1 to {_index}
+		if {_maxProgress} is not set:
+			stop trigger
+		# convert block/s into block/tick
+		set {_maxVelocity} to {_maxVelocity} / 40
+		set {_maxAcceleration} to {_maxAcceleration} / 40
+		set {_horizontalVelocity} to {_horizontalVelocity} / 40
 		if {_index} >= {_accessory}.size():
+			# flight time depleted. Check if the player has a wing
 			set {_gliding} to false
 			set {_index} to 0
 			loop {_accessory}.size() times:
@@ -326,92 +322,97 @@ on KeyBoardPressEvent:
 					stop loop
 				add 1 to {_index}
 			if {_gliding} is false:
-				set metadata "thrust" of player to {_index}
+				# the player has no wing
+				set metadata "thrust" of {_ply} to {_index}
 				stop trigger
 			else:
-				set {_maxVelocity} to 24.9
+				set {_maxVelocity} to -0.75
+				set {_horizontalVelocity} to {_horizontalVelocity} / 2
 				set {_maxProgress} to 5000000
-		if {_accessory}.contains("翱翔徽章"):
-			{_maxProgress} > 1
-			set {_maxProgress} to {_maxProgress} * 4
-		set metadata "thrust" of player to {_index}
-		#thrust
-		if {_maxProgress} > 1:
-			apply potion of levitation round({_maxVelocity} / 0.1) without particles to player for "%({_maxProgress} - {_thrustProgress}) * 4% ticks" parsed as timespan
-		while player is online:
-			if metadata "thrusting" of player is not true:
+		set metadata "thrust" of {_ply} to {_index}
+		while {_ply} is online:
+			if metadata "thrusting" of {_ply} is not true:
 				stop loop
-			if gamemode of player is spectator:
+			if gamemode of {_ply} is spectator:
 				stop loop
-			if {_maxProgress} = 1:
-				# bottle
-				set {_v} to velocity of player
-				if y of {_v} < 0:
-					set {_force} to {_maxAcceleration} - y of {_v}
-				else:
-					set {_force} to ({_maxVelocity} - y of {_v})
-					set {_force} to min({_maxAcceleration}, {_force})
-				push player {_force} upward
-			player.setFallDistance(0)
-			if {_gliding} is true:
-				if the block 1 below player is not air:
-					set {_v} to vector(0, y of velocity of player * -1, 0)
-					push player {_v}
-					stop loop
-			else:
-				add 1 to {_thrustProgress}
+			{_ply}.setFallDistance(0)
+			
+			# vertical movement
+			set {_v} to velocity of {_ply}
+			set {_force} to min({_maxAcceleration}, ({_maxVelocity} - (y of {_v})))
+			if {_force} > 0:
+				push {_ply} {_force} upward
+			# horizontal movement
+			set {_dir} to metadata "moveDir" of {_ply}
+			if {_dir} is set:
+				set {_playerVelocity} to velocity of {_ply}
+				set y component of {_playerVelocity} to 0
+				# velocity is the speed in which the player is moving along 
+				set {_velocity} to ({_playerVelocity} dot {_dir}) / (vector length of {_dir})
+				set vector length of {_dir} to min({_maxAcceleration}, ({_horizontalVelocity} - {_velocity}))
+				push {_ply} {_dir}
+			if {_gliding} is not true:
 				#particles
-				if {_accessory}.get({_index}) ends with "瓶":
-					draw 4 cloud particles at location of player with direction vector(0, 0, 1) and speed 0.1, offset 0.5, 0, 0.5, visible range 30, keep 1 tick
-					draw 4 cloud particles at location of player with direction vector(0, 0, -1) and speed 0.1, offset 0.5, 0, 0.5, visible range 30, keep 1 tick
-					draw 4 cloud particles at location of player with direction vector(1, 0, 1) and speed 0.1, offset 0.5, 0, 0.5, visible range 30, keep 1 tick
-					draw 4 cloud particles at location of player with direction vector(1, 0, -1) and speed 0.1, offset 0.5, 0, 0.5, visible range 30, keep 1 tick
-					draw 4 cloud particles at location of player with direction vector(-1, 0, 1) and speed 0.1, offset 0.5, 0, 0.5, visible range 30, keep 1 tick
-					draw 4 cloud particles at location of player with direction vector(-1, 0, -1) and speed 0.1, offset 0.5, 0, 0.5, visible range 30, keep 1 tick
-					draw 4 cloud particles at location of player with direction vector(1, 0, 0) and speed 0.1, offset 0.5, 0, 0.5, visible range 30, keep 1 tick
-					draw 4 cloud particles at location of player with direction vector(-1, 0, 0) and speed 0.1, offset 0.5, 0, 0.5, visible range 30, keep 1 tick
+				if {_bounceTime} is set:
+					# bottle jump
+					set {_xOffset} to -1
+					loop 3 times:
+						set {_zOffset} to -1
+						loop 3 times:
+							if {_xOffset} = 0:
+								{_zOffset} = 0
+								continue
+							draw 4 cloud particles at location of {_ply} with direction vector({_xOffset}, 0, {_zOffset}) and speed 0.1, offset 0.5, 0, 0.5, visible range 30, keep 1 tick							
+							add 1 to {_zOffset}
+						add 1 to {_xOffset}
+					add 10 to {_thrustProgress}
 				else if {_accessory}.get({_index}) is "火箭靴" or "幽灵靴":
-					draw 10 cloud particles at location of player with direction vector(0, -1, 0) and speed 0.17, offset 0.5, 0, 0.5, visible range 30, keep 1 tick
-				if {_thrustProgress} >= {_maxProgress}:
-					{_maxProgress} is not -1
+					add 1 to {_thrustProgress}
+					draw 10 cloud particles at location of {_ply} with direction vector(0, -1, 0) and speed 0.17, offset 0.5, 0, 0.5, visible range 30, keep 1 tick
+				
+				# flight time depleted
+				if {_thrustProgress} / 10 >= {_maxProgress}:
 					set {_thrustProgress} to 0
 					add 1 to {_index}
 					stop loop
-			wait 4 ticks
-		set metadata "thrust" of player to {_index}
-		set metadata "thrustProgress" of player to {_thrustProgress}
-		player.removePotionEffect(PotionEffectType.LEVITATION)
-		set metadata "thrusting" of player to false
+				else if {_bounceTime} is set:
+					# no continuous flight for bottle jump
+					stop loop
+			wait 2 ticks
+		set metadata "thrust" of {_ply} to {_index}
+		set metadata "thrustProgress" of {_ply} to {_thrustProgress}
+		set metadata "thrusting" of {_ply} to false
 	else if event.getKey() is 19:
 		#Grappling hook, only on key down
 		event.getEventKeyState() is true
-		handleGrapplingHook(player)
+		handleGrapplingHook({_ply})
 	else if event.getKey() is 46:
 		#remove all hooks
-		set {_hooks} to metadata "hooks" of player
+		set {_hooks} to metadata "hooks" of {_ply}
 		loop ...{_hooks}:
 			if (loop-value).getHandle().inGround is true:
 				(loop-value).remove()
 		#Charge
-		player doesn't have scoreboard tag "temp_dashCD"
-		set {_dashSpeed} to -1
-		loop ...{_accessory}:
-			if loop-value is "克苏鲁之眼盾":
-				set {_dashSpeed} to 1
-				set {_dashCD} to 1.75 seconds
-				stop loop
-		if {_dashSpeed} > 0:
-			add "temp_dashCD" to scoreboard tags of player
-			set {_dir} to new vector with yaw (player.getHandle().yaw) and pitch 0
-			set {_playerVelocity} to velocity of player
-			set {_dashSpeed} to {_dashSpeed} * (try (metadata "attrMap" of player).getOrDefault("speedMulti", 1))
-			set vector length of {_dir} to {_dashSpeed}
-			set y of {_dir} to ((y of {_playerVelocity}) * -1) + y of {_dir}
-			push player {_dir}
-			wait {_dashCD}
-			remove "temp_dashCD" from scoreboard tags of player
+		set {_dir} to new vector with yaw ({_ply}.getHandle().yaw) and pitch 0
+		set {_dir} to metadata "moveDir" of {_ply}
+		if {_ply} doesn't have scoreboard tag "temp_sheidDashCD":
+			set {_dashSpeed} to -1
+			loop ...{_accessory}:
+				if loop-value is "克苏鲁之眼盾":
+					set {_dashSpeed} to 1
+					set {_dashCD} to 1.75 seconds
+					stop loop
+			if {_dashSpeed} > 0:
+				add "temp_sheidDashCD" to scoreboard tags of {_ply}
+				set {_playerVelocity} to velocity of {_ply}
+				set {_dashSpeed} to {_dashSpeed} * (try (metadata "attrMap" of {_ply}).getOrDefault("speedMulti", 1))
+				set vector length of {_dir} to {_dashSpeed}
+				set y of {_dir} to ((y of {_playerVelocity}) * -1) + y of {_dir}
+				push {_ply} {_dir}
+				wait {_dashCD}
+				remove "temp_sheidDashCD" from scoreboard tags of {_ply}
 	else if event.getKey() is 41:
-		open (metadata "inventories" of player).get("accessory") for player
+		open (metadata "inventories" of {_ply}).get("accessory") for {_ply}
 
 on ButtonClickEvent:
 	set {_station} to metadata "craftingStation" of player
@@ -1073,8 +1074,6 @@ on rightclick:
 				set event-block to cracked stone brick
 				draw 35 blockdust particles made of stone brick at location of event-block, offset 0.3, 0.3, 0.3, keepFor 1 tick
 
-on dismount:
-	(event-entity).getVehicle().remove()
 on VehicleEntityCollisionEvent:
 	cancel event
 	set {_vehicle} to event.getVehicle()
@@ -2125,6 +2124,7 @@ function handleZenith(ply: player, colorSword: text, destination: location, item
 
 function projectileAI(arrow: entity, weaponType: text):
 	disguiseProjectile({_arrow})
+	set {_weaponType} to {_weaponType} in uppercase
 	set {_speed} to vector length of (velocity of {_arrow})
 	set {_speed} to metadata "pSpeed" of {_arrow}
 	set {_target} to metadata "followTarget" of {_arrow}
@@ -2219,10 +2219,10 @@ function projectileAI(arrow: entity, weaponType: text):
 		if {_weaponType} starts with "MAGIC":
 			set {_loopTime} to 50
 			set {_waitTime} to 4 tick
-		else if {_weaponType} is "GUN" or "Bullet":
+		else if {_weaponType} is "GUN" or "BULLET":
 			set {_loopTime} to 50
 			set {_waitTime} to 4 tick
-		else if {_weaponType} is "BOW" or "Arrow":
+		else if {_weaponType} is "BOW" or "ARROW":
 			set {_loopTime} to 50
 			set {_waitTime} to 4 ticks
 			set {_resetVelocity} to false
@@ -2628,8 +2628,8 @@ function sentryAI(sentry: entity, owner: player, nameSentry: text):
 	set {_target} to {_owner}
 	set {_sentryLoc} to location of {_sentry}
 	
-	# alive for at most 2 minutes
-	loop 800 times:
+	# alive for at most 5 minutes
+	loop 2000 times:
 		if {_owner} is not online:
 			stop loop
 		if {_owner} has scoreboard tag "unauthorized":
@@ -2662,6 +2662,8 @@ function sentryAI(sentry: entity, owner: player, nameSentry: text):
 			set {_clearTarget} to true
 		else if {_target}.isDead() is true:
 			set {_clearTarget} to true
+		else if distance between {_target} and {_sentry} > {_targetRange}:
+			set {_clearTarget} to true
 		else if {_sentry}.hasLineOfSight({_target}) is false:
 			set {_clearTarget} to true
 		if {_clearTarget} is true:
@@ -2676,7 +2678,7 @@ function sentryAI(sentry: entity, owner: player, nameSentry: text):
 				set {_reTarget} to true
 			if {_reTarget} is true:
 				set {_dist} to 999
-				loop all living entities in radius 48 of {_sentry}:
+				loop all living entities in radius {_targetRange} of {_sentry}:
 					set {_currCheckTarget} to loop-value-2
 					health of {_currCheckTarget} > 0
 					{_currCheckTarget} is not a player
@@ -2704,36 +2706,50 @@ function sentryAI(sentry: entity, owner: player, nameSentry: text):
 					projectileAI({_bulletE}, "ARROW")
 			else if {_nameSentry} is "月亮传送门":
 				if {_target} is {_owner}:
-					mod({_index}, 17) > 13
+					mod({_index}, 17) < 5
 					clear {_yaw}
 					clear {_pitch}
 				else:
-					if mod({_index}, 17) = 0:
+					if mod({_index}, 17) = 5:
 						set {_v} to (eye location of {_target}).subtract(eye location of {_sentry}).toVector()
 						if vector length of {_v} < 0.01:
 							set {_v} to vector(0, -1, 0)
 						set {_yaw} to vector yaw of {_v}
-						set {_pitch} to vector pitch of {_v} + 10
-				if mod({_index}, 17) <= 13:
+						set {_pitch} to vector pitch of {_v} + 2
+				if mod({_index}, 17) >= 5:
 					{_yaw} is set
-					handleStrikeLine({_sentry}, {_yaw}, {_pitch}, 64, (a diamond), {_particleColor}, {_meleeCD}, false, {_advanced})
-					subtract 2 from {_pitch}
+					set {_yawTemp} to {_yaw} - 1
+					loop 2 times:
+						set {_pitchTemp} to {_pitch} - 1
+						loop 2 times:
+							handleStrikeLine({_sentry}, {_yawTemp}, {_pitchTemp}, 64, (a diamond), {_particleColor}, {_meleeCD}, false, {_advanced})
+							add 2 to {_pitchTemp}
+						add 2 to {_yawTemp}
+					subtract 1 from {_pitch}
 			else if {_nameSentry} is "七彩水晶":
-				if mod({_index}, 5) = 0:
-					if mod(({_index} / 5), 2) = 0:
+				if mod({_index}, 4) = 0:
+					if mod(({_index} / 4), 2) = 0:
 						set {_loopInd} to 1
 					else:
-						set {_loopInd} to 5
-					loop 4 times:
+						set {_loopInd} to 10
+					loop 9 times:
 						set {_loopIdx} to {_loopInd} + loop-number-2
 						if {_locationExplode::%{_loopIdx}%} is set:
 							handleEntityExplodeAtLoc({_sentry}, {_sentry}, {_locationExplode::%{_loopIdx}%})
 							clear {_locationExplode::%{_loopIdx}%}
+						else:
+							stop loop
 					if {_target} is not {_owner}:
 						set {_color} to new ArrayList(1)
 						{_color}.add({_particleColor}.get(a random integer between 0 and (({_particleColor}.size()) - 1)))
-						loop (a random integer between 2 and 4) times:
-							set {_targetLoc} to (eye location of {_target}).add((a random number between -8 and 8), (a random number between -8 and 8), (a random number between -8 and 8))
+						set {_lastLoc} to location of {_target}
+						wait 1 tick
+						set {_offSet} to (location of {_target}).subtract({_lastLoc}).toVector()
+						if vector length of {_offSet} > 0:
+							set vector length of {_offSet} to (vector length of {_offSet}) * 12
+						set {_predictedLoc} to (eye location of {_target}).add({_offSet})
+						loop (a random integer between 3 and 5) times:
+							set {_targetLoc} to {_predictedLoc}.clone().add((a random number between -4 and 4), (a random number between 0 and 4), (a random number between -4 and 4))
 							set {_locationExplode::%{_loopInd}%} to {_targetLoc}
 							add 1 to {_loopInd}
 							set {_v} to {_targetLoc}.clone().subtract(eye location of {_sentry}).toVector()
@@ -2750,18 +2766,19 @@ function minionAI(minion: entity, owner: player, nameMinion: text, minionSlot: n
 	set {_minionList} to metadata "minions" of {_owner}
 	set {_minionIndex} to metadata "nextMinionIndex" of {_owner}
 	set {_minionLimit} to (metadata "attrMap" of {_owner}).get("minionLimit")
+	set {_minionIdx} to {_minionIndex}
 	loop {_minionSlot} times:
 		if {_minionList}.size() < {_minionLimit}:
-			set {_minionIndex} to {_minionList}.size()
+			set {_minionIdx} to {_minionList}.size()
 		else:
-			set {_minionIndex} to mod({_minionIndex}, {_minionLimit})
-		if {_minionIndex} < {_minionList}.size():
-			try {_minionList}.get({_minionIndex}).remove()
-			{_minionList}.set({_minionIndex}, {_minion})
+			set {_minionIdx} to mod({_minionIdx}, {_minionLimit})
+		if {_minionIdx} < {_minionList}.size():
+			try {_minionList}.get[int]({_minionIdx}).remove()
+			{_minionList}.set({_minionIdx}, {_minion})
 		else:
 			{_minionList}.add({_minion})
-		add 1 to {_minionIndex}
-	set metadata "nextMinionIndex" of {_owner} to mod({_minionIndex}, {_minionLimit})
+		add 1 to {_minionIdx}
+	set metadata "nextMinionIndex" of {_owner} to mod({_minionIdx}, {_minionLimit})
 	set metadata "damageSourcePlayer" of {_minion} to {_owner}
 	set {_attrMap} to metadata "attrMap" of {_minion}
 	{_minion}.setRemoveWhenFarAway(false)

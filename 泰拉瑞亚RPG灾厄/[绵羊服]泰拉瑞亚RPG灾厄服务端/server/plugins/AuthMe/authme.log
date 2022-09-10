@@ -159,3 +159,504 @@
 [09-04 11:26:55]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
 [09-04 11:36:37]: [FINE] laomianyang logged in!
 [09-04 15:16:32]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-04 15:18:59]: [INFO] SQLite driver loaded
+[09-04 15:18:59]: [INFO] SQLite Setup finished
+[09-04 15:18:59]: [INFO] Hooked into Vault!
+[09-04 15:18:59]: [INFO] Hooked successfully into Essentials
+[09-04 15:18:59]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-04 15:18:59]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-04 15:18:59]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-04 15:18:59]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-04 15:18:59]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-04 15:18:59]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-04 15:24:07]: [FINE] laomianyang logged in!
+[09-04 16:08:36]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-05 09:19:40]: [INFO] SQLite driver loaded
+[09-05 09:19:40]: [INFO] SQLite Setup finished
+[09-05 09:19:40]: [INFO] Hooked into Vault!
+[09-05 09:19:40]: [INFO] Hooked successfully into Essentials
+[09-05 09:19:40]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-05 09:19:40]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-05 09:19:40]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-05 09:19:40]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-05 09:19:40]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-05 09:19:40]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-05 09:25:24]: [FINE] laomianyang logged in!
+[09-05 09:50:31]: [FINE] laomianyang logged in!
+[09-05 12:34:56]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-05 20:15:55]: [INFO] SQLite driver loaded
+[09-05 20:15:55]: [INFO] SQLite Setup finished
+[09-05 20:15:55]: [INFO] Hooked into Vault!
+[09-05 20:15:55]: [INFO] Hooked successfully into Essentials
+[09-05 20:15:55]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-05 20:15:55]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-05 20:15:55]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-05 20:15:55]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-05 20:15:55]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-05 20:15:55]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-05 20:20:22]: [FINE] laomianyang logged in!
+[09-05 20:20:23]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-05 20:20:23]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-05 20:23:48]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-05 20:46:13]: [INFO] SQLite driver loaded
+[09-05 20:46:13]: [INFO] SQLite Setup finished
+[09-05 20:46:13]: [INFO] Hooked into Vault!
+[09-05 20:46:13]: [INFO] Hooked successfully into Essentials
+[09-05 20:46:13]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-05 20:46:13]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-05 20:46:13]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-05 20:46:13]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-05 20:46:13]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-05 20:46:13]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-05 21:05:17]: [FINE] laomianyang logged in!
+[09-05 21:39:53]: [FINE] laomianyang logged in!
+[09-05 23:27:36]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-06 20:24:29]: [INFO] SQLite driver loaded
+[09-06 20:24:29]: [INFO] SQLite Setup finished
+[09-06 20:24:29]: [INFO] Hooked into Vault!
+[09-06 20:24:29]: [INFO] Hooked successfully into Essentials
+[09-06 20:24:29]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-06 20:24:29]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-06 20:24:29]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-06 20:24:29]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-06 20:24:29]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-06 20:24:29]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-06 20:30:19]: [FINE] laomianyang logged in!
+[09-06 21:31:51]: [FINE] laomianyang logged in!
+[09-06 21:52:24]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-06 21:52:31]: [INFO] SQLite driver loaded
+[09-06 21:52:31]: [INFO] SQLite Setup finished
+[09-06 21:52:31]: [INFO] Hooked into Vault!
+[09-06 21:52:31]: [INFO] Hooked successfully into Essentials
+[09-06 21:52:31]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-06 21:52:32]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-06 21:52:32]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-06 21:52:32]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-06 21:52:32]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-06 21:52:32]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-06 22:03:22]: [FINE] laomianyang logged in!
+[09-06 22:35:44]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-07 18:45:15]: [INFO] SQLite driver loaded
+[09-07 18:45:15]: [INFO] SQLite Setup finished
+[09-07 18:45:15]: [INFO] Hooked into Vault!
+[09-07 18:45:15]: [INFO] Hooked successfully into Essentials
+[09-07 18:45:15]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-07 18:45:15]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-07 18:45:15]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-07 18:45:15]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-07 18:45:15]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-07 18:45:15]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-07 18:59:09]: [FINE] laomianyang logged in!
+[09-07 20:33:13]: [FINE] laomianyang logged in!
+[09-07 20:35:12]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-07 21:55:08]: [INFO] SQLite driver loaded
+[09-07 21:55:08]: [INFO] SQLite Setup finished
+[09-07 21:55:08]: [INFO] Hooked into Vault!
+[09-07 21:55:09]: [INFO] Hooked successfully into Essentials
+[09-07 21:55:09]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-07 21:55:09]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-07 21:55:09]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-07 21:55:09]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-07 21:55:09]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-07 21:55:09]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-07 22:00:04]: [FINE] laomianyang logged in!
+[09-07 22:09:27]: [FINE] laomianyang logged in!
+[09-07 22:44:45]: [FINE] laomianyang logged in!
+[09-07 22:53:36]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-08 18:26:12]: [INFO] SQLite driver loaded
+[09-08 18:26:12]: [INFO] SQLite Setup finished
+[09-08 18:26:12]: [INFO] Hooked into Vault!
+[09-08 18:26:12]: [INFO] Hooked successfully into Essentials
+[09-08 18:26:12]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-08 18:26:12]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-08 18:26:12]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-08 18:26:12]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-08 18:26:12]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-08 18:26:12]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-08 18:30:15]: [FINE] laomianyang logged in!
+[09-08 20:23:34]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-08 23:57:23]: [INFO] SQLite driver loaded
+[09-08 23:57:23]: [INFO] SQLite Setup finished
+[09-08 23:57:23]: [INFO] Hooked into Vault!
+[09-08 23:57:23]: [INFO] Hooked successfully into Essentials
+[09-08 23:57:23]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-08 23:57:23]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-08 23:57:23]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-08 23:57:23]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-08 23:57:23]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-08 23:57:23]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-09 00:10:22]: [FINE] laomianyang logged in!
+[09-09 00:35:15]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-09 18:03:16]: [INFO] SQLite driver loaded
+[09-09 18:03:16]: [INFO] SQLite Setup finished
+[09-09 18:03:16]: [INFO] Hooked into Vault!
+[09-09 18:03:16]: [INFO] Hooked successfully into Essentials
+[09-09 18:03:16]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-09 18:03:16]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-09 18:03:16]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-09 18:03:16]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-09 18:03:16]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-09 18:03:16]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-09 18:12:35]: [FINE] laomianyang logged in!
+[09-09 20:04:34]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-09 21:26:01]: [INFO] SQLite driver loaded
+[09-09 21:26:01]: [INFO] SQLite Setup finished
+[09-09 21:26:01]: [INFO] Hooked into Vault!
+[09-09 21:26:01]: [INFO] Hooked successfully into Essentials
+[09-09 21:26:01]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-09 21:26:01]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-09 21:26:01]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-09 21:26:01]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-09 21:26:01]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-09 21:26:01]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-09 21:36:38]: [FINE] laomianyang logged in!
+[09-09 23:41:23]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-10 09:55:47]: [INFO] SQLite driver loaded
+[09-10 09:55:47]: [INFO] SQLite Setup finished
+[09-10 09:55:47]: [INFO] Hooked into Vault!
+[09-10 09:55:47]: [INFO] Hooked successfully into Essentials
+[09-10 09:55:47]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-10 09:55:47]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-10 09:55:47]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-10 09:55:47]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-10 09:55:47]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-10 09:55:47]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-10 10:00:03]: [INFO] SQLite driver loaded
+[09-10 10:00:03]: [INFO] SQLite Setup finished
+[09-10 10:00:03]: [INFO] Hooked into Vault!
+[09-10 10:00:03]: [INFO] Hooked successfully into Essentials
+[09-10 10:00:03]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-10 10:00:03]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-10 10:00:03]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-10 10:00:03]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-10 10:00:03]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-10 10:00:03]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-10 10:02:00]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-10 10:10:48]: [INFO] SQLite driver loaded
+[09-10 10:10:48]: [INFO] SQLite Setup finished
+[09-10 10:10:48]: [INFO] Hooked into Vault!
+[09-10 10:10:48]: [INFO] Hooked successfully into Essentials
+[09-10 10:10:48]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-10 10:10:48]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-10 10:10:48]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-10 10:10:48]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-10 10:10:48]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-10 10:10:48]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-10 10:18:29]: [FINE] laomianyang logged in!
+[09-10 10:27:44]: [FINE] laomianyang logged in!
+[09-10 10:28:09]: [INFO] laomianyang logged out
+[09-10 10:28:11]: [FINE] laomianyang logged in!
+[09-10 11:00:35]: [FINE] laomianyang logged in!
+[09-10 11:11:10]: [FINE] laomianyang used the wrong password
+[09-10 11:11:13]: [FINE] laomianyang logged in!
+[09-10 11:32:54]: [INFO] AuthMe 5.2-b1542 disabled!
+[09-10 12:23:11]: [INFO] SQLite driver loaded
+[09-10 12:23:11]: [INFO] SQLite Setup finished
+[09-10 12:23:11]: [INFO] Hooked into Vault!
+[09-10 12:23:11]: [INFO] Hooked successfully into Essentials
+[09-10 12:23:11]: [INFO] Essentials spawn file not found: 'C:\Users\sunny\OneDrive\Desktop\other\MC\server\[绵羊服]泰拉瑞亚RPG灾厄服务端\server\plugins\Essentials\spawn.yml'
+[09-10 12:23:11]: [WARN] Could not download GeoLiteAPI database [UnknownHostException]: geolite.maxmind.com
+[09-10 12:23:11]: java.net.UnknownHostException: geolite.maxmind.com
+	at java.net.AbstractPlainSocketImpl.connect(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at sun.net.NetworkClient.doConnect(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.openServer(Unknown Source)
+	at sun.net.www.http.HttpClient.<init>(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.http.HttpClient.New(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(Unknown Source)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(Unknown Source)
+	at fr.xephi.authme.service.GeoIpService$1.run(GeoIpService.java:87)
+	at java.lang.Thread.run(Unknown Source)
+
+[09-10 12:23:11]: [INFO] Development builds are available on our jenkins, thanks to f14stelt.
+[09-10 12:23:11]: [INFO] Do you want a good game server? Look at our sponsor GameHosting.it leader in Italy as Game Server Provider!
+[09-10 12:23:11]: [INFO] AuthMe 5.2 build n.1542 correctly enabled!
+[09-10 12:28:59]: [FINE] laomianyang logged in!
+[09-10 12:38:26]: [FINE] laomianyang logged in!
+[09-10 13:20:11]: [FINE] laomianyang logged in!
+[09-10 13:25:57]: [FINE] laomianyang logged in!
+[09-10 13:27:29]: [FINE] laomianyang logged in!
+[09-10 14:31:36]: [FINE] laomianyang logged in!
+[09-10 14:43:50]: [FINE] laomianyang logged in!
+[09-10 14:45:02]: [FINE] laomianyang logged in!
+[09-10 14:48:42]: [FINE] laomianyang logged in!
+[09-10 15:37:10]: [FINE] laomianyang logged in!
+[09-10 15:37:21]: [FINE] laomianyang logged in!

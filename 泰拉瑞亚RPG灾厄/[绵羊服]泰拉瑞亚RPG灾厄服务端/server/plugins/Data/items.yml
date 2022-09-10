@@ -406,6 +406,24 @@
   - 'defence: 2'
   worth: 20000
   rarity: 1
+钨钢屏障生成仪:
+  item: LEASH
+  lore:
+  - §r[饰品]
+  - §r10 防御
+  attributes:
+  - 'defence: 10'
+  worth: 200000
+  rarity: 1
+钨钢电池:
+  item: LEASH
+  lore:
+  - §r[饰品]
+  - §r增加7%召唤伤害
+  attributes:
+  - 'damageSummonMulti: 0.07'
+  worth: 200000
+  rarity: 1
 鲨牙项链:
   item: LEASH
   lore:
@@ -2672,6 +2690,7 @@
   - 'damageType: Bullet'
   - 'crit: 4'
   - 'projectileSpeed: 5'
+  - 'projectileSpeedMulti: 0.01'
   - 'knockback: 0'
   - 'useTime: 16'
   worth: 1000000

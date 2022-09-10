@@ -14,6 +14,7 @@ spawnInfo:
         哥布林弓箭手: 3
     day:
         史莱姆: 1
+        钨钢军团: 0.02
     night:
         僵尸: 16
         恶魔之眼: 8
@@ -385,6 +386,56 @@ mobInfo:
                     knockback: 2
                     knockbackResistance: 0.5
                     health: 120
+    钨钢回转器:
+        name: "钨钢回转器"
+        monsterType: "HUSK"
+        disguiseType: "SLIME_3"
+        variants:
+            default1:
+                attributes:
+                    damage: 60
+                    damageType: "Melee"
+                    defence: 10
+                    knockback: 2
+                    knockbackResistance: 0.14
+                    health: 72
+    钨钢悬浮坦克:
+        name: "钨钢悬浮坦克"
+        monsterType: "SLIME"
+        variants:
+            default1:
+                attributes:
+                    damage: 80
+                    damageType: "Melee"
+                    defence: 8
+                    knockback: 2
+                    knockbackResistance: 0.9
+                    health: 60
+    钨钢无人机:
+        name: "钨钢无人机"
+        monsterType: "SLIME"
+        variants:
+            default1:
+                attributes:
+                    damage: 96
+                    damageType: "Melee"
+                    defence: 8
+                    knockback: 2
+                    knockbackResistance: 0.32
+                    health: 84
+    钨钢漫步者:
+        name: "钨钢漫步者"
+        monsterType: "HUSK"
+        disguiseType: "SLIME_3"
+        variants:
+            default1:
+                attributes:
+                    damage: 128
+                    damageType: "Melee"
+                    defence: 26
+                    knockback: 2
+                    knockbackResistance: 0.85
+                    health: 40
     史莱姆:
         name: "史莱姆"
         monsterType: "SLIME"

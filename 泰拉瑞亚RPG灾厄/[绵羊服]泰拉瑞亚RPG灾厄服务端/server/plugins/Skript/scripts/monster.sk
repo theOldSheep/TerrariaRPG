@@ -168,9 +168,9 @@ function attemptSpawnType(spawnType: text, ply: player) :: boolean:
 			{_spawnInfoMap}.put(loop-value, {_spawnWeight})
 	if {_total} = 0:
 		return false
-	set {_total} to a random integer between 0 and {_total}
+	set {_total} to a random number between 0 and {_total}
 	set {_iterator} to {_spawnInfoMap}.entrySet().iterator()
-	while {_total} > 0:
+	while {_total} > 0.001:
 		set {_next} to {_iterator}.next()
 		remove {_next}.getValue() from {_total}
 		set {_mobType} to {_next}.getKey()
@@ -233,6 +233,12 @@ function spawnMob(type: text, loc: location, ply: player):
 	if block at {_loc} is solid:
 		stop trigger
 	if block 1 above {_loc} is solid:
+		stop trigger
+	if {_type} is "钨钢军团":
+		spawnMob("钨钢回转器", {_loc}, {_ply})
+		spawnMob("钨钢悬浮坦克", {_loc}, {_ply})
+		spawnMob("钨钢无人机", {_loc}, {_ply})
+		spawnMob("钨钢漫步者", {_loc}, {_ply})
 		stop trigger
 	set {_entityType} to yml value "mobInfo.%{_type}%.monsterType" from file "plugins/Data/mobSpawning.yml"
 	set {_name} to yml value "mobInfo.%{_type}%.name" from file "plugins/Data/mobSpawning.yml"
@@ -310,11 +316,9 @@ function spawnMob(type: text, loc: location, ply: player):
 		else if {_type} is "探测怪":
 			{_entity}.setSize(4)
 			{_entity}.setGravity(false)
-		else if {_type} is "雪花怪" or "礼物宝箱怪" or "精灵直升机" or "腐化宝箱怪" or "神圣宝箱怪":
+		else if {_type} is "雪花怪" or "礼物宝箱怪" or "精灵直升机" or "腐化宝箱怪" or "神圣宝箱怪" or "钨钢悬浮坦克" or "钨钢无人机":
 			{_entity}.setSize(3)
-			if {_type} is "精灵直升机":
-				{_entity}.setGravity(false)
-			else if {_type} is "雪花怪":
+			if {_type} is "精灵直升机" or "雪花怪" or "钨钢悬浮坦克" or "钨钢无人机":
 				{_entity}.setGravity(false)
 		else if {_type} is "蛾怪":
 			{_entity}.setSize(6)
@@ -330,6 +334,8 @@ function spawnMob(type: text, loc: location, ply: player):
 	else if {_type} is "幽灵" or "死神":
 		{_entity}.setGravity(false)
 		set {_entity}.getHandle().noclip to true
+	else if {_type} is "钨钢回转器" or "钨钢漫步者":
+		{_entity}.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.45)
 	set metadata "motherType" of {_entity} to {_type}
 	set {_health} to yml value "%{_parentNode}%.attributes.health" from file "plugins/Data/mobSpawning.yml"
 	set {_hasHealthMulti} to yml value "mobInfo.%{_type}%.hasHealthMulti" from file "plugins/Data/mobSpawning.yml"
@@ -393,7 +399,7 @@ function entityAI(entity: entity, target: entity, type: text):
 	if {_entity} has scoreboard tag "isMonster":
 		set {_isMonster} to true
 	makeTarget({_entity}, {_target})
-	if {_type} is "僵尸":
+	if {_type} is "僵尸" or "钨钢回转器":
 		while health of {_entity} > 0:
 			if {_entity}.isDead() is true:
 				stop loop
@@ -497,7 +503,7 @@ function entityAI(entity: entity, target: entity, type: text):
 			else:
 				add 1 to {_angleIndex}
 			wait 5 ticks
-	else if {_type} is "恶魔之眼" or "探测怪" or "飞蛇":
+	else if {_type} is "恶魔之眼" or "探测怪" or "飞蛇" or "钨钢悬浮坦克" or "钨钢无人机":
 		set {_index} to 0
 		while health of {_entity} > 0:
 			if {_entity}.isDead() is true:
@@ -527,16 +533,21 @@ function entityAI(entity: entity, target: entity, type: text):
 				if {_target} is set:
 					if {_type} is "探测怪":
 						set {_targetLoc} to (eye location of {_target}).add(sin({_index} * 5) * 16, 5, cos({_index} * 5) * 16)
+					else if {_type} is "钨钢无人机":
+						set {_targetLoc} to (eye location of {_target}).add(sin({_index} * 5) * 4, 5, cos({_index} * 5) * 4)
 					else:
 						set {_targetLoc} to eye location of {_target}
 					set {_dV} to {_targetLoc}.subtract(location of {_entity}).toVector()
-					if {_type} is "探测怪":
+					if {_type} is "探测怪" or "钨钢无人机":
 						if mod({_index}, 4) = 0:
 							set {_velocity} to (location of {_target}).subtract(location of {_entity}).toVector()
 							
 							if {_type} is "探测怪":
 								set vector length of {_velocity} to 1.5
 								set {_projectile} to mobProjectile({_entity}, {_velocity}, (metadata "attrMap" of {_entity}), "激光")
+							else:
+								set vector length of {_velocity} to 1
+								set {_projectile} to mobProjectile({_entity}, {_velocity}, (metadata "attrMap" of {_entity}), "钨钢光球")
 							
 							{_projectile}.setGravity(false)
 							set metadata "penetration" of {_projectile} to 10
@@ -616,7 +627,7 @@ function entityAI(entity: entity, target: entity, type: text):
 					
 					{_projectile}.setGravity(false)
 					set metadata "penetration" of {_projectile} to 10
-					projectileAI({_projectile}, "MAGIC_PROJECTILE")
+					projectileAI({_projectile}, "MAGIC")
 				else if {_type} is "红恶魔":
 					mod({_index}, 4) = 0
 					set {_velocity} to {_target}.getLocation().subtract({_entity}.getLocation()).toVector()
@@ -625,7 +636,7 @@ function entityAI(entity: entity, target: entity, type: text):
 					
 					{_projectile}.setGravity(false)
 					set metadata "penetration" of {_projectile} to 10
-					projectileAI({_projectile}, "MAGIC_PROJECTILE")
+					projectileAI({_projectile}, "MAGIC")
 			else:
 				set {_dV} to vector(0, 0.3, 0)
 			push {_entity} {_dV}
