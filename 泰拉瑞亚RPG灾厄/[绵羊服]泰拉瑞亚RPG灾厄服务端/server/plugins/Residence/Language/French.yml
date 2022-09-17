@@ -514,7 +514,8 @@ CommandHelp:
           Description: Selection Commands
           Info:
           - This command selects areas for usage with residence.
-          - /res select [x] [y] [z] - selects a radius of blocks, with you in the middle.
+          - /res select [x] [y] [z] - selects a radius of blocks, with you in the
+            middle.
           SubCommands:
             coords:
               Description: Display selected coordinates
@@ -601,12 +602,14 @@ CommandHelp:
           Description: List All Residences
           Info:
           - 'Usage: /res listall <page>'
-          - Lists all residences on the server. (except hidden ones that you dont own)
+          - Lists all residences on the server. (except hidden ones that you dont
+            own)
         info:
           Description: Show info on a residence.
           Info:
           - 'Usage: /res info <residence>'
-          - Leave off <residence> to display info for the residence your currently in.
+          - Leave off <residence> to display info for the residence your currently
+            in.
         area:
           Description: Manage physical areas for a residence.
           SubCommands:
@@ -632,7 +635,8 @@ CommandHelp:
               Info:
               - 'Usage: /res area replace [residence] [areaID]'
               - You must first select two points first.
-              - Replacing a area will charge the difference in size if the new area is bigger.
+              - Replacing a area will charge the difference in size if the new area
+                is bigger.
         give:
           Description: Give residence to player.
           Info:
@@ -724,12 +728,16 @@ CommandHelp:
               Description: Rent a residence
               Info:
               - 'Usage: /res market rent [residence] <autorenew>'
-              - Rents a residence.  Autorenew can be either true or false.  If true, the residence will be automatically re-rented upon expire if the residence owner has allowed it.
+              - Rents a residence.  Autorenew can be either true or false.  If true,
+                the residence will be automatically re-rented upon expire if the residence
+                owner has allowed it.
             rentable:
               Description: Make a residence rentable.
               Info:
               - 'Usage: /res market rentable [residence] [cost] [days] <repeat>'
-              - Makes a residence rentable for [cost] money for every [days] number of days.  If <repeat> is true, the residence will automatically be able to be rented again after the current rent expires.
+              - Makes a residence rentable for [cost] money for every [days] number
+                of days.  If <repeat> is true, the residence will automatically be
+                able to be rented again after the current rent expires.
             autopay:
               Description: Sets residence AutoPay to given value
               Info:
@@ -746,8 +754,10 @@ CommandHelp:
               Description: Remove a residence from rent or rentable.
               Info:
               - '&eUsage: &6/res market unrent [residence]'
-              - If you are the renter, this command releases the rent on the house for you.
-              - If you are the owner, this command makes the residence not for rent anymore.
+              - If you are the renter, this command releases the rent on the house
+                for you.
+              - If you are the owner, this command makes the residence not for rent
+                anymore.
         rc:
           Description: Joins current or defined residence chat chanel
           Info:
@@ -821,7 +831,8 @@ CommandHelp:
           Description: Reset residence to default flags.
           Info:
           - '&eUsage: &6/res reset <residence>'
-          - Resets the flags on a residence to their default.  You must be the owner or an admin to do this.
+          - Resets the flags on a residence to their default.  You must be the owner
+            or an admin to do this.
         listhidden:
           Description: List Hidden Residences (ADMIN ONLY)
           Info:
@@ -850,7 +861,8 @@ CommandHelp:
           Description: Mirrors Flags
           Info:
           - 'Usage: /res mirror [Source Residence] [Target Residence]'
-          - Mirrors flags from one residence to another.  You must be owner of both or a admin to do this.
+          - Mirrors flags from one residence to another.  You must be owner of both
+            or a admin to do this.
         shop:
           Description: Manage residence shop
           Info:
@@ -885,12 +897,14 @@ CommandHelp:
               Description: Sets residence shop description
               Info:
               - 'Usage: /res shop setdesc [text]'
-              - Sets residence shop description. Color code supported. For new line use /n
+              - Sets residence shop description. Color code supported. For new line
+                use /n
             createboard:
               Description: Create res shop board
               Info:
               - 'Usage: /res shop createboard [place]'
-              - Creates res shop board from selected area. Place - position from which to start filling board
+              - Creates res shop board from selected area. Place - position from which
+                to start filling board
             deleteboard:
               Description: Deletes res shop board
               Info:
@@ -970,7 +984,8 @@ CommandHelp:
               Info:
               - '&eUsage: &6/res set/pset <residence> anvil true/false/remove'
             admin:
-              Description: Autorise ou non la possibilite de changer les flags de la residence  NE PAS DONNER A N IMPORTE QUI.
+              Description: Autorise ou non la possibilite de changer les flags de
+                la residence  NE PAS DONNER A N IMPORTE QUI.
               Info:
               - '&eUsage: &6/res pset <residence> [flag] true/false/remove'
             animalkilling:
@@ -1054,7 +1069,8 @@ CommandHelp:
               Info:
               - '&eUsage: &6/res set <residence> [flag] true/false/remove'
             craft:
-              Description: Donne les permissions d utilisation des tables de craft, enchant et alambic.
+              Description: Donne les permissions d utilisation des tables de craft,
+                enchant et alambic.
               Info:
               - '&eUsage: &6/res set/pset <residence> [flag] true/false/remove'
             creeper:
@@ -1282,7 +1298,8 @@ CommandHelp:
               Info:
               - '&eUsage: &6/res set/pset <residence> [flag] true/false/remove'
             piston:
-              Description: allow or deny pistons from pushing or pulling blocks in the residence
+              Description: allow or deny pistons from pushing or pulling blocks in
+                the residence
               Info:
               - '&eUsage: &6/res set <residence> [flag] true/false/remove'
             pistonprotection:
@@ -1374,11 +1391,13 @@ CommandHelp:
               Info:
               - '&eUsage: &6/res set/pset <residence> [flag] true/false/remove'
             trusted:
-              Description: Donne la permission de construire, bouger, utiliser, se téléporter, stocker a un joueur
+              Description: Donne la permission de construire, bouger, utiliser, se
+                téléporter, stocker a un joueur
               Info:
               - '&eUsage: &6/res pset <residence> [flag] true/false/remove'
             use:
-              Description: Autorise ou non l utilisation de portes, leviers, boutons etc...
+              Description: Autorise ou non l utilisation de portes, leviers, boutons
+                etc...
               Info:
               - '&eUsage: &6/res set/pset <residence> [flag] true/false/remove'
             vehicledestroy:
@@ -1437,7 +1456,8 @@ CommandHelp:
           Description: Create subzones in residences.
           Info:
           - 'Usage: /res subzone <residence name> [subzone name]'
-          - If residence name is left off, will attempt to use residence your standing in.
+          - If residence name is left off, will attempt to use residence your standing
+            in.
         removeworld:
           Description: Remove all residences from world
           Info:
@@ -1453,7 +1473,8 @@ CommandHelp:
           Info:
           - 'Usage: /res set <residence> [flag] [true/false/remove]'
           - To see a list of flags, use /res flags ?
-          - These flags apply to any players who do not have the flag applied specifically to them. (see /res pset ?)
+          - These flags apply to any players who do not have the flag applied specifically
+            to them. (see /res pset ?)
         clearflags:
           Description: Remove all flags from residence
           Info:
@@ -1559,7 +1580,8 @@ CommandHelp:
           Description: Teleport to a residence
           Info:
           - 'Usage: /res tp [residence]'
-          - Teleports you to a residence, you must have +tp flag access or be the owner.
+          - Teleports you to a residence, you must have +tp flag access or be the
+            owner.
           - Your permission group must also be allowed to teleport by the server admin.
         setall:
           Description: Set general flags on all residences

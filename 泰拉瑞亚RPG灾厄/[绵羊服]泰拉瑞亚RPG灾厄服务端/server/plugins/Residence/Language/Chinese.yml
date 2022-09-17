@@ -703,8 +703,10 @@ CommandHelp:
               Description: Remove a residence from rent or rentable.
               Info:
               - '&eUsage: &6/res market unrent [residence]'
-              - If you are the renter, this command releases the rent on the house for you.
-              - If you are the owner, this command makes the residence not for rent anymore.
+              - If you are the renter, this command releases the rent on the house
+                for you.
+              - If you are the owner, this command makes the residence not for rent
+                anymore.
         rc:
           Description: 加入当前或者指定的领地聊天频道
           Info:

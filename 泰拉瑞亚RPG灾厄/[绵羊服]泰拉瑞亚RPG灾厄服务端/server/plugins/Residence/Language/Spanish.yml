@@ -499,7 +499,8 @@ CommandHelp:
           Description: Comandos de selección
           Info:
           - Este comando selecciona áreas para hacer residencias.
-          - /res select [x] [y] [z] - selecciona un número de bloques alrededor de tí.
+          - /res select [x] [y] [z] - selecciona un número de bloques alrededor de
+            tí.
           SubCommands:
             coords:
               Description: Mostrar coordinadas de la selección
@@ -592,7 +593,8 @@ CommandHelp:
           Description: Mostrar información de una residencia.
           Info:
           - 'Uso: /res info <residencia>'
-          - Si no especifica <residencia> se mostrará la información de la residencia en la que estás.
+          - Si no especifica <residencia> se mostrará la información de la residencia
+            en la que estás.
         area:
           Description: Gestiona áreas físicas de una residencia.
           SubCommands:
@@ -618,7 +620,8 @@ CommandHelp:
               Info:
               - 'Uso: /res area replace [residencia] [IDdelArea]'
               - Tienes que seleccionar dos puntos primero.
-              - El reemplazamiento de un área cobrará la diferencia de tamaño si la nueva és más grande.
+              - El reemplazamiento de un área cobrará la diferencia de tamaño si la
+                nueva és más grande.
         give:
           Description: Give residence to player.
           Info:
@@ -710,12 +713,14 @@ CommandHelp:
               Description: Alquilar a una residencia
               Info:
               - 'Uso: /res market rent [residencia] <renovacionauto>'
-              - A;quilar a una residencia. Renovacion auto puede ser true (si) o false (no).
+              - A;quilar a una residencia. Renovacion auto puede ser true (si) o false
+                (no).
             rentable:
               Description: Poner en alquiler a una residencia.
               Info:
               - 'Uso: /res market rentable [residencia] [coste] [días] <renovar>'
-              - Pone una residencia en alquiler por [coste] dinero y para cada [días] días. Si <renover> es true, el comprador puede renovar automaticámente.
+              - Pone una residencia en alquiler por [coste] dinero y para cada [días]
+                días. Si <renover> es true, el comprador puede renovar automaticámente.
             autopay:
               Description: Sets residence AutoPay to given value
               Info:
@@ -732,8 +737,10 @@ CommandHelp:
               Description: Remove a residence from rent or rentable.
               Info:
               - '&eUsage: &6/res market unrent [residence]'
-              - If you are the renter, this command releases the rent on the house for you.
-              - If you are the owner, this command makes the residence not for rent anymore.
+              - If you are the renter, this command releases the rent on the house
+                for you.
+              - If you are the owner, this command makes the residence not for rent
+                anymore.
         rc:
           Description: Joins current or defined residence chat channel
           Info:
@@ -807,7 +814,8 @@ CommandHelp:
           Description: Reset residence to default flags.
           Info:
           - '&eUsage: &6/res reset <residence/all>'
-          - Resets the flags on a residence to their default.  You must be the owner or an admin to do this.
+          - Resets the flags on a residence to their default.  You must be the owner
+            or an admin to do this.
         listhidden:
           Description: Listear residencias ocultas (sólo admins)
           Info:
@@ -836,7 +844,8 @@ CommandHelp:
           Description: Copiar los flags de una residencia.
           Info:
           - 'Uso: /res mirror [residencia fuente] [residencia objetiva]'
-          - Copia los flags de una residencia a otra. Tienes que ser el propietario de las dos residencias o admin para esto.
+          - Copia los flags de una residencia a otra. Tienes que ser el propietario
+            de las dos residencias o admin para esto.
         shop:
           Description: Manage residence shop
           Info:
@@ -871,12 +880,14 @@ CommandHelp:
               Description: Sets residence shop description
               Info:
               - '&eUsage: &6/res shop setdesc [text]'
-              - Sets residence shop description. Color code supported. For new line use /n
+              - Sets residence shop description. Color code supported. For new line
+                use /n
             createboard:
               Description: Create res shop board
               Info:
               - '&eUsage: &6/res shop createboard [place]'
-              - Creates res shop board from selected area. Place - position from which to start filling board
+              - Creates res shop board from selected area. Place - position from which
+                to start filling board
             deleteboard:
               Description: Deletes res shop board
               Info:
@@ -906,7 +917,8 @@ CommandHelp:
           - build - autoriza o denega construcción
           - use - autoriza o denega el uso de puertas, botones, palancas, etc.
           - move - autoriza o denega movimiento
-          - container - autoriza o denega el uso de cofres, hornos, dispensadores, etc.
+          - container - autoriza o denega el uso de cofres, hornos, dispensadores,
+            etc.
           - trusted - Gives build, use, move, container and tp flags
           - place - autoriza o denega plazamiento de bloques, anula el flag build
           - destroy - autoriza o denega destrucción de bloques, anula el flag build
@@ -964,7 +976,8 @@ CommandHelp:
               Info:
               - '&eUsage: &6/res set <residence> anvilbreak true/false/remove'
             backup:
-              Description: If set to true, restores previous look of area (WordEdit required)
+              Description: If set to true, restores previous look of area (WordEdit
+                required)
               Info:
               - '&eUsage: &6/res set <residence> backup true/false/remove'
             bank:
@@ -1004,7 +1017,8 @@ CommandHelp:
               Info:
               - '&eUsage: &6/res set <residence> canimals true/false/remove'
             chorustp:
-              Description: Allow or disallow teleporting to the residence with chorus fruit
+              Description: Allow or disallow teleporting to the residence with chorus
+                fruit
               Info:
               - '&eUsage: &6/res set/pset <residence> chorustp true/false/remove'
             chat:
@@ -1060,7 +1074,8 @@ CommandHelp:
               Info:
               - '&eUsage: &6/res set <residence> decay true/false/remove'
             destroy:
-              Description: Allows or denys only destruction of blocks, overrides the build flag
+              Description: Allows or denys only destruction of blocks, overrides the
+                build flag
               Info:
               - '&eUsage: &6/res set/pset <residence> destroy true/false/remove'
             dryup:
@@ -1260,7 +1275,8 @@ CommandHelp:
               Info:
               - '&eUsage: &6/res set/pset <residence> pressure true/false/remove'
             piston:
-              Description: Allow or deny pistons from pushing or pulling blocks in the residence
+              Description: Allow or deny pistons from pushing or pulling blocks in
+                the residence
               Info:
               - '&eUsage: &6/res set <residence> piston true/false/remove'
             pistonprotection:
@@ -1268,7 +1284,8 @@ CommandHelp:
               Info:
               - '&eUsage: &6/res set <residence> pistonprotection true/false/remove'
             place:
-              Description: Allows or denys only placement of blocks, overrides the build flag
+              Description: Allows or denys only placement of blocks, overrides the
+                build flag
               Info:
               - '&eUsage: &6/res set/pset <residence> place true/false/remove'
             pvp:
@@ -1415,7 +1432,8 @@ CommandHelp:
           Description: Crear subzonas en residencias.
           Info:
           - 'Uso: /res subzone <nombre residencia> [nombre subzona]'
-          - Si el nombre de residencia no se especifica, intentará utilizar la residencia en la cual estás.
+          - Si el nombre de residencia no se especifica, intentará utilizar la residencia
+            en la cual estás.
         removeworld:
           Description: Remove all residences from world
           Info:
@@ -1431,7 +1449,8 @@ CommandHelp:
           Info:
           - 'Uso: /res set <residencia> [flag] [true/false/remove]'
           - Para ver una lista de flags, utiliza /res flags ?
-          - Los flags se aplican a cualquier jugador que no tiene flags especificos (ver /res pset ?).
+          - Los flags se aplican a cualquier jugador que no tiene flags especificos
+            (ver /res pset ?).
         clearflags:
           Description: Remove all flags from residence
           Info:
@@ -1462,7 +1481,8 @@ CommandHelp:
           Description: Establecer el punto de teletransporte de una residencia
           Info:
           - 'Uso: /res tpset'
-          - Establecerá el punto de teletransporte de una residencia al punto en el que estás.
+          - Establecerá el punto de teletransporte de una residencia al punto en el
+            que estás.
           - Tienes que estar en la residencia para usar este comando.
           - Tambien tienes que ser el propietario o tener el flag +admin.
         tpconfirm:
@@ -1506,13 +1526,15 @@ CommandHelp:
           Info:
           - 'Uso: /res lease [renew/cost] [residencia]'
           - /res lease cost mostrará el coste de renovación de un arrendamiento.
-          - /res lease renew renovará el arrendamiento de una residencia si tienes suficiente dinero.
+          - /res lease renew renovará el arrendamiento de una residencia si tienes
+            suficiente dinero.
           SubCommands:
             set:
               Description: Poner el tiempo de arrendamiento (sólo admins)
               Info:
               - 'Uso: /resadmin lease set [residencia] [#días/infinite]'
-              - Pone el tiempo de arrendamiento de [residencia] a un número de días, o infinito (infinite)
+              - Pone el tiempo de arrendamiento de [residencia] a un número de días,
+                o infinito (infinite)
             renew:
               Description: Renew the lease time
               Info:
@@ -1537,7 +1559,8 @@ CommandHelp:
           Description: Teletransportar a una residencia
           Info:
           - 'Uso: /res tp [residencia]'
-          - Teletransportate a una residencia. Tienes que tener el flag +tp o ser admin.
+          - Teletransportate a una residencia. Tienes que tener el flag +tp o ser
+            admin.
           - Tu grupo tambien tiene que ser autorizado a teletransportarse.
         setall:
           Description: Set general flags on all residences
@@ -1552,4 +1575,5 @@ CommandHelp:
           Info:
           - 'Uso: /resload'
           - 'INSEGURO: no guarda las residencias antes.'
-          - Carga las residencias del fichero despues de haber hecho cambios en el fichero.
+          - Carga las residencias del fichero despues de haber hecho cambios en el
+            fichero.

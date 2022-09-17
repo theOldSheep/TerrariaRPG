@@ -170,6 +170,36 @@ function getWorth(name: text) :: integer:
 		set {_worthMulti} to {_worthMulti} parsed as number
 		set {_worth} to {_worth} * {_worthMulti}
 	return round({_worth} / 100) * 100
+function getMaxHealthByTier(tier: number) :: number:
+	if mod({_tier}, 1) > 0.5:
+		set {_tier} to ceil({_tier})
+	else:
+		set {_tier} to floor({_tier})
+	if {_tier} < 21:
+		return {_tier} * 40
+	else if {_tier} < 41:
+		return 800 + (({_tier} - 20) * 10)
+	else if {_tier} = 41:
+		return 1050
+	else if {_tier} = 42:
+		return 1100
+	else if {_tier} = 43:
+		return 1150
+	else:
+		return 1200
+function getMaxManaByTier(tier: number) :: number:
+	if mod({_tier}, 1) > 0.5:
+		set {_tier} to ceil({_tier})
+	else:
+		set {_tier} to floor({_tier})
+	if {_tier} < 11:
+		return {_tier} * 20
+	else if {_tier} = 11:
+		return 250
+	else if {_tier} = 12:
+		return 300
+	else:
+		return 350
 function getBiome(loc: location) :: text:
 	if "%(world of {_loc})%" is "world_nether":
 		return "underworld"
@@ -679,48 +709,50 @@ function handleGrapplingHook(ply: player):
 				stop loop
 			if {_hooks}.size() = 0:
 				stop loop
-			set {_center} to location(0, 0, 0, {_hookWorld})
-			set {_hookedAmount} to 0
-			loop ...{_hooks}:
-				set {_hook} to loop-value
-				if (distance between location of {_ply} and location of {_hook}) / 2 > {_hookReach}:
-					{_hook}.remove()
-				if {_hook}.isDead() is false:
-					if {_hook}.getHandle().inGround is true:
-						{_center}.add(location of {_hook})
-						add 1 to {_hookedAmount}
-					#draw chain of the hook
-					set {_dVec} to (location of {_hook}).subtract(location of {_ply}).subtract(0, 1, 0).toVector()
-					if vector length of {_dVec} > 0:
-						set {_loopTime} to floor((vector length of {_dVec}) * 2)
-						set {_color} to metadata "colorInfo" of {_hook}
-						loop {_loopTime} times:
-							set {_particleLoc} to (location of {_ply}).add(0, 1, 0)
-							set {_vector} to {_dVec}.clone()
-							set vector length of {_vector} to (0.5 * (loop-number))
-							{_particleLoc}.add({_vector})
-							{_hookWorld}.spawnParticle(Particle.REDSTONE, {_particleLoc}, 0, ({_color}.getRed() / 255 - 1), ({_color}.getGreen() / 255), ({_color}.getBlue() / 255))
+			set {_mount} to vehicle of {_ply}
+			if {_mount} is set:
+				set {_center} to location(0, 0, 0, {_hookWorld})
+				set {_hookedAmount} to 0
+				loop ...{_hooks}:
+					set {_hook} to loop-value
+					if (distance between location of {_ply} and location of {_hook}) / 2 > {_hookReach}:
+						{_hook}.remove()
+					if {_hook}.isDead() is false:
+						if {_hook}.getHandle().inGround is true:
+							{_center}.add(location of {_hook})
+							add 1 to {_hookedAmount}
+						#draw chain of the hook
+						set {_dVec} to (location of {_hook}).subtract(location of {_ply}).subtract(0, 1, 0).toVector()
+						if vector length of {_dVec} > 0:
+							set {_loopTime} to floor((vector length of {_dVec}) * 2)
+							set {_color} to metadata "colorInfo" of {_hook}
+							loop {_loopTime} times:
+								set {_particleLoc} to (location of {_ply}).add(0, 1, 0)
+								set {_vector} to {_dVec}.clone()
+								set vector length of {_vector} to (0.5 * (loop-number))
+								{_particleLoc}.add({_vector})
+								{_hookWorld}.spawnParticle(Particle.REDSTONE, {_particleLoc}, 0, ({_color}.getRed() / 255 - 1), ({_color}.getGreen() / 255), ({_color}.getBlue() / 255))
+					else:
+						{_hooks}.remove({_hook})
+				if {_hookedAmount} >= 1:
+					set gravity of {_mount} to off
+					set metadata "thrust" of {_ply} to 0
+					set metadata "thrustProgress" of {_ply} to 0
+					{_mount}.setFallDistance(0)
+					{_center}.multiply(1 / {_hookedAmount})
+					set {_thrust} to {_center}.subtract(location of {_ply}).subtract(0, 1, 0).toVector()
+					if vector length of {_thrust} > {_hookPullSpeed} * 6:
+						set vector length of {_thrust} to {_hookPullSpeed}
+					else if vector length of {_thrust} > 0:
+						set vector length of {_thrust} to (vector length of {_thrust} * 0.167)
+					set velocity of {_mount} to {_thrust}
 				else:
-					{_hooks}.remove({_hook})
-			if {_hookedAmount} >= 1:
-				set gravity of {_ply} to off
-				set metadata "thrust" of {_ply} to 0
-				set metadata "thrustProgress" of {_ply} to 0
-				{_ply}.setFallDistance(0)
-				{_center}.multiply(1 / {_hookedAmount})
-				set {_thrust} to {_center}.subtract(location of {_ply}).subtract(0, 1, 0).toVector()
-				if vector length of {_thrust} > {_hookPullSpeed} * 6:
-					set vector length of {_thrust} to {_hookPullSpeed}
-				else if vector length of {_thrust} > 0:
-					set vector length of {_thrust} to (vector length of {_thrust} * 0.167)
-				set velocity of {_ply} to {_thrust}
-			else:
-				set gravity of {_ply} to on
+					set gravity of {_mount} to on
 			wait 3 ticks
 		loop ...{_hooks}:
 			try loop-value.remove()
 		{_hooks}.clear()
-		set gravity of {_ply} to on
+		set gravity of {_mount} to on
 function threadAccessory(ply: player):
 	set {_index} to 0
 	set {_attrMap} to new HashMap(5)
@@ -1050,11 +1082,9 @@ function threadRegen(ply: player):
 	set {_lastHealth} to health of {_ply}
 	set {_lastMana} to level of {_ply}
 	set {_lastLoc} to location of {_ply}
-	set {_index} to 0
 	while {_ply} is online:
 		if {_ply} has scoreboard tag "unauthorized":
 			stop trigger
-		set {_index} to mod(({_index} + 1), 4)
 		if gamemode of {_ply} is spectator:
 			stop trigger
 		set {_attrMap} to metadata "attrMap" of {_ply}
@@ -1067,35 +1097,36 @@ function threadRegen(ply: player):
 		else if {_lastHealth} > health of {_ply}:
 			set {_displayHealth} to true
 			set {_healthRegenCD} to 6
-		if {_index} = 0:
-			set {_lastHealth} to health of {_ply}
-			set {_totalHealAmount} to 0
-				
-			if metadata "effectTime生命星云" of {_ply} > 0:
-				set {_buffLevel} to ceil((metadata "effectTime生命星云" of {_ply}) / 160)
-				add (3 * {_buffLevel}) to {_totalHealAmount}
-			if {_ply} has metadata "effectTime再生":
-				add 4 to {_totalHealAmount}
-			if {_accessories}.contains("再生手环"):
-				add 2 to {_totalHealAmount}
-			if {_accessories}.contains("神话护身符"):
-				add 2 to {_totalHealAmount}
+		# health regen
+		set {_lastHealth} to health of {_ply}
+		set {_totalHealAmount} to 0
 			
-			if {_healthRegenCD} <= 0:
-				add max(({_attrMap}.get("regen")) * ({_attrMap}.get("regenMulti")), 0) to {_totalHealAmount}
-				if distance between location of {_ply} and {_lastLoc} > 0.25:
-					set {_healthRegenCD} to 2
-				else:
-					if {_accessories}.contains("闪亮石"):
-						add 10 to {_totalHealAmount}
-			else:
-				remove 1 from {_healthRegenCD}
-			if {_totalHealAmount} > 0:
-				set health of {_ply} to min(health of {_ply} + {_totalHealAmount}, max health of {_ply})
-				set {_lastHealth} to health of {_ply}
-				set {_displayHealth} to true
-			set {_lastLoc} to location of {_ply}
+		if metadata "effectTime生命星云" of {_ply} > 0:
+			set {_buffLevel} to ceil((metadata "effectTime生命星云" of {_ply}) / 160)
+			add (3 * {_buffLevel}) to {_totalHealAmount}
+		if {_ply} has metadata "effectTime再生":
+			add 4 to {_totalHealAmount}
+		if {_accessories}.contains("再生手环"):
+			add 2 to {_totalHealAmount}
+		if {_accessories}.contains("神话护身符"):
+			add 2 to {_totalHealAmount}
 		
+		if {_healthRegenCD} <= 0:
+			add max(({_attrMap}.get("regen")) * ({_attrMap}.get("regenMulti")), 0) to {_totalHealAmount}
+			if distance between location of {_ply} and {_lastLoc} > 0.25:
+				set {_healthRegenCD} to 2
+			else:
+				if {_accessories}.contains("闪亮石"):
+					add 10 to {_totalHealAmount}
+		else:
+			remove 1 from {_healthRegenCD}
+		if {_totalHealAmount} > 0:
+			set {_totalHealAmount} to {_totalHealAmount} / 4
+			set health of {_ply} to min(health of {_ply} + {_totalHealAmount}, max health of {_ply})
+			set {_lastHealth} to health of {_ply}
+			set {_displayHealth} to true
+		set {_lastLoc} to location of {_ply}
+		# mana regen
 		set {_totalManaRegen} to 0
 		set {_maxMana} to {_attrMap}.get("maxMana")
 		if {_lastMana} != level of {_ply}:
@@ -1228,13 +1259,6 @@ function resetPlayerStats(ply: player):
 	set hunger of {_ply} to 3
 	set gravity of {_ply} to on
 	set metadata "thrusting" of {_ply} to false
-	VexViewAPI.setMinecraftHudVisible(MinecraftHud.ARMOR, false, {_ply})
-	VexViewAPI.setMinecraftHudVisible(MinecraftHud.EXP, false, {_ply})
-	VexViewAPI.setMinecraftHudVisible(MinecraftHud.HUNGER, false, {_ply})
-	VexViewAPI.setMinecraftHudVisible(MinecraftHud.HEALTH, false, {_ply})
-	VexViewAPI.setMinecraftHudVisible(MinecraftHud.HOTBAR, true, {_ply})
-	VexViewAPI.setMinecraftHudVisible(MinecraftHud.OXYGEN, true, {_ply})
-	VexViewAPI.setMinecraftHudVisible(MinecraftHud.BOSSBAR, true, {_ply})
 	displayIconHud({_ply}, true, true)
 	
 	set metadata "craftingStation" of {_ply} to "CLOSED"
@@ -1752,6 +1776,10 @@ function handleDeath(v: entity, dPly: entity, d: entity, damageCause: text):
 				remove 1 from {_respawnTime}
 				set metadata "respawnCD" of {_v} to {_respawnTime}
 				send action bar "&a重生倒计时： %{_respawnTime}%" to {_v}
+			else:
+				set {_vNew} to name of {_v} parsed as player
+				if name of {_vNew} is name of {_v}:
+					set {_v} to {_vNew}
 			wait 1 second
 		set gamemode of {_v} to survival
 		set {_spawnLoc} to (world "world").getSpawnLocation()
@@ -1902,14 +1930,17 @@ function displayHolo(e: entity, damage: number, isCrit: boolean, damageCause: te
 		set {_text} to "&a%round({_damage})%"
 	else if {_damageCause} is "回蓝":
 		set {_text} to "&9%round({_damage})%"
-	else if {_damageCause} is "debuff_咒火":
-		set {_text} to "&e%round({_damage})%"
-	else if {_damageCause} is "debuff_霜火":
-		set {_text} to "&b%round({_damage})%"
-	else if {_damageCause} is "debuff_中毒" or "debuff_剧毒":
-		set {_text} to "&2%round({_damage})%"
-	else if {_damageCause} is "debuff_破晓":
-		set {_text} to "&6%round({_damage})%"
+	else if {_damageCause} starts with "debuff_":
+		if {_damageCause} is "debuff_咒火":
+			set {_text} to "&e%round({_damage})%"
+		else if {_damageCause} is "debuff_霜火":
+			set {_text} to "&b%round({_damage})%"
+		else if {_damageCause} is "debuff_中毒" or "debuff_剧毒":
+			set {_text} to "&2%round({_damage})%"
+		else if {_damageCause} is "debuff_破晓":
+			set {_text} to "&6%round({_damage})%"
+		else:
+			stop trigger
 	else:
 		if {_isCrit} is true:
 			set {_text} to "&c%round({_damage})%"
@@ -2182,7 +2213,10 @@ function handleDamage(v: entity, d: entity, dmg: number, damageCause: text):
 			set y of {_vec} to min(1, {_kb} / 8)
 			if y of velocity of {_damageTaker} > 5:
 				subtract y of velocity of {_damageTaker} from y of {_vec}
-		push {_damageTaker} {_vec}
+		set {_knockbackTaker} to {_damageTaker}
+		if {_damageTaker} is a player:
+			set {_knockbackTaker} to vehicle of {_damageTaker}
+		push {_knockbackTaker} {_vec}
 	
 	if {_damageCause} is not "drowning":
 		displayHolo({_v}, {_dmg}, {_crit}, {_damageCause})

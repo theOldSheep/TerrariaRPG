@@ -55,8 +55,26 @@ on papi placeholder request with prefix "skript":
 	else:
 		set {_attrMap%{_plyName}%} to metadata "attrMap" of event-player
 		if the identifier is "defence":
-			set {_result%{_plyName}%} to round(({_attrMap%{_plyName}%}.get("defence")) * ({_attrMap%{_plyName}%}.get("defenceMulti")))
-			set placeholder result to "%{_result%{_plyName}%}%"
+			set {_result_defence_%{_plyName}%} to round(({_attrMap%{_plyName}%}.get("defence")) * ({_attrMap%{_plyName}%}.get("defenceMulti")))
+			set placeholder result to "%{_result_defence_%{_plyName}%}%"
+		else if the identifier is "max_mana":
+			set {_result_maxmana_%{_plyName}%} to {_attrMap%{_plyName}%}.get("maxMana")
+			set placeholder result to "%{_result_maxmana_%{_plyName}%}%"
+		else if the identifier is "mana_tier":
+			set {_result_mana_tier_%{_plyName}%} to {_attrMap%{_plyName}%}.get("manaTier")
+			set placeholder result to "%{_result_mana_tier_%{_plyName}%}%"
+		else if the identifier is "health_tier":
+			set {_result_healthtier_%{_plyName}%} to {_attrMap%{_plyName}%}.get("healthTier")
+			set placeholder result to "%{_result_healthtier_%{_plyName}%}%"
+		else if the identifier is "health":
+			if gamemode of event-player is spectator:
+				set placeholder result to 0
+			else:
+				set {_result_health_%{_plyName}%} to health of event-player
+				set placeholder result to "%{_result_health_%{_plyName}%}%"
+		else if the identifier is "max_health":
+			set {_result_max_health_%{_plyName}%} to (max health of event-player) * ({_attrMap%{_plyName}%}.getOrDefault("maxHealthMulti", 1))
+			set placeholder result to "%{_result_max_health_%{_plyName}%}%"
 		
 
 on script load:

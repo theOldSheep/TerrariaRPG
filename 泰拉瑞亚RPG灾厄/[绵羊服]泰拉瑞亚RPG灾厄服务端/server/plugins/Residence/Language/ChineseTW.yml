@@ -707,8 +707,10 @@ CommandHelp:
               Description: Remove a residence from rent or rentable.
               Info:
               - '&eUsage: &6/res market unrent [residence]'
-              - If you are the renter, this command releases the rent on the house for you.
-              - If you are the owner, this command makes the residence not for rent anymore.
+              - If you are the renter, this command releases the rent on the house
+                for you.
+              - If you are the owner, this command makes the residence not for rent
+                anymore.
         rc:
           Description: 加入當前或者指定的領地聊天頻道
           Info:
@@ -899,7 +901,8 @@ CommandHelp:
               Info:
               - '&eUsage: &6/res set <residence> anvilbreak true/false/remove'
             backup:
-              Description: If set to true, restores previous look of area (WordEdit required)
+              Description: If set to true, restores previous look of area (WordEdit
+                required)
               Info:
               - '&eUsage: &6/res set <residence> backup true/false/remove'
             bank:
@@ -939,7 +942,8 @@ CommandHelp:
               Info:
               - '&e用法: &6/res set <領地> [許可權] true/false/remove'
             chorustp:
-              Description: Allow or disallow teleporting to the residence with chorus fruit
+              Description: Allow or disallow teleporting to the residence with chorus
+                fruit
               Info:
               - '&eUsage: &6/res set/pset <residence> chorustp true/false/remove'
             chat:

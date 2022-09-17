@@ -193,7 +193,7 @@ on rightclick:
 			add 2000000 to player's money
 		else if {_type} is "血肉之墙":
 			set {_maxAcc} to yml value "stats.maxAccessories" from file "plugins/PlayerData/%name of player%.yml"
-			if {_maxAcc} < 7:
+			if {_maxAcc} < 6:
 				giveItem(player, getItem("恶魔之心"))
 			if chance of 0.25:
 				giveItem(player, getItem("战士徽章"))
@@ -294,6 +294,8 @@ on rightclick:
 		else if {_type} is "月球领主":
 			giveItem(player, getItem("天界之翼"))
 			giveItem(player, getItem("夜明矿:%a random integer between 90 and 110%"))
+			if {_maxAcc} < 7:
+				giveItem(player, getItem("天体洋葱"))
 			if chance of 0.1:
 				giveItem(player, getItem("彩虹猫矿车"))
 			if chance of 1/9:
@@ -319,17 +321,29 @@ on rightclick:
 		stop trigger
 	else if {_name} is "恶魔之心":
 		set {_maxAcc} to yml value "stats.maxAccessories" from file "plugins/PlayerData/%name of player%.yml"
+		if {_maxAcc} < 6:
+			set yml value "stats.maxAccessories" from file "plugins/PlayerData/%name of player%.yml" to 6
+			set {_item} to player's tool
+			set {_item} to (item amount of {_item} - 1) of {_item}
+			set player's tool to {_item}
+			applyCD(player, 20)
+			send "&a您成功解锁了第六个饰品栏" to player
+			set slot 15 of (metadata "inventories" of player).get("accessory") to air
+		else:
+			send "&c您的第六个饰品栏已经被解锁了，无法再次使用此物品。" to player
+		stop trigger
+	else if {_name} is "天体洋葱":
+		set {_maxAcc} to yml value "stats.maxAccessories" from file "plugins/PlayerData/%name of player%.yml"
 		if {_maxAcc} < 7:
 			set yml value "stats.maxAccessories" from file "plugins/PlayerData/%name of player%.yml" to 7
 			set {_item} to player's tool
 			set {_item} to (item amount of {_item} - 1) of {_item}
 			set player's tool to {_item}
 			applyCD(player, 20)
-			send "&a您成功解锁了第六和第七个饰品栏" to player
-			set slot 15 of (metadata "inventories" of player).get("accessory") to air
+			send "&a您成功解锁了第七个饰品栏" to player
 			set slot 16 of (metadata "inventories" of player).get("accessory") to air
 		else:
-			send "&c您的第六和第七个饰品栏已经被解锁了，无法再次使用此物品。" to player
+			send "&c您的第七个饰品栏已经被解锁了，无法再次使用此物品。" to player
 		stop trigger
 	else if {_name} is "回城药水" or "虫洞药水":
 		if {_name} is "回城药水":
@@ -365,34 +379,53 @@ on rightclick:
 			add loop-value to {_potion::*}
 			add {_duration} to {_potionDuration::*}
 	if {_maxHealth} is set:
-		set {_mHealth} to yml value "stats.maxHealth" from file "plugins/PlayerData/%name of player%.yml"
-		if {_name} is "生命水晶":
-			"%{_mHealth}%" parsed as number >= 800
-			send action bar "&c您的生命上限现在需要通过食用生命果才能提升" to player
+		set {_hTier} to yml value "stats.healthTier" from file "plugins/PlayerData/%name of player%.yml"
+		if {_hTier} < 20:
+			if {_name} is not "生命水晶":
+				stop trigger
+		else if {_hTier} < 40:
+			if {_name} is not "生命果":
+				stop trigger
+		else if {_hTier} < 41:
+			if {_name} is not "血橙":
+				stop trigger
+		else if {_hTier} < 42:
+			if {_name} is not "奇迹之果":
+				stop trigger
+		else if {_hTier} < 43:
+			if {_name} is not "旧神浆果":
+				stop trigger
+		else if {_hTier} < 44:
+			if {_name} is not "龙果":
+				stop trigger
+		else:
 			stop trigger
-		else if {_name} is "生命果":
-			if "%{_mHealth}%" parsed as number >= 1000:
-				send action bar "&c您的生命上限已经达到了最高值" to player
-				stop trigger
-			else if "%{_mHealth}%" parsed as number < 800:
-				send action bar "&c请先使用生命水晶提升生命值后再使用生命果" to player
-				stop trigger
-		set {_healthMulti} to max health of player / {_mHealth}
-		add {_maxHealth} to {_mHealth}
-		set max health of player to {_mHealth} * {_healthMulti}
-		set yml value "stats.maxHealth" from file "plugins/PlayerData/%name of player%.yml" to {_mHealth}
+		add 1 to {_hTier}
+		{_attrMap}.put("healthTier", {_hTier})
+		set yml value "stats.healthTier" from file "plugins/PlayerData/%name of player%.yml" to {_hTier}
+		set {_mHealth} to getMaxHealthByTier({_hTier})
+		{_attrMap}.put("maxHealth", (({_attrMap}.get("maxHealth")) + {_maxHealth}))
+		set max health of player to {_mHealth}
 		heal player by {_maxHealth}
-		
 		displayHolo(player, {_maxHealth}, false, "回血")
 	if {_maxMana} is set:
-		set {_mMana} to yml value "stats.maxMana" from file "plugins/PlayerData/%name of player%.yml"
-		if "%{_mMana}%" parsed as number >= 200:
-			send action bar "&c您的魔力上限已经达到了最高值" to player
-			stop trigger
-		set {_manaMulti} to {_attrMap}.get("maxMana") / {_mMana}
-		add {_maxMana} to {_mMana}
-		{_attrMap}.put("maxMana", ({_mMana} * {_manaMulti}))
-		set yml value "stats.maxMana" from file "plugins/PlayerData/%name of player%.yml" to {_mMana}
+		set {_mTier} to yml value "stats.manaTier" from file "plugins/PlayerData/%name of player%.yml"
+		if {_name} is "魔力星" or "附魔星鱼":
+			if {_mTier} >= 10:
+				stop trigger
+		else if {_name} is "彗星碎片":
+			if {_mTier} != 10:
+				stop trigger
+		else if {_name} is "飘渺之核":
+			if {_mTier} != 11:
+				stop trigger
+		else if {_name} is "幻影之心":
+			if {_mTier} != 12:
+				stop trigger
+		add 1 to {_mTier}
+		{_attrMap}.put("manaTier", {_mTier})
+		{_attrMap}.put("maxMana", (({_attrMap}.get("maxMana")) + {_maxMana}))
+		set yml value "stats.manaTier" from file "plugins/PlayerData/%name of player%.yml" to {_mTier}
 		set level of player to min(({_attrMap}.get("maxMana")), (level of player + {_maxMana}))
 		displayHolo(player, {_maxMana}, false, "回蓝")
 	if {_health} is set:
@@ -430,6 +463,7 @@ on rightclick:
 			play sound "entity.generic.drink" with volume 1 and pitch 1 at location of player
 		applyEffect(player, loop-value, round({_potionDuration::%loop-index%}))
 	set {_item} to player's tool
+	broadcast "%{_item}%"
 	set {_item} to (item amount of {_item} - 1) of {_item}
 	set player's tool to {_item}
 	applyCD(player, 5)

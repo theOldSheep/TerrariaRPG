@@ -27,6 +27,7 @@ command /toggleSprite:
 			send "&e您正在使用本地贴图；如果出现&c贴图无法加载&e的问题，请加群并下载修复包（内附使用说明）或输入&d/toggleSprite&e来尝试使用泰拉瑞亚wiki网页提供的贴图。" to {_ply}
 
 function displayIconHud(ply: player, refreshHealth: boolean, refreshMana: boolean):
+	stop trigger
 	set {_attrMap} to metadata "attrMap" of {_ply}
 	{_attrMap} is set
 
@@ -93,17 +94,17 @@ function displayIconHud(ply: player, refreshHealth: boolean, refreshMana: boolea
 				set {_hud} to new VexImageShow("HealthDisplay~%loop-number%", {_Url}, ({_xOffset} + (11 - {_sideLength}) / 2), ({_yOffset} + (11 - {_sideLength}) / 2), {_sideLength}, {_sideLength}, {_sideLength}, {_sideLength}, 0)
 				VexViewAPI.sendHUD({_ply}, {_hud})
 				remove 1 from {_switchLine}
-				add 13 to {_xOffset}
+				add 11 to {_xOffset}
 				if {_switchLine} <= 0:
 					set {_xOffset} to {_windowWidth} - (11 * 13)
-					add 15 to {_yOffset}
+					add 11 to {_yOffset}
 					set {_switchLine} to 10
 			else:
 				VexViewAPI.removeHUD({_ply}, "HealthDisplay~%loop-number%")
 	if {_refreshMana} is true:
 		set {_allStars} to ceil({_maxMana} / 20)
 		set {_xOffset} to {_windowWidth} - 13
-		set {_yOffset} to 4
+		set {_yOffset} to 16
 		set {_drewMana} to 0
 		if metadata "starsDrew" of {_ply} is not set:
 			set {_loopTime} to {_allStars}
@@ -126,7 +127,7 @@ function displayIconHud(ply: player, refreshHealth: boolean, refreshMana: boolea
 						set {_sideLength} to (20 - {_drewMana} + {_mana}) * 0.15 + 8
 				set {_hud} to new VexImageShow("ManaDisplay~%loop-number%", {_Url}, ({_xOffset} + (11 - {_sideLength}) / 2), ({_yOffset} + (11 - {_sideLength}) / 2), {_sideLength}, {_sideLength}, {_sideLength}, {_sideLength}, 0)
 				VexViewAPI.sendHUD({_ply}, {_hud})
-				add 13 to {_yOffset}
+				add 9 to {_yOffset}
 			else:
 				VexViewAPI.removeHUD({_ply}, "ManaDisplay~%loop-number%")
 

@@ -61,6 +61,7 @@ on skript start:
 	{playerAttrMap}.put("damageType", "Melee")
 	{playerAttrMap}.put("defence", 0)
 	{playerAttrMap}.put("defenceMulti", 1)
+	{playerAttrMap}.put("healthMulti", 1)
 	{playerAttrMap}.put("invulnerabilityTick", 10)
 	{playerAttrMap}.put("knockback", 0)
 	{playerAttrMap}.put("knockbackResistance", 0)
@@ -70,6 +71,7 @@ on skript start:
 	{playerAttrMap}.put("manaRegenMulti", 1)
 	{playerAttrMap}.put("manaUse", 0)
 	{playerAttrMap}.put("manaUseMulti", 1)
+	{playerAttrMap}.put("maxHealthMulti", 1)
 	{playerAttrMap}.put("meleeReachMulti", 1)
 	{playerAttrMap}.put("minionLimit", 2)
 	{playerAttrMap}.put("mobLimit", 15)
@@ -202,7 +204,7 @@ on join:
 	loop {_perms::*}:
 		{_att}.setPermission(loop-value, true)
 	set player list name of player to "&c<红队>&r%name of player%"
-	apply potion of jump boost 6 without particles to player for 10 days
+	apply potion of haste 20 without particles to player for 10 days
 	set {_filePath} to "plugins/PlayerData/%name of player%.yml"
 	set {_file} to new File({_filePath})
 	if {_file}.exists() is not true:
@@ -256,145 +258,35 @@ on hunger level change:
 	cancel event
 on PlayerLeashEntityEvent:
 	cancel event
-on dismount:
-	set {_mount} to (event-entity).getVehicle()
-	if {_mount} is a pig:
-		cancel event
-	else:
-		{_mount}.remove()
 on KeyBoardPressEvent:
 	set {_ply} to event.getPlayer()
+	set {_mount} to vehicle of {_ply}
 	gamemode of {_ply} is not spectator
 	set {_accessory} to metadata "accessory" of {_ply}
 	if event.getKey() is 25:
 		gamemode of {_ply} is survival
 		open a new chest inventory with 1 row named "&a垃圾箱" for {_ply}
-	else if event.getKey() is 47:
-		#thrust
-		gamemode of {_ply} is survival
-		if {_ply}.isOnGround() is true:
-			stop trigger
-		set metadata "thrusting" of {_ply} to event.getEventKeyState()
+	else if event.getKey() is 35:
+		# toggle
 		event.getEventKeyState() is true
-		#remove all hooks
-		set {_hooks} to metadata "hooks" of {_ply}
-		loop ...{_hooks}:
-			if (loop-value).getHandle().inGround is true:
-				(loop-value).remove()
-		set {_index} to metadata "thrust" of {_ply}
-		set {_thrustProgress} to metadata "thrustProgress" of {_ply}
-		while {_index} < {_accessory}.size():
-			set {_currAcc} to {_accessory}.get({_index})
-			set {_maxProgress} to yml value "%{_currAcc}%.maxProgress" from file "plugins/Data/wings.yml"
-			if {_maxProgress} is set:
-				set {_maxVelocity} to yml value "%{_currAcc}%.maxVelocity" from file "plugins/Data/wings.yml"
-				set {_maxAcceleration} to yml value "%{_currAcc}%.maxAcceleration" from file "plugins/Data/wings.yml"
-				set {_horizontalVelocity} to yml value "%{_currAcc}%.horizontalVelocity" from file "plugins/Data/wings.yml"
-				set {_bounceTime} to yml value "%{_currAcc}%.bounceTime" from file "plugins/Data/wings.yml"
-				if {_accessory}.contains("翱翔徽章") is true:
-					set {_maxVelocity} to {_maxVelocity} * 1.25
-					set {_maxAcceleration} to {_maxAcceleration} * 1.25
-					set {_horizontalVelocity} to {_horizontalVelocity} * 1.25
-					if {_maxProgress} > {_bounceTime}:
-						add ({_maxProgress} - {_bounceTime}) * 4 to {_maxProgress}
-				set {_attrMap} to metadata "attrMap" of {_ply}
-				if {_attrMap} is set:
-					set {_multi} to {_attrMap}.getOrDefault("speedMulti", 1)
-					set {_maxVelocity} to {_maxVelocity} * {_multi}
-					set {_maxAcceleration} to {_maxAcceleration} * {_multi}
-					set {_horizontalVelocity} to {_horizontalVelocity} * {_multi}
-				stop loop
-			add 1 to {_index}
-		if {_maxProgress} is not set:
-			stop trigger
-		# convert block/s into block/tick
-		set {_maxVelocity} to {_maxVelocity} / 40
-		set {_maxAcceleration} to {_maxAcceleration} / 40
-		set {_horizontalVelocity} to {_horizontalVelocity} / 40
-		if {_index} >= {_accessory}.size():
-			# flight time depleted. Check if the player has a wing
-			set {_gliding} to false
-			set {_index} to 0
-			loop {_accessory}.size() times:
-				if {_accessory}.get({_index}).toString() ends with "翼":
-					set {_gliding} to true
-					set {_index} to {_accessory}.size()
-					stop loop
-				add 1 to {_index}
-			if {_gliding} is false:
-				# the player has no wing
-				set metadata "thrust" of {_ply} to {_index}
-				stop trigger
-			else:
-				set {_maxVelocity} to -0.75
-				set {_horizontalVelocity} to {_horizontalVelocity} / 2
-				set {_maxProgress} to 5000000
-		set metadata "thrust" of {_ply} to {_index}
-		while {_ply} is online:
-			if metadata "thrusting" of {_ply} is not true:
-				stop loop
-			if gamemode of {_ply} is spectator:
-				stop loop
-			{_ply}.setFallDistance(0)
-			
-			# vertical movement
-			set {_v} to velocity of {_ply}
-			set {_force} to min({_maxAcceleration}, ({_maxVelocity} - (y of {_v})))
-			if {_force} > 0:
-				push {_ply} {_force} upward
-			# horizontal movement
-			set {_dir} to metadata "moveDir" of {_ply}
-			if {_dir} is set:
-				set {_playerVelocity} to velocity of {_ply}
-				set y component of {_playerVelocity} to 0
-				# velocity is the speed in which the player is moving along 
-				set {_velocity} to ({_playerVelocity} dot {_dir}) / (vector length of {_dir})
-				set vector length of {_dir} to min({_maxAcceleration}, ({_horizontalVelocity} - {_velocity}))
-				push {_ply} {_dir}
-			if {_gliding} is not true:
-				#particles
-				if {_bounceTime} is set:
-					# bottle jump
-					set {_xOffset} to -1
-					loop 3 times:
-						set {_zOffset} to -1
-						loop 3 times:
-							if {_xOffset} = 0:
-								{_zOffset} = 0
-								continue
-							draw 4 cloud particles at location of {_ply} with direction vector({_xOffset}, 0, {_zOffset}) and speed 0.1, offset 0.5, 0, 0.5, visible range 30, keep 1 tick							
-							add 1 to {_zOffset}
-						add 1 to {_xOffset}
-					add 10 to {_thrustProgress}
-				else if {_accessory}.get({_index}) is "火箭靴" or "幽灵靴":
-					add 1 to {_thrustProgress}
-					draw 10 cloud particles at location of {_ply} with direction vector(0, -1, 0) and speed 0.17, offset 0.5, 0, 0.5, visible range 30, keep 1 tick
-				
-				# flight time depleted
-				if {_thrustProgress} / 10 >= {_maxProgress}:
-					set {_thrustProgress} to 0
-					add 1 to {_index}
-					stop loop
-				else if {_bounceTime} is set:
-					# no continuous flight for bottle jump
-					stop loop
-			wait 2 ticks
-		set metadata "thrust" of {_ply} to {_index}
-		set metadata "thrustProgress" of {_ply} to {_thrustProgress}
-		set metadata "thrusting" of {_ply} to false
+		if {_ply} has scoreboard tag "temp_isMounting":
+			remove "temp_isMounting" from scoreboard tags of {_ply}
+		else:
+			add "temp_isMounting" to scoreboard tags of {_ply}
 	else if event.getKey() is 19:
-		#Grappling hook, only on key down
+		# Grappling hook, only on key down
 		event.getEventKeyState() is true
 		handleGrapplingHook({_ply})
 	else if event.getKey() is 46:
-		#remove all hooks
+		event.getEventKeyState() is true
+		# remove all hooks
 		set {_hooks} to metadata "hooks" of {_ply}
 		loop ...{_hooks}:
 			if (loop-value).getHandle().inGround is true:
 				(loop-value).remove()
-		#Charge
+		# Charge
 		set {_dir} to new vector with yaw ({_ply}.getHandle().yaw) and pitch 0
-		set {_dir} to metadata "moveDir" of {_ply}
+		set {_dir} to (metadata "moveDir" of {_ply}).clone()
 		if {_ply} doesn't have scoreboard tag "temp_sheidDashCD":
 			set {_dashSpeed} to -1
 			loop ...{_accessory}:
@@ -404,11 +296,10 @@ on KeyBoardPressEvent:
 					stop loop
 			if {_dashSpeed} > 0:
 				add "temp_sheidDashCD" to scoreboard tags of {_ply}
-				set {_playerVelocity} to velocity of {_ply}
+				set {_playerVelocity} to velocity of {_mount}
 				set {_dashSpeed} to {_dashSpeed} * (try (metadata "attrMap" of {_ply}).getOrDefault("speedMulti", 1))
 				set vector length of {_dir} to {_dashSpeed}
-				set y of {_dir} to ((y of {_playerVelocity}) * -1) + y of {_dir}
-				push {_ply} {_dir}
+				push {_mount} {_dir}
 				wait {_dashCD}
 				remove "temp_sheidDashCD" from scoreboard tags of {_ply}
 	else if event.getKey() is 41:
@@ -650,7 +541,6 @@ function handlePlayerArmorSet(ply: player, armor: items, remove: boolean) :: obj
 		{_armorSetChest::*} contains loop-value
 		{_armorSetLeg::*} contains loop-value
 		set {_attrMap} to metadata "attrMap" of {_ply}
-		set {_mSPD} to ({_attrMap}.get("speed")) * ({_attrMap}.get("speedMulti"))
 		set {_lore} to yml value "sets.%loop-value%.lore" from file "plugins/Data/armorSet.yml"
 		set {_attributes::*} to ...(yml value "sets.%loop-value%.attributes" from file "plugins/Data/armorSet.yml")
 		if {_attributes::*} is set:
@@ -658,8 +548,6 @@ function handlePlayerArmorSet(ply: player, armor: items, remove: boolean) :: obj
 				set {_info::1} to loop-value-2
 				set {_info::*} to {_info::1} split at ": "
 				tweakAttribute({_attrMap}, {_info::1}, {_info::2}, !{_remove})
-		if {_mSPD} is not ({_attrMap}.get("speed")) * ({_attrMap}.get("speedMulti")):
-			set {_ply}'s walk speed to min((({_attrMap}.get("speed")) * ({_attrMap}.get("speedMulti"))), 1)
 		set metadata "armorSet" of {_ply} to loop-value
 		return {_lore}
 	set metadata "armorSet" of {_ply} to ""
@@ -675,19 +563,23 @@ function setPlayerStats(ply: player):
 	
 	set {_filePath} to "plugins/PlayerData/%name of {_ply}%.yml"
 	
-	set {_maxHealth} to yml value "stats.maxHealth" from file {_filePath}
-	if {_maxHealth} is not set:
-		set yml value "stats.maxHealth" from file {_filePath} to 200
-		set {_maxHealth} to 200
+	set {_manaTier} to yml value "stats.manaTier" from file {_filePath}
+	if {_manaTier} is not set:
+		set yml value "stats.manaTier" from file {_filePath} to 1
+		set {_manaTier} to 1
+	set {_maxMana} to getMaxManaByTier({_manaTier})
+	{_attrMap}.put("manaTier", {_manaTier})
+	{_attrMap}.put("maxMana", {_maxMana})
+	set {_healthTier} to yml value "stats.healthTier" from file {_filePath}
+	if {_healthTier} is not set:
+		set yml value "stats.healthTier" from file {_filePath} to 5
+		set {_healthTier} to 5
 		set {_ply}'s max health to 200
 		set {_ply}'s health to 200
-	set {_ply}'s max health to {_maxHealth}
+	set {_maxHealth} to getMaxHealthByTier({_healthTier})
+	{_attrMap}.put("healthTier", {_healthTier})
 	{_attrMap}.put("maxHealth", {_maxHealth})
-	set {_maxMana} to yml value "stats.maxMana" from file {_filePath}
-	if {_maxMana} is not set:
-		set yml value "stats.maxMana" from file {_filePath} to 20
-		set {_maxMana} to 20
-	{_attrMap}.put("maxMana", {_maxMana})
+	set {_ply}'s max health to {_maxHealth}
 	
 	set {_toolDmgMulti} to 0
 	set {_checkLore} to trimText(line 1 of lore of tool of {_ply})
@@ -762,12 +654,10 @@ function setPlayerStats(ply: player):
 	add {_lore::*} to lore of helmet of {_ply}
 	add {_lore::*} to lore of chestplate of {_ply}
 	add {_lore::*} to lore of leggings of {_ply}
-	set {_ply}'s walk speed to min((({_attrMap}.get("speed")) * ({_attrMap}.get("speedMulti"))), 1)
 	set gravity of {_ply} to on
 	
 function handlePlayerSwitchItem(ply: player, itemOld: item, itemNew: item):
 	set {_attrMap} to metadata "attrMap" of {_ply}
-	set {_mSPD} to ({_attrMap}.get("speed")) * ({_attrMap}.get("speedMulti"))
 	if name of {_itemOld} is set:
 		set {_name} to trimText(name of {_itemOld})
 		set {_attributes} to new ArrayList()
@@ -807,8 +697,6 @@ function handlePlayerSwitchItem(ply: player, itemOld: item, itemNew: item):
 				set {_info::1} to "%loop-value%"
 				set {_info::*} to {_info::1} split at ": "
 				tweakAttribute({_attrMap}, {_info::1}, {_info::2}, true)
-	if {_mSPD} is not ({_attrMap}.get("speed")) * ({_attrMap}.get("speedMulti")):
-		set {_ply}'s walk speed to min((({_attrMap}.get("speed")) * ({_attrMap}.get("speedMulti"))), 1)
 
 on PlayerItemDamageEvent:
 	cancel event
@@ -2889,7 +2777,7 @@ function minionAI(minion: entity, owner: player, nameMinion: text, minionSlot: n
 				wait 10 ticks
 				{_minionIndex} >= (metadata "attrMap" of {_owner}).getOrDefault("minionLimit", 1)
 				stop loop
-			if {_minionList}.get({_minionIndex}) is not {_minion}:
+			if try {_minionList}.get({_minionIndex}) is not {_minion}:
 				stop loop
 		set {_distX} to ((x-coordinate of {_minion}) - (x-coordinate of {_owner}))
 		set {_distZ} to ((z-coordinate of {_minion}) - (z-coordinate of {_owner}))

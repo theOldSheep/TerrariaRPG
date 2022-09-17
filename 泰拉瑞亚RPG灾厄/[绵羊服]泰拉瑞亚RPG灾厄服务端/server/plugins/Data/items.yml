@@ -1364,6 +1364,7 @@
   - §r4% 暴击率
   - §r快的使用速度
   - §r普通的击退威力
+  - §r“使用时并不需要高速旋转”
   attributes:
   - 'damage: 20'
   - 'damageType: Melee'

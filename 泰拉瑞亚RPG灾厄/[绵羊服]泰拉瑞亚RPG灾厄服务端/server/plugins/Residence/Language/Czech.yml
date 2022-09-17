@@ -583,7 +583,8 @@ CommandHelp:
           Description: Zobrazit info o residenci.
           Info:
           - '&ePouziti: &6/res info <residence>'
-          - Vynech <residence> aby si zobrazil informace o oblasti, ve ktere prave stojis.
+          - Vynech <residence> aby si zobrazil informace o oblasti, ve ktere prave
+            stojis.
         area:
           Description: Spravovat oblasti residence.
           SubCommands:
@@ -609,7 +610,8 @@ CommandHelp:
               Info:
               - '&ePouziti: &6/res area replace [residence] [areaID]'
               - Nejprve musis vybrat 2 body.
-              - Vymeneni oblasti residence te muze stat penize, pokud je cilova oblast vetsi.
+              - Vymeneni oblasti residence te muze stat penize, pokud je cilova oblast
+                vetsi.
         give:
           Description: Da hraci residenci.
           Info:
@@ -662,7 +664,8 @@ CommandHelp:
               Description: Zobrazit informace o ekonomii residence
               Info:
               - '&ePouziti: &6/res market Info [residence]'
-              - Zobrazi, jestli je informace na prodej nebo k pronajmu, popr jeji cenu
+              - Zobrazi, jestli je informace na prodej nebo k pronajmu, popr jeji
+                cenu
             list:
               Description: Zobrazit seznam residenci na prodej a k pronajmu
               Info:
@@ -700,12 +703,14 @@ CommandHelp:
               Description: Pronajmout residenci
               Info:
               - '&ePouziti: &6/res market rent [residence] <autoProdlouzeni>'
-              - Pronajmout si residenci.  autoProdlouzeni muze byt true(ano)/false(ne).  Pokud true, bude dochazet k automatickemu prodluzovani najmu.
+              - Pronajmout si residenci.  autoProdlouzeni muze byt true(ano)/false(ne).  Pokud
+                true, bude dochazet k automatickemu prodluzovani najmu.
             rentable:
               Description: Nastavit residenci pronajimatelnou
               Info:
               - '&ePouziti: &6/res market rentable [residence] [cena] [dni] <opakovat>'
-              - Nastavi residenci jako pronajimatelnou za [cena] kazdych [dni].  Pokud je <repeat> true, najem bude automaticky prodluzovan.
+              - Nastavi residenci jako pronajimatelnou za [cena] kazdych [dni].  Pokud
+                je <repeat> true, najem bude automaticky prodluzovan.
             autopay:
               Description: Sets residence AutoPay to given value
               Info:
@@ -722,8 +727,10 @@ CommandHelp:
               Description: Remove a residence from rent or rentable.
               Info:
               - '&eUsage: &6/res market unrent [residence]'
-              - If you are the renter, this command releases the rent on the house for you.
-              - If you are the owner, this command makes the residence not for rent anymore.
+              - If you are the renter, this command releases the rent on the house
+                for you.
+              - If you are the owner, this command makes the residence not for rent
+                anymore.
         rc:
           Description: Pripojit se do residencniho chatu.
           Info:
@@ -858,12 +865,14 @@ CommandHelp:
               Description: Nastavit popis residencniho shopu
               Info:
               - '&ePouziti: &6/res shop setdesc [text]'
-              - Nastavi popis residencniho shopu. Barvy jsou podporovany. Pro novy radek pouzij /n
+              - Nastavi popis residencniho shopu. Barvy jsou podporovany. Pro novy
+                radek pouzij /n
             createboard:
               Description: Vytvorit novou obchodni tabuli
               Info:
               - '&ePouziti: &6/res shop createboard [place]'
-              - Vytvori novou obchodni tabuli ceduli. Place - position from which to start filling board
+              - Vytvori novou obchodni tabuli ceduli. Place - position from which
+                to start filling board
             deleteboard:
               Description: Smazat obchodni tabuli
               Info:
@@ -912,7 +921,8 @@ CommandHelp:
               Info:
               - '&eUsage: &6/res set <residence> anvilbreak true/false/remove'
             backup:
-              Description: If set to true, restores previous look of area (WordEdit required)
+              Description: If set to true, restores previous look of area (WordEdit
+                required)
               Info:
               - '&eUsage: &6/res set <residence> backup true/false/remove'
             bank:
@@ -952,7 +962,8 @@ CommandHelp:
               Info:
               - '&ePouziti: &6/res set <residence> [vlajka] true/false/remove'
             chorustp:
-              Description: Allow or disallow teleporting to the residence with chorus fruit
+              Description: Allow or disallow teleporting to the residence with chorus
+                fruit
               Info:
               - '&eUsage: &6/res set/pset <residence> chorustp true/false/remove'
             chat:
@@ -972,7 +983,8 @@ CommandHelp:
               Info:
               - '&ePouziti: &6/res set/pset <residence> [vlajka] true/false/remove'
             container:
-              Description: povoluje/zakazuje pristup k truhlam, pecim, dispenserum, atd ...
+              Description: povoluje/zakazuje pristup k truhlam, pecim, dispenserum,
+                atd ...
               Info:
               - '&ePouziti: &6/res set/pset  <residence> [vlajka] true/false/remove'
             coords:
@@ -1363,7 +1375,8 @@ CommandHelp:
           Description: Vytvorit subzony v residenci.
           Info:
           - '&ePouziti: &6/res subzone <jmeno residence> [jmeno subzony]'
-          - Pokud jmeno residence neni zadane, pouzije jmeno residence, ve ktere se nachazis.
+          - Pokud jmeno residence neni zadane, pouzije jmeno residence, ve ktere se
+            nachazis.
         removeworld:
           Description: Odstranit vsechny residence sveta.
           Info:
@@ -1379,7 +1392,8 @@ CommandHelp:
           Info:
           - '&ePouziti: &6/res set <residence> [vlajka] [true/false/remove]'
           - Pouzij &6/res flags ? &cpro zobrazeni vsech dostupnych vlajek
-          - Tyto vlajky se vztahuji na vsechny hrace. (pokud chces jenom na jednoho, zkus &6/res pset ?&c)
+          - Tyto vlajky se vztahuji na vsechny hrace. (pokud chces jenom na jednoho,
+            zkus &6/res pset ?&c)
         clearflags:
           Description: Remove all flags from residence
           Info:
@@ -1484,7 +1498,8 @@ CommandHelp:
           Description: Teleportovat se do residence.
           Info:
           - '&ePouziti: &6/res tp [residence]'
-          - Teleportuje te do residence. Ta musi mit nastavenou vlajku +tp, popr musis byt vlastnik.
+          - Teleportuje te do residence. Ta musi mit nastavenou vlajku +tp, popr musis
+            byt vlastnik.
           - Take na to musis mit prava.
         setall:
           Description: Set general flags on all residences
