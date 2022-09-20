@@ -276,9 +276,9 @@ on join:
 	set {_spawnLoc} to {_world}.getSpawnLocation()
 	player.getHandle().setLocation((x-coordinate of {_spawnLoc}), (y-coordinate of {_spawnLoc}), (z-coordinate of {_spawnLoc}), 0, 0)
 	broadcast "%{_spawnLoc}%"
-	threadMovement(player)
+#	threadMovement(player)
 on gamemode change to survival:
-	threadMovement(player)
+#	threadMovement(player)
 on dismount:
 	set {_ply} to event-entity
 	set {_mount} to vehicle of {_ply}

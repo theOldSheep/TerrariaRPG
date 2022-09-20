@@ -539,7 +539,11 @@ function entityAI(entity: entity, target: entity, type: text):
 						set {_targetLoc} to eye location of {_target}
 					set {_dV} to {_targetLoc}.subtract(location of {_entity}).toVector()
 					if {_type} is "探测怪" or "钨钢无人机":
-						if mod({_index}, 4) = 0:
+						if {_type} is "探测怪":
+							set {_shootInterval} to 4
+						else:
+							set {_shootInterval} to 20
+						if mod({_index}, {_shootInterval}) = 0:
 							set {_velocity} to (location of {_target}).subtract(location of {_entity}).toVector()
 							
 							if {_type} is "探测怪":

@@ -66,6 +66,9 @@ on papi placeholder request with prefix "skript":
 		else if the identifier is "health_tier":
 			set {_result_healthtier_%{_plyName}%} to {_attrMap%{_plyName}%}.get("healthTier")
 			set placeholder result to "%{_result_healthtier_%{_plyName}%}%"
+		else if the identifier is "accessory_amount":
+			set {_result_accessory_amount_%{_plyName}%} to yml value "stats.maxAccessories" from file "plugins/PlayerData/%{_plyName}%.yml"
+			set placeholder result to "%{_result_accessory_amount_%{_plyName}%}%"
 		else if the identifier is "health":
 			if gamemode of event-player is spectator:
 				set placeholder result to 0

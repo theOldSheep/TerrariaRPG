@@ -6,7 +6,6 @@ import:
 	lk.vexview.api.VexViewAPI
 	lk.vexview.event.ButtonClickEvent
 	lk.vexview.event.gui.VexGuiCloseEvent
-	lk.vexview.event.KeyBoardPressEvent
 	lk.vexview.event.PlayerClientWindowSizeEvent
 	lk.vexview.event.VexSlotClickEvent
 	lk.vexview.gui.components.VexButton
@@ -258,52 +257,6 @@ on hunger level change:
 	cancel event
 on PlayerLeashEntityEvent:
 	cancel event
-on KeyBoardPressEvent:
-	set {_ply} to event.getPlayer()
-	set {_mount} to vehicle of {_ply}
-	gamemode of {_ply} is not spectator
-	set {_accessory} to metadata "accessory" of {_ply}
-	if event.getKey() is 25:
-		gamemode of {_ply} is survival
-		open a new chest inventory with 1 row named "&a垃圾箱" for {_ply}
-	else if event.getKey() is 35:
-		# toggle
-		event.getEventKeyState() is true
-		if {_ply} has scoreboard tag "temp_isMounting":
-			remove "temp_isMounting" from scoreboard tags of {_ply}
-		else:
-			add "temp_isMounting" to scoreboard tags of {_ply}
-	else if event.getKey() is 19:
-		# Grappling hook, only on key down
-		event.getEventKeyState() is true
-		handleGrapplingHook({_ply})
-	else if event.getKey() is 46:
-		event.getEventKeyState() is true
-		# remove all hooks
-		set {_hooks} to metadata "hooks" of {_ply}
-		loop ...{_hooks}:
-			if (loop-value).getHandle().inGround is true:
-				(loop-value).remove()
-		# Charge
-		set {_dir} to new vector with yaw ({_ply}.getHandle().yaw) and pitch 0
-		set {_dir} to (metadata "moveDir" of {_ply}).clone()
-		if {_ply} doesn't have scoreboard tag "temp_sheidDashCD":
-			set {_dashSpeed} to -1
-			loop ...{_accessory}:
-				if loop-value is "克苏鲁之眼盾":
-					set {_dashSpeed} to 1
-					set {_dashCD} to 1.75 seconds
-					stop loop
-			if {_dashSpeed} > 0:
-				add "temp_sheidDashCD" to scoreboard tags of {_ply}
-				set {_playerVelocity} to velocity of {_mount}
-				set {_dashSpeed} to {_dashSpeed} * (try (metadata "attrMap" of {_ply}).getOrDefault("speedMulti", 1))
-				set vector length of {_dir} to {_dashSpeed}
-				push {_mount} {_dir}
-				wait {_dashCD}
-				remove "temp_sheidDashCD" from scoreboard tags of {_ply}
-	else if event.getKey() is 41:
-		open (metadata "inventories" of {_ply}).get("accessory") for {_ply}
 
 on ButtonClickEvent:
 	set {_station} to metadata "craftingStation" of player

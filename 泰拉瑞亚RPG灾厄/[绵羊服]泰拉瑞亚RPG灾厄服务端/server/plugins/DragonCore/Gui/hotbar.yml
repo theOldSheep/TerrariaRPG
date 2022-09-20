@@ -98,7 +98,7 @@ match: "hud"
 hotbar_label:
   x: 84
   y: 0
-  texts: "方法.合并文本(方法.取物品名(方法.取物品(方法.合并文本('container_',方法.玩家手持槽() + 36))))"
+  texts: "方法.去颜色(方法.取物品名(方法.取物品(方法.合并文本('container_',方法.玩家手持槽() + 36))))"
   center: true
   shadow: true
   length: 100

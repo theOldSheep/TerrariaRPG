@@ -243,7 +243,7 @@
   rarity: 0
 专家模式福袋:
   item: LEATHER
-  rarity: 3
+  rarity: 1000
 可疑的眼球:
   item: EYE_OF_ENDER
   rarity: 1
@@ -440,7 +440,7 @@
   - §r让史莱姆不再攻击你
   - §r不过，这还是挡不住史莱姆想和你贴贴
   worth: 2000000
-  rarity: 3
+  rarity: 1000
 克苏鲁之眼盾:
   item: LEASH
   lore:
@@ -450,7 +450,7 @@
   attributes:
   - 'defence: 1'
   worth: 2000000
-  rarity: 3
+  rarity: 1000
 火箭靴:
   item: LEASH
   lore:
@@ -466,7 +466,7 @@
   attributes:
   - 'damageTakenMulti: 0.9'
   worth: 2000000
-  rarity: 3
+  rarity: 1000
 钴盾:
   item: LEASH
   lore:
@@ -556,7 +556,7 @@
   - §r孢子球内部成熟孢子的压力令其一被触碰就会炸裂开来
   - §r另外，手持它右键石砖会让石砖上长出青苔——这在地下丛林中可能会吸引某些生物……
   worth: 4000000
-  rarity: 3
+  rarity: 1000
 圣骑士护盾:
   item: LEASH
   lore:
@@ -625,7 +625,7 @@
   - §r[饰品]
   - §r不移动时，大大提高生命再生速度
   worth: 5000000
-  rarity: 3
+  rarity: 1000
 太阳石:
   item: LEASH
   lore:
@@ -736,7 +736,7 @@
   - §r按住V短暂飞行
   - §r飞行时间结束后按住V缓降
   worth: 10000000
-  rarity: 10
+  rarity: 1000
 航鱼靴:
   item: LEASH
   lore:
@@ -941,14 +941,14 @@
   - §r[饰品]
   - §r定期释放能伤害敌人的挥发明胶
   worth: 5000000
-  rarity: 3
+  rarity: 1000
 翱翔徽章:
   item: LEASH
   lore:
   - §r[饰品]
   - §r让翅膀和火箭靴获得四倍飞行时间
   worth: 10000000
-  rarity: 3
+  rarity: 1000
 矮人项链:
   item: LEASH
   lore:
@@ -2563,7 +2563,7 @@
   - 'penetration: 2'
   - 'bounce: 1'
   worth: 2000000
-  rarity: 1
+  rarity: 1000
 尖桩发射器:
   item: BOW
   lore:
@@ -5677,9 +5677,9 @@
 恶魔之心:
   item: CLAY_BALL
   lore:
-  - §r使用后额外增加两个饰品栏
+  - §r使用后额外增加一个饰品栏
   worth: 2000000
-  rarity: 3
+  rarity: 1000
 金鸟:
   item: RABBIT_HIDE
   lore:
@@ -6131,15 +6131,15 @@
 机械电池片:
   item: DIAMOND
   worth: 500000
-  rarity: 3
+  rarity: 1000
 机械车轮片:
   item: IRON_INGOT
   worth: 500000
-  rarity: 3
+  rarity: 1000
 机械车体片:
   item: IRON_INGOT
   worth: 500000
-  rarity: 3
+  rarity: 1000
 机械矿车:
   item: IRON_INGOT
   worth: 3000000

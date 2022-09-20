@@ -27,8 +27,7 @@ Functions:
   # 关于变量更新在 背包.yml 里讲了,可以去那个配置里看
   更新hud变量: |-
     方法.更新变量值('skript_health','skript_max_health','skript_max_mana','skript_mana_tier','skript_health_tier');
-    方法.延时(100);
-    方法.执行按键指令('');
+    方法.延时(250);
     方法.异步执行方法('更新hud变量');
 
 

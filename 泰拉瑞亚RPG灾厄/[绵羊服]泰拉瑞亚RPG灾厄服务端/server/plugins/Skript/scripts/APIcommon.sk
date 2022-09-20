@@ -1,4 +1,5 @@
 import:
+	eos.moe.dragoncore.api.CoreAPI
 	java.util.ArrayList
 	java.io.File
 	java.util.Calendar
@@ -1132,7 +1133,7 @@ function threadRegen(ply: player):
 		if {_lastMana} != level of {_ply}:
 			set {_displayMana} to true
 			if {_lastMana} > level of {_ply}:
-				set {_manaRegenCD} to 4
+				set {_manaRegenCD} to 6
 				set {_lastManaUse} to 2
 		if {_lastManaUse} <= 0:
 			{_accessories}.contains("魔力再生手环") is true
@@ -1144,8 +1145,8 @@ function threadRegen(ply: player):
 			if distance between location of {_ply} and {_lastLoc} > 0.25:
 				{_ply} doesn't have metadata "effectTime魔力再生"
 				set {_manaRegenCD} to 2
-			set {_regenAmount} to {_attrMap}.get("manaRegen")
-			set {_regenAmount} to round({_regenAmount} * ({_attrMap}.get("manaRegenMulti")))
+			set {_regenAmount} to ({_attrMap}.get("manaRegen")) * ({_attrMap}.get("manaRegenMulti"))
+			set {_regenAmount} to 2 + ({_regenAmount} * ((level of {_ply}) / {_maxMana}))
 			add {_regenAmount} to {_totalManaRegen}
 		else:
 			remove 1 from {_manaRegenCD}
@@ -1354,11 +1355,12 @@ function randomPrefix(item: item) :: item:
 			set {_next} to {_iterator}.next()
 			remove {_next}.getValue() from {_random}
 			set {_prefix} to {_next}.getKey()
-		#generate color according to rarity
+		# generate color according to rarity
 		set {_rarity} to 0
 		set {_rarity} to yml value "%{_itemType}%.rarity" from file "plugins/Data/items.yml"
+		# initialize rarity color before applying prefix
+		set {_rarityColor} to yml value "rarity.%{_rarity}%" from file "plugins/Data/setting.yml"
 		add (yml value "prefixInfo.%{_prefix}%.rarity" from file "plugins/Data/prefix.yml") to {_rarity}
-		set {_rarityColor} to 5
 		set {_rarityColor} to yml value "rarity.%{_rarity}%" from file "plugins/Data/setting.yml"
 		set name of {_item} to "§%{_rarityColor}%%{_prefix}%的 %{_itemType}%"
 		set {_addLore::*} to ...(yml value "prefixInfo.%{_prefix}%.lore" from file "plugins/Data/prefix.yml")
@@ -1425,10 +1427,11 @@ function getItem(info: text) :: item:
 			set {_rarity} to 0
 			set {_rarity} to yml value "%{_itemType}%.rarity" from file "plugins/Data/items.yml"
 			set {_addLore} to yml value "prefixInfo.%{_prefix}%.lore" from file "plugins/Data/prefix.yml"
+			# initialize rarity color before applying prefix
+			set {_rarityColor} to yml value "rarity.%{_rarity}%" from file "plugins/Data/setting.yml"
 			if {_addLore} is set:
 				add (yml value "prefixInfo.%{_prefix}%.rarity" from file "plugins/Data/prefix.yml") to {_rarity}
 				add (...{_addLore}) to lore of {_i}
-			set {_rarityColor} to 5
 			set {_rarityColor} to yml value "rarity.%{_rarity}%" from file "plugins/Data/setting.yml"
 			if {_addLore} is set:
 				set name of {_i} to "§%{_rarityColor}%%{_prefix}%的 %{_itemType}%"
@@ -1448,9 +1451,19 @@ function giveItem(ply: player, item: item):
 		drop {_item} at location of {_ply} without velocity
 
 function trimText(text: object) :: text:
-	if {_text} is not instance of String:
-		set {_text} to {_text}.toString()
-	return uncoloured {_text}
+	set {_splittext::*} to {_text} split at ""
+	set {_returnText} to ""
+	set {_isColor} to -1
+	loop {_splittext::*}:
+		if loop-value is "§":
+			set {_isColor} to 1
+		if {_isColor} = 0:
+			loop-value is "##"
+			set {_isColor} to 6
+		if {_isColor} < 0:
+			set {_returnText} to "%{_returnText}%%loop-value%"
+		subtract 1 from {_isColor}
+	return {_returnText}
 
 function dropMoney(loc: location, amount: integer):
 	set {_stackSize::*} to coinConversion({_amount})
@@ -1696,6 +1709,7 @@ function handleDeath(v: entity, dPly: entity, d: entity, damageCause: text):
 	if {_damageCause} = "Summon":
 		set {_damageCause} to "Melee"
 	if {_v} is a player:
+		set velocity of {_v} to vector(0, 0, 0)
 		remove health boost from {_v}
 		remove fire resistance from {_v}
 		remove blindness from {_v}
@@ -1948,12 +1962,16 @@ function displayHolo(e: entity, damage: number, isCrit: boolean, damageCause: te
 			set {_text} to "&6%round({_damage})%"
 	replace all "&" in {_text} with "§"
 	set {_loc} to (location of {_e}).clone().add((new Random().nextFloat() - 0.5), (new Random().nextFloat() + 1), (new Random().nextFloat() - 0.5))
-	VexViewAPI.addWorldTag((world of {_loc}), (new VexTextTag("%{NextHologramIndex}%", (x-coordinate of {_loc}), (y-coordinate of {_loc}), (z-coordinate of {_loc}), {_text}, true, (new TagDirection(0, 0, 0, true, true)))))
-	set {_holoInd} to "%{NextHologramIndex}%"
+	set {_holoInd} to "HOLOIND_%{NextHologramIndex}%"
 	add 1 to {NextHologramIndex}
+	loop all players in radius 200 of {_loc}:
+		add loop-player to {_playersSent::*}
+	loop {_playersSent::*}:
+		CoreAPI.setPlayerWorldTexture((loop-value), {_holoInd}, {_loc}, 0, 0, 0, "[text]%{_text}%", 1, 0.75, 1, true, true)
 	{Holograms}.put({_holoInd}, {_loc}.getWorld())
 	wait 5 seconds
-	VexViewAPI.removeWorldTag((world of {_loc}), {_holoInd})
+	loop {_playersSent::*}:
+		CoreAPI.removePlayerWorldTexture((loop-value), {_holoInd})
 	{Holograms}.remove({_holoInd})
 function handleDamage(v: entity, d: entity, dmg: number, damageCause: text):
 	set {_damageTaker} to {_v}
@@ -2206,17 +2224,17 @@ function handleDamage(v: entity, d: entity, dmg: number, damageCause: text):
 				else:
 					play sound "ENTITY.%{_v}.getType()%.HURT" with volume 3 and pitch 1 at {_v}.getLocation()
 			set health of {_damageTaker} to (health of {_damageTaker} - {_dmg})
-		set {_kb} to {_kb} * {_kbResis}
-		if {_kb} > 0:
-			set {_vec} to vector((x-coordinate of {_damageTaker} - x-coordinate of {_d}), 0, (z-coordinate of {_damageTaker} - z-coordinate of {_d}))
-			set vector length of {_vec} to sqrt({_kb}) / 3
-			set y of {_vec} to min(1, {_kb} / 8)
-			if y of velocity of {_damageTaker} > 5:
-				subtract y of velocity of {_damageTaker} from y of {_vec}
-		set {_knockbackTaker} to {_damageTaker}
-		if {_damageTaker} is a player:
-			set {_knockbackTaker} to vehicle of {_damageTaker}
-		push {_knockbackTaker} {_vec}
+			set {_kb} to {_kb} * {_kbResis}
+			if {_kb} > 0:
+				set {_vec} to vector((x-coordinate of {_damageTaker} - x-coordinate of {_d}), 0, (z-coordinate of {_damageTaker} - z-coordinate of {_d}))
+				set vector length of {_vec} to sqrt({_kb}) / 3
+				set y of {_vec} to min(1, {_kb} / 8)
+				if y of velocity of {_damageTaker} > 5:
+					subtract y of velocity of {_damageTaker} from y of {_vec}
+			set {_knockbackTaker} to {_damageTaker}
+			if {_damageTaker} is a player:
+				set {_knockbackTaker} to vehicle of {_damageTaker}
+			push {_knockbackTaker} {_vec}
 	
 	if {_damageCause} is not "drowning":
 		displayHolo({_v}, {_dmg}, {_crit}, {_damageCause})

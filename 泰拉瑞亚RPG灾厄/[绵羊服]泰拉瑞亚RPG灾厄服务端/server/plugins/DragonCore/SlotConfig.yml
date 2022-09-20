@@ -1,86 +1,52 @@
 # 自定义的槽位必须填在此处，否则槽位将不允许点击操作
 
-extra1:
-  attribute: true
-  limit: []
-extra2:
-  attribute: true
-  limit: []
-extra3:
-  attribute: true
-  limit: []
-extra4:
-  attribute: true
-  limit: []
-extra5:
-  attribute: true
-  limit: []
-extra6:
-  attribute: true
-  limit: []
-extra7:
-  attribute: true
-  limit: []
-extra8:
-  attribute: true
-  limit: []
-extra9:
-  attribute: true
-  limit: []
 ammo1:
   attribute: true
-  limit: []
+  limit:
+  - "lorecontains|[弹药]"
 ammo2:
   attribute: true
-  limit: []
+  limit:
+  - "lorecontains|[弹药]"
 ammo3:
   attribute: true
-  limit: []
+  limit:
+  - "lorecontains|[弹药]"
 ammo4:
   attribute: true
-  limit: []
-ammo5:
-  attribute: true
-  limit: []
-money1:
-  attribute: true
-  limit: []
-money2:
-  attribute: true
-  limit: []
-money3:
-  attribute: true
-  limit: []
-money4:
-  attribute: true
-  limit: []
-money5:
-  attribute: true
-  limit: []
+  limit:
+  - "lorecontains|[弹药]"
 trash:
   attribute: true
   limit: []
 accessory1:
   attribute: true
-  limit: []
+  limit:
+  - "lorecontains|[饰品]"
 accessory2:
   attribute: true
-  limit: []
+  limit:
+  - "lorecontains|[饰品]"
 accessory3:
   attribute: true
-  limit: []
+  limit:
+  - "lorecontains|[饰品]"
 accessory4:
   attribute: true
-  limit: []
+  limit:
+  - "lorecontains|[饰品]"
 accessory5:
   attribute: true
-  limit: []
+  limit:
+  - "lorecontains|[饰品]"
 accessory6:
   attribute: true
-  limit: []
+  limit:
+  - "lorecontains|[饰品]"
 accessory7:
   attribute: true
-  limit: []
+  limit:
+  - "lorecontains|[饰品]"
 
 
 # 脚本功能，不会改的不要乱改哦~
@@ -98,7 +64,6 @@ Script:
           }
         }
       }
-      player.sendMessage("§c该槽位需要Lore: "+limitString);
       return false;
     }
   # 用于判断物品是否有一行lore为xxx

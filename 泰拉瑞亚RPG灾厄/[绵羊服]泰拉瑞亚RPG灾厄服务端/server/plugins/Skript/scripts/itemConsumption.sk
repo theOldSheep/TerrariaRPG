@@ -328,7 +328,6 @@ on rightclick:
 			set player's tool to {_item}
 			applyCD(player, 20)
 			send "&a您成功解锁了第六个饰品栏" to player
-			set slot 15 of (metadata "inventories" of player).get("accessory") to air
 		else:
 			send "&c您的第六个饰品栏已经被解锁了，无法再次使用此物品。" to player
 		stop trigger
@@ -341,7 +340,6 @@ on rightclick:
 			set player's tool to {_item}
 			applyCD(player, 20)
 			send "&a您成功解锁了第七个饰品栏" to player
-			set slot 16 of (metadata "inventories" of player).get("accessory") to air
 		else:
 			send "&c您的第七个饰品栏已经被解锁了，无法再次使用此物品。" to player
 		stop trigger
