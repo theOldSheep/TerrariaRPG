@@ -158,8 +158,8 @@ nametagsuffix::34, string, 8006E4BA94E6AD8C
 nametagsuffix::35, string, 8009E5A4A7E6A999E5AD90
 nametagsuffix::36, string, 800CE7B289E9B1BCE5A5B6E5A5B6
 nametagsuffix::37, string, 8009E78B90E78BB8E7B2BE
-nexthologramindex, long, 000000000000035C
-questfish, string, 8009E9AAB7E9AB85E9B1BC
+nexthologramindex, long, 000000000000151E
+questfish, string, 800CE5858BE88B8FE9B281E9B1BC
 skilltype::1, string, 8006E58991E69CAF
 skilltype::2, string, 8006E5B084E587BB
 skilltype::3, string, 8006E68C96E68E98

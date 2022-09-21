@@ -62,38 +62,55 @@ match: "hud"
   x: "(方法.玩家手持槽==0) ? 12 : 8"
   y: "12"
   identifier: "container_36"
+  
 槽位2_slot:
   x: "(方法.玩家手持槽<1) ? 34 : ((方法.玩家手持槽==1) ? 30 : 26)"
   y: "12"
   identifier: "container_37"
+  enable: false
+  drawBackground: false
 槽位3_slot:
   x: "(方法.玩家手持槽<2) ? 52 : ((方法.玩家手持槽==2) ? 48 : 44)"
   y: "12"
   identifier: "container_38"
+  enable: false
+  drawBackground: false
 槽位4_slot:
   x: "(方法.玩家手持槽<3) ? 70 : ((方法.玩家手持槽==3) ? 66 : 62)"
   y: "12"
   identifier: "container_39"
+  enable: false
+  drawBackground: false
 槽位5_slot:
   x: "(方法.玩家手持槽<4) ? 88 : ((方法.玩家手持槽==4) ? 84 : 80)"
   y: "12"
   identifier: "container_40"
+  enable: false
+  drawBackground: false
 槽位6_slot:
   x: "(方法.玩家手持槽<5) ? 106 : ((方法.玩家手持槽==5) ? 102 : 98)"
   y: "12"
   identifier: "container_41"
+  enable: false
+  drawBackground: false
 槽位7_slot:
   x: "(方法.玩家手持槽<6) ? 124 : ((方法.玩家手持槽==6) ? 120 : 116)"
   y: "12"
   identifier: "container_42"
+  enable: false
+  drawBackground: false
 槽位8_slot:
   x: "(方法.玩家手持槽<7) ? 142 : ((方法.玩家手持槽==7) ? 138 : 134)"
   y: "12"
   identifier: "container_43"
+  enable: false
+  drawBackground: false
 槽位9_slot:
   x: "(方法.玩家手持槽<8) ? 160 : ((方法.玩家手持槽==8) ? 156 : 152)"
   y: "12"
   identifier: "container_44"
+  enable: false
+  drawBackground: false
 
 hotbar_label:
   x: 84

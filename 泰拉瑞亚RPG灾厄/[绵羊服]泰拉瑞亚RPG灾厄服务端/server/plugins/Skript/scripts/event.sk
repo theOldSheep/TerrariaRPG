@@ -2,11 +2,11 @@ import:
 	java.util.ArrayList
 	java.util.HashMap
 	java.util.HashSet
-	net.minecraft.server.v1_11_R1.BossBattle
-	net.minecraft.server.v1_11_R1.BossBattle$BarColor
-	net.minecraft.server.v1_11_R1.BossBattle$BarStyle
-	net.minecraft.server.v1_11_R1.BossBattleServer
-	net.minecraft.server.v1_11_R1.PathfinderGoalSelector
+	net.minecraft.server.v1_12_R1.BossBattle
+	net.minecraft.server.v1_12_R1.BossBattle$BarColor
+	net.minecraft.server.v1_12_R1.BossBattle$BarStyle
+	net.minecraft.server.v1_12_R1.BossBattleServer
+	net.minecraft.server.v1_12_R1.PathfinderGoalSelector
 	org.bukkit.attribute.Attribute
 	org.bukkit.craftbukkit.v1_11_R1.util.CraftChatMessage
 	org.bukkit.entity.EntityType

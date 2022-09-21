@@ -18,39 +18,85 @@ ammo4:
   - "lorecontains|[弹药]"
 trash:
   attribute: true
+  limit:
+  - "lorecontains|[坐骑]"
+mount:
+  attribute: true
   limit: []
 accessory1:
   attribute: true
   limit:
-  - "lorecontains|[饰品]"
+  - "accessory_check|1"
 accessory2:
   attribute: true
   limit:
-  - "lorecontains|[饰品]"
+  - "accessory_check|2"
 accessory3:
   attribute: true
   limit:
-  - "lorecontains|[饰品]"
+  - "accessory_check|3"
 accessory4:
   attribute: true
   limit:
-  - "lorecontains|[饰品]"
+  - "accessory_check|4"
 accessory5:
   attribute: true
   limit:
-  - "lorecontains|[饰品]"
+  - "accessory_check|5"
 accessory6:
   attribute: true
   limit:
-  - "lorecontains|[饰品]"
+  - "accessory_check|6"
 accessory7:
   attribute: true
   limit:
-  - "lorecontains|[饰品]"
+  - "accessory_check|7"
 
 
 # 脚本功能，不会改的不要乱改哦~
 Script:
+  # 判定饰品
+  accessory_check: |-
+    function execute(player, itemStack, slotIdentifier, limitString){
+      var itemDNE = itemStack == null || itemStack.getType().toString() == "AIR";
+      if (itemDNE) {
+        return true;
+      }
+      
+      var lore = itemStack.getItemMeta().getLore();
+      var hasLore = false;
+      if(lore!=null){
+        for(var i=0;i<lore.size();i++){
+          var line = lore.get(i);
+          if(line!=null && line.contains("[饰品]")){
+             hasLore = true;
+             break;
+          }
+        }
+      }
+      if (hasLore === false){
+        return false;
+      }
+      
+      var itemName = itemStack.getItemMeta().getDisplayName();
+      if (itemName.endsWith("靴") || itemName.endsWith("之翼")) {
+        for (var idx = 1; idx <= 7; idx ++) {
+          if ("" + idx == limitString) {
+            continue;
+          }
+          var currItem = SlotAPI.static.getCacheSlotItem(player,"accessory"+idx);
+          var itemDNE = currItem == null || currItem.getType().toString() == "AIR";
+          if (itemDNE) {
+            continue;
+          }
+          var currItemName = currItem.getItemMeta().getDisplayName();
+          if (currItemName.endsWith("靴") || currItemName.endsWith("之翼")) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
   # 用于判断物品的某行lore里是否包含了xxx
   lorecontains: |-
     function execute(player, itemStack, slotIdentifier, limitString){

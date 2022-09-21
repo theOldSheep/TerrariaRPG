@@ -5,9 +5,9 @@ import:
 	me.libraryaddict.disguise.disguisetypes.DisguiseType
 	me.libraryaddict.disguise.disguisetypes.MiscDisguise
 	me.libraryaddict.disguise.disguisetypes.watchers.DroppedItemWatcher
-	net.minecraft.server.v1_11_R1.PathfinderGoalFloat
-	net.minecraft.server.v1_11_R1.PathfinderGoalRandomStroll
-	net.minecraft.server.v1_11_R1.PathfinderGoalSelector
+	net.minecraft.server.v1_12_R1.PathfinderGoalFloat
+	net.minecraft.server.v1_12_R1.PathfinderGoalRandomStroll
+	net.minecraft.server.v1_12_R1.PathfinderGoalSelector
 	org.bukkit.Color as BukkitColor
 	org.bukkit.entity.EntityType
 	org.bukkit.inventory.ItemStack

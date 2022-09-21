@@ -19,14 +19,14 @@ import:
 	me.libraryaddict.disguise.disguisetypes.MiscDisguise
 	me.libraryaddict.disguise.disguisetypes.MobDisguise
 	me.libraryaddict.disguise.disguisetypes.watchers.SplashPotionWatcher
-	net.minecraft.server.v1_11_R1.EntitySlime
-	net.minecraft.server.v1_11_R1.Items
-	net.minecraft.server.v1_11_R1.PacketPlayOutSetCooldown
+	net.minecraft.server.v1_12_R1.EntitySlime
+	net.minecraft.server.v1_12_R1.Items
+	net.minecraft.server.v1_12_R1.PacketPlayOutSetCooldown
 	org.bukkit.Bukkit
 	org.bukkit.Color as BukkitColor
 	org.bukkit.configuration.file.FileConfiguration
 	org.bukkit.configuration.file.YamlConfiguration
-	org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack
+	org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 	org.bukkit.entity.EntityType
 	org.bukkit.event.block.BlockBreakEvent
 	org.bukkit.event.entity.EntityTargetEvent$TargetReason as TargetReason
@@ -1729,9 +1729,6 @@ function handleDeath(v: entity, dPly: entity, d: entity, damageCause: text):
 		else:
 			set {_respawnTime} to 15
 		
-		set {_velocity} to {_v}.getVelocity()
-		set vector length of {_velocity} to 0
-		{_v}.setVelocity({_velocity})
 		set {_moneyDrop} to floor({_v}'s money / 100)
 		set {_moneyDrop} to ceil({_moneyDrop} * 0.75)
 		remove {_moneyDrop} * 100 from {_v}'s money

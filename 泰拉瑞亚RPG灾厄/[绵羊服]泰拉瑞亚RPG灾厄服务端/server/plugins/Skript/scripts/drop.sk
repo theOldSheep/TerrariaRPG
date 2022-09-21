@@ -2,7 +2,7 @@ import:
 	java.util.ArrayList
 	java.util.HashMap
 	org.bukkit.block.Chest
-	org.bukkit.craftbukkit.v1_11_R1.block.CraftSkull
+	org.bukkit.craftbukkit.v1_12_R1.block.CraftSkull
 	org.bukkit.event.block.BlockBreakEvent
 	org.bukkit.Material
 

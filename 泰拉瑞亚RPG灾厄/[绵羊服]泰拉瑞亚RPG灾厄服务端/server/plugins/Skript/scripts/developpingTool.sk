@@ -6,7 +6,7 @@ import:
 	lk.vexview.gui.components.VexScrollingList
 	lk.vexview.gui.components.VexSlot
 	lk.vexview.gui.VexGui
-	net.minecraft.server.v1_11_R1.EntityInsentient
+	net.minecraft.server.v1_12_R1.EntityInsentient
 	
 	org.bukkit.block.Biome
 

@@ -6,8 +6,8 @@ import:
 	java.util.ArrayList
 	java.util.HashMap
 	java.util.UUID
-	net.minecraft.server.v1_11_R1.EntityHuman
-	org.bukkit.craftbukkit.v1_11_R1.block.CraftSkull
+	net.minecraft.server.v1_12_R1.EntityHuman
+	org.bukkit.craftbukkit.v1_12_R1.block.CraftSkull
 	org.bukkit.block.BlockFace
 	org.bukkit.block.Skull
 	org.bukkit.Bukkit

@@ -13,18 +13,18 @@ import:
 	me.libraryaddict.disguise.DisguiseAPI
 	me.libraryaddict.disguise.disguisetypes.DisguiseType
 	me.libraryaddict.disguise.disguisetypes.MobDisguise
-	net.minecraft.server.v1_11_R1.EntityInsentient
-	net.minecraft.server.v1_11_R1.EntityMonster
-	net.minecraft.server.v1_11_R1.EntitySlime
-	net.minecraft.server.v1_11_R1.EntityTippedArrow
-	net.minecraft.server.v1_11_R1.MathHelper
-	net.minecraft.server.v1_11_R1.PathfinderGoalAvoidTarget
-	net.minecraft.server.v1_11_R1.PathfinderGoalFloat
-	net.minecraft.server.v1_11_R1.PathfinderGoalLookAtPlayer
-	net.minecraft.server.v1_11_R1.PathfinderGoalMoveTowardsRestriction
-	net.minecraft.server.v1_11_R1.PathfinderGoalRandomLookaround
-	net.minecraft.server.v1_11_R1.PathfinderGoalRandomStrollLand
-	net.minecraft.server.v1_11_R1.PathfinderGoalSelector
+	net.minecraft.server.v1_12_R1.EntityInsentient
+	net.minecraft.server.v1_12_R1.EntityMonster
+	net.minecraft.server.v1_12_R1.EntitySlime
+	net.minecraft.server.v1_12_R1.EntityTippedArrow
+	net.minecraft.server.v1_12_R1.MathHelper
+	net.minecraft.server.v1_12_R1.PathfinderGoalAvoidTarget
+	net.minecraft.server.v1_12_R1.PathfinderGoalFloat
+	net.minecraft.server.v1_12_R1.PathfinderGoalLookAtPlayer
+	net.minecraft.server.v1_12_R1.PathfinderGoalMoveTowardsRestriction
+	net.minecraft.server.v1_12_R1.PathfinderGoalRandomLookaround
+	net.minecraft.server.v1_12_R1.PathfinderGoalRandomStrollLand
+	net.minecraft.server.v1_12_R1.PathfinderGoalSelector
 	org.bukkit.entity.EntityType
 	org.bukkit.entity.Monster
 	org.bukkit.entity.Villager$Profession as Profession

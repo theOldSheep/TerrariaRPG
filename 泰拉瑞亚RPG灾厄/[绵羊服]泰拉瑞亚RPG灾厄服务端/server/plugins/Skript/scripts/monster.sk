@@ -4,8 +4,8 @@ import:
 	me.libraryaddict.disguise.DisguiseAPI
 	me.libraryaddict.disguise.disguisetypes.DisguiseType
 	me.libraryaddict.disguise.disguisetypes.MobDisguise
-	net.minecraft.server.v1_11_R1.EntityVillager
-	net.minecraft.server.v1_11_R1.PathfinderGoalNearestAttackableTarget
+	net.minecraft.server.v1_12_R1.EntityVillager
+	net.minecraft.server.v1_12_R1.PathfinderGoalNearestAttackableTarget
 	org.bukkit.attribute.Attribute
 	org.bukkit.entity.EntityType
 	org.bukkit.event.entity.EntityTargetEvent

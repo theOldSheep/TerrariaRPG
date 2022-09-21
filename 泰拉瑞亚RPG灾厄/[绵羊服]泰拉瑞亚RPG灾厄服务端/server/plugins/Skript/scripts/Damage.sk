@@ -5,7 +5,7 @@ import:
 	java.util.Random
 	lk.vexview.api.VexViewAPI
 	lk.vexview.tag.components.VexTextTag
-	net.minecraft.server.v1_11_R1.AxisAlignedBB
+	net.minecraft.server.v1_12_R1.AxisAlignedBB
 	org.bukkit.entity.Arrow
 	org.bukkit.entity.EntityType
 	org.bukkit.entity.Projectile
