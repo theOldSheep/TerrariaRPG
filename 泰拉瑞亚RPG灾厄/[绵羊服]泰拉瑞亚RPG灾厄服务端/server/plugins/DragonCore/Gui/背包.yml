@@ -18,21 +18,14 @@ Functions:
   keyPress: "(方法.取当前按下键=='E' || 方法.取当前按下键=='ESCAPE')?{方法.关闭界面;}:0"
 
   # 界面开启之后会自动执行open，此时就可以开始更新变量啦
-  open: "方法.异步执行方法('更新所有背包变量')"
+  open: "方法.异步执行方法('更新背包变量')"
 
   # 由于功能完全是在客户端实现的，所以客户端并不能直接知道变量的值，我们需要通过【方法.更新变量值】来向服务端同步变量值到客户端内
   # 文本内容需要用 ''包裹,不然mod无法识别这条公式
-  更新所有背包变量: |-
-    方法.异步执行方法('更新背包变量');
-    方法.异步执行方法('更新颜色变量');
   更新背包变量: |-
     方法.更新变量值('skript_defence','skript_money','skript_accessory_amount');
     方法.延时(1000);
     方法.异步执行方法('更新背包变量');
-  更新颜色变量: |-
-    方法.设置变量值('rainbow_color',方法.合并文本(方法.mod(方法.取当前时间(), 2500) < 1250 ? '§#FF0000' : '§#FFFF00'));
-    方法.延时(1);
-    方法.异步执行方法('更新颜色变量');
 
 # 设置4个装备槽和副手槽
 helmet_texture:
@@ -40,7 +33,7 @@ helmet_texture:
   y: "方法.取屏幕高度-160"
   width: 16
   height: 16
-  texture: "gui/slot_helmet.png"
+  texture: "方法.取文本长度(方法.取物品名(方法.取物品('container_5'))) < 0.1 ? 'gui/slot_helmet.png' : 'gui/slot_accessory_full.png'"
   alpha: 0.75
 helmet_slot:
   x: "方法.取屏幕宽度-32"
@@ -52,7 +45,7 @@ chestplate_texture:
   y: "方法.取屏幕高度-142"
   width: 16
   height: 16
-  texture: "gui/slot_chestplate.png"
+  texture: "方法.取文本长度(方法.取物品名(方法.取物品('container_6'))) < 0.1 ? 'gui/slot_chestplate.png' : 'gui/slot_accessory_full.png'"
   alpha: 0.75
 chestplate_slot:
   x: "方法.取屏幕宽度-32"
@@ -64,7 +57,7 @@ leggings_texture:
   y: "方法.取屏幕高度-124"
   width: 16
   height: 16
-  texture: "gui/slot_leggings.png"
+  texture: "方法.取文本长度(方法.取物品名(方法.取物品('container_7'))) < 0.1 ? 'gui/slot_leggings.png' : 'gui/slot_accessory_full.png'"
   alpha: 0.75
 leggings_slot:
   x: "方法.取屏幕宽度-32"
@@ -76,7 +69,7 @@ offhand_texture:
   y: "方法.取屏幕高度-142"
   width: 16
   height: 16
-  texture: "gui/slot_hook.png"
+  texture: "方法.取文本长度(方法.取物品名(方法.取物品('container_45'))) < 0.1 ? 'gui/slot_hook.png' : 'gui/slot_accessory_full.png'"
   alpha: 0.75
 offhand_slot:
   x: "方法.取屏幕宽度-50"
@@ -88,7 +81,7 @@ mount_texture:
   y: "方法.取屏幕高度-124"
   width: 16
   height: 16
-  texture: "gui/slot_mount.png"
+  texture: "方法.取文本长度(方法.取物品名(方法.取物品('mount'))) < 0.1 ? 'gui/slot_mount.png' : 'gui/slot_accessory_full.png'"
   alpha: 0.75
 mount_slot:
   x: "方法.取屏幕宽度-50"
@@ -211,17 +204,17 @@ crafting_slot:
   tip: "制作窗口"
 # 防御
 defence_texture:
-  x: "方法.取屏幕宽度-45"
-  y: "方法.取屏幕高度-20"
+  x: "方法.取屏幕宽度-48"
+  y: "方法.取屏幕高度-38"
   width: 10
   height: 10
   texture: "gui/defence.png"
 defence_label:
-  x: "方法.取屏幕宽度-40"
-  y: "方法.取屏幕高度-19"
+  x: "方法.取屏幕宽度-43"
+  y: "方法.取屏幕高度-37"
   center: true
   scale: 0.75
-  texts: "方法.合并文本(方法.取变量('skript_defence'))"
+  texts: "方法.取变量('skript_defence')"
   tip: "方法.合并文本(方法.取变量('skript_defence'), ' 防御力')"
 # 背包
 backpack_label:
@@ -666,9 +659,10 @@ slot4-9_slot:
   drawBackground: false
 # ammunition
 ammoslot_label:
-  x: "170"
+  x: "183"
   y: "12"
   texts: "弹药"
+  center: true
 ammoslot1_texture:
   x: "170"
   y: "22"
@@ -724,6 +718,62 @@ ammoslot4_slot:
   width: "12"
   height: "12"
   identifier: "ammo4"
+  drawBackground: false
+ammoslot5_texture:
+  x: "184"
+  y: "22"
+  width: "12"
+  height: "12"
+  texture: "gui/slot.png"
+  alpha: 0.75
+ammoslot5_slot:
+  x: "184"
+  y: "22"
+  width: "12"
+  height: "12"
+  identifier: "ammo5"
+  drawBackground: false
+ammoslot6_texture:
+  x: "184"
+  y: "36"
+  width: "12"
+  height: "12"
+  texture: "gui/slot.png"
+  alpha: 0.75
+ammoslot6_slot:
+  x: "184"
+  y: "36"
+  width: "12"
+  height: "12"
+  identifier: "ammo6"
+  drawBackground: false
+ammoslot7_texture:
+  x: "184"
+  y: "50"
+  width: "12"
+  height: "12"
+  texture: "gui/slot.png"
+  alpha: 0.75
+ammoslot7_slot:
+  x: "184"
+  y: "50"
+  width: "12"
+  height: "12"
+  identifier: "ammo7"
+  drawBackground: false
+ammoslot8_texture:
+  x: "184"
+  y: "64"
+  width: "12"
+  height: "12"
+  texture: "gui/slot.png"
+  alpha: 0.75
+ammoslot8_slot:
+  x: "184"
+  y: "64"
+  width: "12"
+  height: "12"
+  identifier: "ammo8"
   drawBackground: false
 # 显示钱币
 money_label:

@@ -16,6 +16,22 @@ ammo4:
   attribute: true
   limit:
   - "lorecontains|[弹药]"
+ammo5:
+  attribute: true
+  limit:
+  - "lorecontains|[弹药]"
+ammo6:
+  attribute: true
+  limit:
+  - "lorecontains|[弹药]"
+ammo7:
+  attribute: true
+  limit:
+  - "lorecontains|[弹药]"
+ammo8:
+  attribute: true
+  limit:
+  - "lorecontains|[弹药]"
 trash:
   attribute: true
   limit:

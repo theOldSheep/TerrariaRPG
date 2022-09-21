@@ -1362,7 +1362,7 @@ function randomPrefix(item: item) :: item:
 		set {_rarityColor} to yml value "rarity.%{_rarity}%" from file "plugins/Data/setting.yml"
 		add (yml value "prefixInfo.%{_prefix}%.rarity" from file "plugins/Data/prefix.yml") to {_rarity}
 		set {_rarityColor} to yml value "rarity.%{_rarity}%" from file "plugins/Data/setting.yml"
-		set name of {_item} to "§%{_rarityColor}%%{_prefix}%的 %{_itemType}%"
+		set name of {_item} to "%{_rarityColor}%%{_prefix}%的 %{_itemType}%"
 		set {_addLore::*} to ...(yml value "prefixInfo.%{_prefix}%.lore" from file "plugins/Data/prefix.yml")
 		add {_addLore::*} to lore of {_item}
 	return {_item}
@@ -1394,7 +1394,7 @@ function getRawItemFromYML(info: text) :: item:
 		set {_rarity} to yml value "%{_name}%.rarity" from file "plugins/Data/items.yml"
 		set {_rarityColor} to 5
 		set {_rarityColor} to yml value "rarity.%{_rarity}%" from file "plugins/Data/setting.yml"
-		set name of {_item} to "§%{_rarityColor}%%{_name}%"
+		set name of {_item} to "%{_rarityColor}%%{_name}%"
 		set {_lore} to yml value "%{_name}%.lore" from file "plugins/Data/items.yml"
 		if {_lore} is set:
 			add ...{_lore} to lore of {_item}
@@ -1434,9 +1434,9 @@ function getItem(info: text) :: item:
 				add (...{_addLore}) to lore of {_i}
 			set {_rarityColor} to yml value "rarity.%{_rarity}%" from file "plugins/Data/setting.yml"
 			if {_addLore} is set:
-				set name of {_i} to "§%{_rarityColor}%%{_prefix}%的 %{_itemType}%"
+				set name of {_i} to "%{_rarityColor}%%{_prefix}%的 %{_itemType}%"
 			else:
-				set name of {_i} to "§%{_rarityColor}%%{_itemType}%"
+				set name of {_i} to "%{_rarityColor}%%{_itemType}%"
 		return {_i}
 	else:
 		set {_i} to getRawItem({_info})
