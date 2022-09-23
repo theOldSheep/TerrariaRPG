@@ -1,19 +1,9 @@
 import:
+	eos.moe.dragoncore.api.SlotAPI
 	java.io.File
 	java.util.ArrayList
 	java.util.HashMap
 	java.util.HashSet
-	lk.vexview.api.VexViewAPI
-	lk.vexview.event.ButtonClickEvent
-	lk.vexview.event.gui.VexGuiCloseEvent
-	lk.vexview.event.PlayerClientWindowSizeEvent
-	lk.vexview.event.VexSlotClickEvent
-	lk.vexview.gui.components.VexButton
-	lk.vexview.gui.components.VexScrollingList
-	lk.vexview.gui.components.VexSlot
-	lk.vexview.gui.components.VexText
-	lk.vexview.gui.VexGui
-	lk.vexview.potions.VexPotion
 	net.minecraft.server.v1_12_R1.PathfinderGoalSelector
 	org.bukkit.attribute.Attribute
 	org.bukkit.Bukkit
@@ -67,7 +57,7 @@ on leftclick:
 		{_toolMat} ends with "PICKAXE"
 		replace all "PICKAXE" in {_toolMat} with ""
 		set {_blockType} to (event-block).getType().toString()
-		if {_blockType} is "WORKBENCH" or "LOG" or "LOG_2" or "LADDER" or "PUMPKIN" or "CHEST" or "FENCE":
+		if {_blockType} is "WORKBENCH" or "LOG" or "LOG_2" or "LADDER" or "PUMPKIN" or "CHEST" or "TRAPPED_CHEST" or "FENCE":
 			set {_toolMat} to "%{_toolMat}%AXE"
 		else if {_blockType} starts with "WOOD":
 			set {_toolMat} to "%{_toolMat}%AXE"
@@ -89,6 +79,42 @@ on leftclick:
 		stop trigger
 	else if metadata "useCD" of player is not true:
 		playerUseItem(player, (player's tool))
+
+function validateAmmo(ammo: item, itemName: text) :: boolean:
+	if trimText(name of {_ammo}) is {_itemName}:
+		return true
+	if "%{_ammo}.getType()%" is {_itemName}:
+		return true
+	return false
+function getAmmo(ply: player, itemName: text, consumptionRate: number) :: item:
+	# in ammo slots
+	set {_ammoInd} to 1
+	loop 8 times:
+		set {_ammo} to SlotAPI.getSlotItem({_ply}, "ammo%{_ammoInd}%", {_null})
+		broadcast "%last java error%|%{_ammo}%"
+		add 1 to {_ammoInd}
+	# in void bag
+	set {_ammoInd} to 0
+	set {_ammoInv} to (metadata "inventories" of {_ply}).get("voidBag")
+	loop 27 times:
+		set {_ammo} to 1 of slot {_ammoInd} of {_ammoInv}
+		if validateAmmo({_ammo}, {_itemName}) is true:
+			if chance of {_chanceConsumption}:
+				remove {_ammo} from slot {_ammoInd} of {_ammoInv}
+			return {_ammo}
+		add 1 to {_ammoInd}
+	# in player inventory
+	set {_ammoInd} to 0
+	set {_ammoInv} to {_ply}'s inventory
+	loop 36 times:
+		set {_ammo} to 1 of slot {_ammoInd} of {_ammoInv}
+		if validateAmmo({_ammo}, {_itemName}) is true:
+			if chance of {_chanceConsumption}:
+				remove {_ammo} from slot {_ammoInd} of {_ammoInv}
+			return {_ammo}
+		add 1 to {_ammoInd}
+	return {_null}
+		
 function playerUseItem(ply: player, item: item):
 	if {_ply} has metadata "effectTime诅咒":
 		set metadata "autoSwing" of {_ply} to false
@@ -145,33 +171,22 @@ function playerUseItem(ply: player, item: item):
 		set {_map} to {_attrMap}.clone()
 		set {_chanceConsumption} to {_attrMap}.get("ammoConsumptionRate")
 		set {_projectileSpeed} to {_attrMap}.get("projectileSpeed")
-		set {_arrowInv} to (metadata "inventories" of {_ply}).get("voidBag")
-		set {_arrowInd} to {_arrowInv}.first(Material.ARROW)
-		if {_arrowInd} < 0:
-			set {_arrowInv} to {_ply}'s inventory
-			set {_arrowInd} to {_arrowInv}.first(Material.ARROW)
-		if {_arrowInd} >= 0:
-			set {_arrow} to 1 of slot {_arrowInd} of {_arrowInv}
+		set {_arrow} to getAmmo({_ply}, "ARROW", {_chanceConsumption})
+		if {_arrow} is set:
 			set {_arrowType} to trimText(name of {_arrow})
 			set {_attrMapArrow} to yml value "%{_arrowType}%.attributes" from file "plugins/Data/items.yml"
 			set {_attrs} to {_attrMapArrow}.iterator()
 			set {_attrMapArrow} to new HashMap()
 			while {_attrs}.hasNext() is true:
 				set {_info} to {_attrs}.next()
-				if {_info} starts with "ammoConsumptionRate: ":
-					set {_chanceConsumption} to {_chanceConsumption} * ({_info}.split(": ")[1] parsed as number)
-				else if {_info} starts with "projectileSpeed: ":
+				if {_info} starts with "projectileSpeed: ":
 					set {_projectileSpeed} to {_projectileSpeed} + ({_info}.split(": ")[1] parsed as number)
 				else:
 					set {_info::*} to {_info} split at ": "
 					{_attrMapArrow}.put({_info::1}, ({_info::2} parsed as number))
 					if {_info::1} is not "damageType":
 						{_map}.put({_info::1}, ({_map}.getOrDefault({_info::1}, 0) + ({_info::2} parsed as number)))
-			if chance of {_chanceConsumption}:
-				set {_chanceConsumption} to {_attrMap}.get("arrowConsumptionRate")
-				if chance of {_chanceConsumption}:
-					remove {_arrow} from slot {_arrowInd} of {_arrowInv}
-		if {_arrow} is set:
+
 			set {_penetration} to ({_attrMap}.getOrDefault("penetration", 0)) + ({_attrMapArrow}.getOrDefault("penetration", 0))
 			if {_arrowType} is "木箭":
 				{_accessory}.contains("熔火箭袋") is true

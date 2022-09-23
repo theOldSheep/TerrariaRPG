@@ -51,7 +51,7 @@ on papi placeholder request with prefix "skript":
 				set {_result%{_plyName}%} to "%{_result%{_plyName}%}%&7%{_stackSize%{_plyName}%::3}%银币 "
 			if {_stackSize%{_plyName}%::4} > 0:
 				set {_result%{_plyName}%} to "%{_result%{_plyName}%}%&c%{_stackSize%{_plyName}%::4}%铜币 "
-		set placeholder result to {_result%{_plyName}%}
+		set placeholder result to "%{_result%{_plyName}%}%"
 	else:
 		set {_attrMap%{_plyName}%} to metadata "attrMap" of event-player
 		if the identifier is "defence":
@@ -71,9 +71,9 @@ on papi placeholder request with prefix "skript":
 			set placeholder result to "%{_result_accessory_amount_%{_plyName}%}%"
 		else if the identifier is "health":
 			if gamemode of event-player is spectator:
-				set placeholder result to 0
+				set placeholder result to "0"
 			else:
-				set {_result_health_%{_plyName}%} to health of event-player
+				set {_result_health_%{_plyName}%} to "%health of event-player%"
 				set placeholder result to "%{_result_health_%{_plyName}%}%"
 		else if the identifier is "max_health":
 			set {_result_max_health_%{_plyName}%} to (max health of event-player) * ({_attrMap%{_plyName}%}.getOrDefault("maxHealthMulti", 1))
@@ -120,8 +120,13 @@ on rightclick:
 			send "&a您的重生点已设置。潜行右键床来移除出生点。" to player
 
 on place:
-	event-block is cobweb
-	cancel event
+	if event-block is cobweb:
+		cancel event
+	else if event-block is ender chest:
+		if mod((x-coordinate of event-block) + (z-coordinate of event-block), 2) = 0:
+			event-block.setType(Material.TRAPPED_CHEST)
+		else:
+			event-block.setType(Material.CHEST)
 command /inspection:
 	trigger:
 		set {_ply} to command sender
@@ -185,7 +190,6 @@ on LoginEvent:
 	remove "unauthorized" from scoreboard tags of player
 	threadThrustRegen(player)
 	threadAccessory(player)
-	displayIconHud(player, true, true)
 	wait 1 second
 	threadRegen(player)
 	send "&a登录成功~请加群681552180并下载材质包以获得最佳体验~" to player

@@ -2,9 +2,12 @@ import:
 	eos.moe.dragoncore.api.event.KeyPressEvent
 	eos.moe.dragoncore.api.event.KeyReleaseEvent
 
+on jump:
+	cancel event
+
 function playerThrust(ply: player, state: boolean):
 	#thrust or jump, wing, jump bottle etc
-	gamemode of {_ply} is survival
+	gamemode of {_ply} is not spectator
 	set metadata "thrusting" of {_ply} to {_state}
 	{_state} is true
 	#remove all hooks
@@ -169,7 +172,7 @@ on KeyPressEvent:
 	set {_accessory} to metadata "accessory" of {_ply}
 	if event.getKey() is "SPACE":
 		# thrust/jump
-#		playerThrust({_ply}, true)
+		playerThrust({_ply}, true)
 	else if event.getKey() is "R":
 		# Grappling hook
 		handleGrapplingHook({_ply})

@@ -93,7 +93,7 @@ on BlockBreakEvent:
 	set {_block} to event.getBlock()
 	set {_newBlock} to air
 	set {_material} to "%{_block}.getType()%"
-	if {_material} is "CHEST":
+	if {_material} is "CHEST" or "TRAPPED_CHEST":
 		set {_inv} to (block at location of {_block}).getState().getBlockInventory()
 		set {_contents} to {_inv}.getStorageContents()
 		loop ...{_contents}:
@@ -237,10 +237,13 @@ on BlockBreakEvent:
 		add getItem("木制工作台") to {_dropItem::*}
 	else if {_material} is "BREWING_STAND":
 		add getItem("酿造台") to {_dropItem::*}
-	else if {_material} is "CHEST" or "ANVIL" or "FURNACE":
+	else if {_material} is "CHEST" or "TRAPPED_CHEST" or "ANVIL" or "FURNACE":
 		set {_blockName} to trimText({_block}.getState().getInventory().getName().toString())
-		if {_blockName} is not set:
-			if {_material} is "CHEST":
+		set {_dropItemByName} to false
+		if {_blockName} is set:
+			set {_dropItemByName} to {Items}.containsKey({_blockName})
+		if {_dropItemByName} is false:
+			if {_material} is "CHEST" or "TRAPPED_CHEST":
 				add getItem("箱子") to {_dropItem::*}
 			else if {_material} is "ANVIL":
 				add getItem("铁砧") to {_dropItem::*}

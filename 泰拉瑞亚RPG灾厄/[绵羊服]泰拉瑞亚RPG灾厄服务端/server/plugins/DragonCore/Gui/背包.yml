@@ -204,17 +204,17 @@ crafting_slot:
   tip: "制作窗口"
 # 防御
 defence_texture:
-  x: "方法.取屏幕宽度-48"
-  y: "方法.取屏幕高度-38"
-  width: 10
-  height: 10
+  x: "方法.取屏幕宽度-50"
+  y: "方法.取屏幕高度-40"
+  width: 14
+  height: 14
   texture: "gui/defence.png"
 defence_label:
   x: "方法.取屏幕宽度-43"
   y: "方法.取屏幕高度-37"
   center: true
-  scale: 0.75
-  texts: "方法.取变量('skript_defence')"
+  scale: 0.8
+  texts: "方法.合并文本('&#CCCCCC&l', 方法.取变量('skript_defence'))"
   tip: "方法.合并文本(方法.取变量('skript_defence'), ' 防御力')"
 # 背包
 backpack_label:

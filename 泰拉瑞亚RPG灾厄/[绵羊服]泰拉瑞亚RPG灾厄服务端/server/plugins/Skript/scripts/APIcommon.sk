@@ -1090,13 +1090,8 @@ function threadRegen(ply: player):
 			stop trigger
 		set {_attrMap} to metadata "attrMap" of {_ply}
 		set {_accessories} to metadata "accessory" of {_ply}
-		set {_displayHealth} to false
-		set {_displayMana} to false
 		
-		if {_lastHealth} < health of {_ply}:
-			set {_displayHealth} to true
-		else if {_lastHealth} > health of {_ply}:
-			set {_displayHealth} to true
+		if {_lastHealth} > health of {_ply}:
 			set {_healthRegenCD} to 6
 		# health regen
 		set {_lastHealth} to health of {_ply}
@@ -1125,13 +1120,11 @@ function threadRegen(ply: player):
 			set {_totalHealAmount} to {_totalHealAmount} / 4
 			set health of {_ply} to min(health of {_ply} + {_totalHealAmount}, max health of {_ply})
 			set {_lastHealth} to health of {_ply}
-			set {_displayHealth} to true
 		set {_lastLoc} to location of {_ply}
 		# mana regen
 		set {_totalManaRegen} to 0
 		set {_maxMana} to {_attrMap}.get("maxMana")
 		if {_lastMana} != level of {_ply}:
-			set {_displayMana} to true
 			if {_lastMana} > level of {_ply}:
 				set {_manaRegenCD} to 6
 				set {_lastManaUse} to 2
@@ -1156,10 +1149,8 @@ function threadRegen(ply: player):
 			set level of {_ply} to (level of {_ply} + {_totalManaRegen})
 			if level of {_ply} > {_maxMana}:
 				set level of {_ply} to {_maxMana}
-			set {_displayMana} to true
 		set {_lastMana} to level of {_ply}
 		set {_lastLoc} to location of {_ply}
-		displayIconHud({_ply}, {_displayHealth}, {_displayMana})
 		wait 5 ticks
 
 function loadInventories(ply: player):
@@ -1260,7 +1251,6 @@ function resetPlayerStats(ply: player):
 	set hunger of {_ply} to 3
 	set gravity of {_ply} to on
 	set metadata "thrusting" of {_ply} to false
-	displayIconHud({_ply}, true, true)
 	
 	set metadata "craftingStation" of {_ply} to "CLOSED"
 	set metadata "recipeNumber" of {_ply} to -1
@@ -1778,7 +1768,6 @@ function handleDeath(v: entity, dPly: entity, d: entity, damageCause: text):
 		set {_v}'s health to min(400, {_v}'s max health)
 		set {_v}'s level to (metadata "attrMap" of {_v}).getOrDefault("maxMana", 100)
 		set metadata "respawnCD" of {_v} to {_respawnTime}
-		displayIconHud({_v}, true, false)
 		while {_respawnTime} > 0:
 			if {_v} is online:
 				set gamemode of {_v} to spectator

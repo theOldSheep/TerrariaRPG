@@ -6,7 +6,6 @@ import:
 	lk.vexview.api.VexViewAPI
 	lk.vexview.event.ButtonClickEvent
 	lk.vexview.event.gui.VexGuiCloseEvent
-	lk.vexview.event.PlayerClientWindowSizeEvent
 	lk.vexview.event.VexSlotClickEvent
 	lk.vexview.gui.components.VexButton
 	lk.vexview.gui.components.VexScrollingList
@@ -98,7 +97,7 @@ on skript start:
 	
 	set {_items::*} to yml nodes "" from file "plugins/Data/items.yml"
 	set {_craftStations::*} to yml nodes "" from file "plugins/Data/recipes.yml"
-	set {Items} to new HashMap(size of {_items::*} * 3)
+	set {Items} to new HashMap(size of {_items::*} * 2)
 	loop {_items::*}:
 		set {_item} to getRawItemFromYML(loop-value)
 		set {_item} to 1 of {_item}
@@ -203,7 +202,6 @@ on join:
 	loop {_perms::*}:
 		{_att}.setPermission(loop-value, true)
 	set player list name of player to "&c<红队>&r%name of player%"
-	apply potion of haste 20 without particles to player for 10 days
 	set {_filePath} to "plugins/PlayerData/%name of player%.yml"
 	set {_file} to new File({_filePath})
 	if {_file}.exists() is not true:
@@ -246,9 +244,6 @@ on join:
 		add 1 to {_index}
 		mod({_index}, 15) = 0
 		saveInventories(player)
-
-on PlayerClientWindowSizeEvent:
-	displayIconHud(player, true, true)
 
 on consume:
 	cancel event
