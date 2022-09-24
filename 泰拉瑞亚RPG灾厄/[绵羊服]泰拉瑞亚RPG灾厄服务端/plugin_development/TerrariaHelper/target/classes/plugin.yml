@@ -1,0 +1,6 @@
+name: TerrariaHelper
+version: 1.0
+main: terraria.TerrariaHelper
+softdepend:
+  - DragonCore
+load: startup
