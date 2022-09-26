@@ -1,31 +1,22 @@
 package terraria.worldgen.overworld;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
 import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.noise.PerlinNoiseGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
-import terraria.TerrariaHelper;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Random;
 
 public class OverworldChunkGenerator extends ChunkGenerator {
+    OverworldBiomeGenerator biomeGen;
     public OverworldChunkGenerator() {
+        biomeGen = new OverworldBiomeGenerator();
     }
     public void tweakBiome(World world, int x, int z, BiomeGrid biome) {
         for (int i = 0; i < 16; i++)
             for (int j = 0; j < 16; j++) {
                 int blockX = x * 16 + i, blockZ = z * 16 + j;
-                biome.setBiome(i, j, OverworldBiomeGenerator.getBiome(world, blockX, blockZ));
+                biome.setBiome(i, j, biomeGen.getBiome(world, blockX, blockZ));
             }
     }
     @Override
