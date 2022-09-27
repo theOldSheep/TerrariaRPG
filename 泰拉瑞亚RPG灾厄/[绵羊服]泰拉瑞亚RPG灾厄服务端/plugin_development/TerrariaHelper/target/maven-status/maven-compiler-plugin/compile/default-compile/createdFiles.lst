@@ -1,10 +1,9 @@
 terraria\dragoncorehelper\playerKeyToggleListener.class
 terraria\worldgen\RandomGenerator.class
-terraria\worldgen\overworld\OverworldBiomeGenerator$LandType.class
+terraria\dragoncorehelper\SlotHelper$SlotCallback.class
 terraria\worldgen\overworld\OverworldChunkGenerator.class
 terraria\dragoncorehelper\RandomTitle.class
 terraria\worldgen\overworld\OverworldBiomeGenerator$OceanType.class
-terraria\dragoncorehelper\SlotHelper$SlotCallback.class
 terraria\dragoncorehelper\SlotHelper.class
 terraria\worldgen\overworld\OverworldBiomeGenerator.class
 terraria\dragoncorehelper\playerTestListener.class
