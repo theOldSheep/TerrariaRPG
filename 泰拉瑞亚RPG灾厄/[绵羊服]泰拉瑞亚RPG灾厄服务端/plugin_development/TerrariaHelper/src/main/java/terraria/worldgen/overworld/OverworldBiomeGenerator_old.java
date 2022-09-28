@@ -1,7 +1,6 @@
 package terraria.worldgen.overworld;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
@@ -12,71 +11,17 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.HashMap;
 
-public class OverworldBiomeGenerator {
+public class OverworldBiomeGenerator_old {
     World wld;
     HashMap<Biome, Integer> biomeColors;
-    HashMap<String, Integer> biomeCache;
-    String[] biomeGenProcess;
-    double lastRecCall = -1, total = 0, cached = 0;
-    static final int CACHE_SIZE = 15000000;
+    HashMap<String, Biome> biomeCache;
+    HashMap<String, Integer> biomeGridGeneralCache;
 
-    public OverworldBiomeGenerator() {
-        biomeGenProcess = new String[] {
-                "zoom_in",
-                "add_islands",
-                "zoom_in",
-                "add_islands",
-                "add_islands",
-                "add_islands",
-                "fill_ocean",
-                "add_islands",
-                "setup_rough_biome",
-                "smooth_biome",
-                "zoom_in",
-                "zoom_in",
-                "add_islands",
-                "zoom_in",
-                "zoom_in",
-                "zoom_in",
-                "zoom_in",
-                "zoom_in",
-                "add_beach",
-                "smooth_biome",
-                "zoom_in",
-                "zoom_in",
-                "zoom_in",
-                "smooth_biome"
-        };
-        biomeGenProcess = new String[] {
-                "zoom_in",
-                "add_islands",
-                "zoom_in",
-////                "add_islands",
-////                "add_islands",
-////                "add_islands",
-                "fill_ocean",
-                "add_islands",
-                "setup_rough_biome",
-                "smooth_biome",
-                "zoom_in",
-                "zoom_in",
-                "add_islands",
-                "zoom_in",
-                "zoom_in",
-                "zoom_in",
-                "zoom_in",
-                "zoom_in",
-                "add_beach",
-                "smooth_biome",
-                "zoom_in",
-                "zoom_in",
-                "zoom_in",
-                "smooth_biome"
-        };
-        biomeCache = new HashMap<>(CACHE_SIZE, 0.8f);
+    public OverworldBiomeGenerator_old() {
+        biomeCache = new HashMap<>(750000);
+        biomeGridGeneralCache = new HashMap<>(750000);
         biomeColors = new HashMap<>();
         biomeColors.put(Biome.FOREST,               new Color(0, 255, 0).getRGB()); //forest(normal)
         biomeColors.put(Biome.JUNGLE,               new Color(0, 100, 0).getRGB()); //jungle
@@ -187,33 +132,23 @@ public class OverworldBiomeGenerator {
         int[][] land_grid = new int[size][size];
         for (int i = 0; i < size; i ++)
             for (int j = 0; j < size; j ++)
-                // land_grid[i][j] = getGeneralBiomeGrid(world, i * 64, j * 64, 1, 1);
+                land_grid[i][j] = getGeneralBiomeGrid(world, i * 64, j * 64);
         Bukkit.getLogger().info(land_grid + "");
         saveTestImage(land_grid, "biomeGrid");
     }
     public void generateBiomeImage(World world) {
         if (wld != null) return;
         wld = world;
-        Bukkit.getLogger().info("START GENERATING BIOME MAP");
-        // generateBiomeGridImage(wld);
+        generateBiomeGridImage(wld);
         // test: save a map of biomes for testing purposes
-        int scale = 1000;
-        int jump = 10;
-        double progress = 0, progressMax = scale * scale;
-        long lastPrinted = Calendar.getInstance().getTimeInMillis();
-        BufferedImage biomeMap = new BufferedImage(scale, scale, BufferedImage.TYPE_INT_RGB);
-        for (int i = 0; i < scale; i ++)
-            for (int j = 0; j < scale; j ++) {
-                int blockX = (i-(scale / 2)) * jump, blockZ = (j-(scale / 2)) * jump;
+        int scaleX = 1000, scaleZ = 1000;
+        int jumpX = 1, jumpZ = 1;
+        BufferedImage biomeMap = new BufferedImage(scaleX, scaleZ, BufferedImage.TYPE_INT_RGB);
+        for (int i = 0; i < scaleX; i ++)
+            for (int j = 0; j < scaleZ; j ++) {
+                int blockX = (i-(scaleX / 2)) * jumpX, blockZ = (j-(scaleZ / 2)) * jumpZ;
                 Biome currBiome = getBiome(wld, blockX, blockZ);
                 biomeMap.setRGB(i, j, biomeColors.getOrDefault(currBiome, new Color(0, 255, 0).getRGB()));
-
-                progress ++;
-                if (lastPrinted + 3000 < Calendar.getInstance().getTimeInMillis()) {
-                    lastPrinted = Calendar.getInstance().getTimeInMillis();
-                    Bukkit.getLogger().info("Generation progress: " + progress / progressMax);
-                    Bukkit.getLogger().info("Cache size: " + biomeCache.size() + " / " + CACHE_SIZE);
-                }
             }
         File dir_biome_map = new File("world/biomesMap.png");
         try {
@@ -222,11 +157,9 @@ public class OverworldBiomeGenerator {
             e.printStackTrace();
             Bukkit.getLogger().warning(e.getMessage());
         }
-        Bukkit.getLogger().info("FINISHED GENERATING BIOME MAP");
     }
     // biome enlarge helper functions
-    public int[][] zoom_in(int[][] original, World wld, int x, int z, int scale) {
-        int sizeOriginal = original.length;
+    public int[][] zoom_in(int[][] original, World wld, int x, int z, int scale) {int sizeOriginal = original.length;
         int size = original.length * 2 - 1;
         int[][] result = new int[size][size];
         // * · *
@@ -399,137 +332,199 @@ public class OverworldBiomeGenerator {
             }
         return result;
     }
-    public int getGeneralBiomeGrid(World world, int x, int z, int gridSize, int recursion) {
+    public int getGeneralBiomeGrid(World world, int x, int z) {
+        // the general biome grid, more delicate calculations needed to become useful
+        int gridSize = 64;
         int gridX = x / gridSize, gridZ = z / gridSize;
-        if (x < 0 && x % gridSize != 0) gridX --;
-        if (z < 0 && z % gridSize != 0) gridZ --;
-        String biomeLocKey = recursion + "|" + gridX + "|" + gridZ;
-        total ++;
-        if (biomeCache.containsKey(biomeLocKey)) {
-            cached ++;
-            int result = biomeCache.get(biomeLocKey);
-            if (biomeCache.size() * 1.5 > CACHE_SIZE) {
-                biomeCache.clear();
+        String biomeLocKey = (gridX * gridSize) + "|" + (gridZ * gridSize);
+        if (biomeGridGeneralCache.containsKey(biomeLocKey)) {
+            int rst = biomeGridGeneralCache.get(biomeLocKey);
+            if (biomeGridGeneralCache.size() > 500000) {
+                biomeGridGeneralCache.clear();
             }
-            return result;
+            return rst;
         }
-        // setup original grid.
-        final int radius = 2;
-        String operation = biomeGenProcess[biomeGenProcess.length - recursion];
+        // setup original land/ocean. 4096 x 4096 for each grid.
+        // 1: land  0: water
+        final int radius = 5;
         int[][] land_grid = new int[radius * 2 + 1][radius * 2 + 1];
-        int grid_x_begin, grid_z_begin;
-        int gridSizeOffset = gridSize;
-        if (operation.equals("zoom_in")) gridSizeOffset = gridSize * 2;
-        grid_x_begin = x / gridSizeOffset;
-        grid_z_begin = z / gridSizeOffset;
-        if (x < 0 && x % gridSizeOffset != 0) grid_x_begin--;
-        if (z < 0 && z % gridSizeOffset != 0) grid_z_begin--;
-        // offset x and z by -radius. [radius][radius] contains the current grid to return.
+        int enlarge_total = 4096;
+        int grid_x_begin = x / enlarge_total, grid_z_begin = z / enlarge_total;
+        if (x < 0 && x % enlarge_total != 0) grid_x_begin --;
+        if (z < 0 && z % enlarge_total != 0) grid_z_begin --;
+        // offset x and z by -2. [2][2] contains the current position (x, z).
         grid_x_begin -= radius;
         grid_z_begin -= radius;
-        int offsetX = grid_x_begin * gridSizeOffset, offsetZ = grid_z_begin * gridSizeOffset;
+        int offsetX = grid_x_begin * enlarge_total, offsetZ = grid_z_begin * enlarge_total;
         {
             for (int i = 0; i < radius * 2 + 1; i++)
                 for (int j = 0; j < radius * 2 + 1; j++) {
-                    if (recursion < biomeGenProcess.length) {
-                        int blockX, blockZ;
-                        blockX = offsetX + i * gridSizeOffset;
-                        blockZ = offsetZ + j * gridSizeOffset;
-                        land_grid[i][j] = getGeneralBiomeGrid(world, blockX, blockZ, gridSizeOffset, recursion + 1);
-                    } else {
-                        int grid_x_curr = gridX + i - radius, grid_z_curr = gridZ + j - radius;
-                        if (grid_x_curr == 0 && grid_z_curr == 0) land_grid[i][j] = 1;
-                        else if (RandomGenerator.getRandom(world.getSeed(), grid_x_curr, grid_z_curr) < 0.1) land_grid[i][j] = 1;
-                        else land_grid[i][j] = 0;
-                    }
+                    int grid_x = grid_x_begin + i * enlarge_total, grid_z = grid_z_begin + j * enlarge_total;
+                    if (grid_x == 0 && grid_z == 0) land_grid[i][j] = 1;
+                    else if (RandomGenerator.getRandom(world.getSeed(), grid_x, grid_z) < 0.1) land_grid[i][j] = 1;
+                    else land_grid[i][j] = 0;
                 }
         }
-        int marginDiscard = 1;
-        if (operation.equals("setup_rough_biome")) {
-            land_grid = setup_rough_biome(land_grid, wld, offsetX, offsetZ, gridSize);
-            marginDiscard = 0;
-        } else {
-            switch (operation) {
-                case "zoom_in":
-                    land_grid = zoom_in(land_grid, wld, offsetX, offsetZ, gridSize);
-                    break;
-                case "add_islands":
-                    land_grid = add_islands(land_grid, wld, offsetX, offsetZ, gridSize);
-                    break;
-                case "fill_ocean":
-                    land_grid = fill_ocean(land_grid, wld, offsetX, offsetZ, gridSize);
-                    break;
-                case "smooth_biome":
-                    land_grid = smooth_biome(land_grid, wld, offsetX, offsetZ, gridSize);
-                    break;
-                case "add_beach":
-                    land_grid = add_beach(land_grid, wld, offsetX, offsetZ, gridSize);
-                    break;
+        String[] processToUse = {
+                "zoom_in",
+                "add_islands",
+                "zoom_in",
+                "add_islands",
+                "add_islands",
+                "add_islands",
+                "fill_ocean",
+                "add_islands",
+                "setup_rough_biome",
+                "smooth_biome",
+                "zoom_in",
+                "zoom_in",
+                "add_islands",
+                "zoom_in",
+                "zoom_in"
+        };
+        int scale = 4096;
+        int marginDiscard = 0;
+        for (String operation : processToUse) {
+            if (operation.equals("setup_rough_biome")) {
+                land_grid = setup_rough_biome(land_grid, wld, offsetX, offsetZ, scale);
+            } else {
+                switch (operation) {
+                    case "zoom_in":
+                        scale /= 2;
+                        land_grid = zoom_in(land_grid, wld, offsetX, offsetZ, scale);
+                        if (marginDiscard == 0) marginDiscard ++;
+                        else marginDiscard *= 2;
+                        break;
+                    case "add_islands":
+                        land_grid = add_islands(land_grid, wld, offsetX, offsetZ, scale);
+                        marginDiscard ++;
+                        break;
+                    case "fill_ocean":
+                        land_grid = fill_ocean(land_grid, wld, offsetX, offsetZ, scale);
+                        marginDiscard ++;
+                        break;
+                    case "smooth_biome":
+                        land_grid = smooth_biome(land_grid, wld, offsetX, offsetZ, scale);
+                        marginDiscard ++;
+                        break;
+                }
             }
         }
         for (int i = marginDiscard; i + marginDiscard < land_grid.length; i++)
             for (int j = marginDiscard; j + marginDiscard < land_grid[i].length; j++) {
-                int halfSize = land_grid.length / 2;
-                int grid_x_curr = gridX + i - halfSize, grid_z_curr = gridZ + j - halfSize;
-                String tempKey = recursion + "|" + grid_x_curr + "|" + grid_z_curr;
-                if (lastRecCall != recursion) {
-                    lastRecCall = recursion;
-////                    Bukkit.getLogger().info(cached / total + "/" + recursion + "|" + gridSizeOffset + "|" + gridSize + "........" + biomeLocKey + "   ||||   " + tempKey);
-                }
-                biomeCache.put(tempKey, land_grid[i][j]);
+                String tempKey = (offsetX + i * gridSize) + "|" + (offsetZ + j * gridSize);
+                biomeGridGeneralCache.put(tempKey, land_grid[i][j]);
             }
-        return biomeCache.get(biomeLocKey);
+        return biomeGridGeneralCache.get(biomeLocKey);
     }
-        public Biome getBiome(World world, int x, int z) {
+    public Biome getBiome(World world, int x, int z) {
         // generateTestImage(world);
         generateBiomeImage(world);
-        String biomeLocKey = 1+"|"+x+"|"+z;
-        int rst = 0;
+        String biomeLocKey = x+"|"+z;
         if (biomeCache.containsKey(biomeLocKey)) {
-            rst = biomeCache.get(biomeLocKey);
-            if (biomeCache.size() * 1.5 > CACHE_SIZE) {
+            Biome rst = biomeCache.get(biomeLocKey);
+            if (biomeCache.size() > 500000) {
                 biomeCache.clear();
             }
-        } else {
-            rst = getGeneralBiomeGrid(world, x, z, 1, 1);
+            return rst;
+        }
+        // setup original land/ocean. 64 x 64 for each grid.
+        // 1: land  0: water
+        final int radius = 5;
+        int[][] land_grid = new int[radius * 2 + 1][radius * 2 + 1];
+        int enlarge_total = 64;
+        int grid_x_begin = x / enlarge_total, grid_z_begin = z / enlarge_total;
+        if (x < 0 && x % enlarge_total != 0) grid_x_begin --;
+        if (z < 0 && z % enlarge_total != 0) grid_z_begin --;
+        // offset x and z by -2. [2][2] contains the current position (x, z)
+        grid_x_begin -= radius;
+        grid_z_begin -= radius;
+        int offsetX = grid_x_begin * enlarge_total, offsetZ = grid_z_begin * enlarge_total;
+        for (int i = 0; i < radius * 2 + 1; i ++)
+            for (int j = 0; j < radius * 2 + 1; j ++) {
+                land_grid[i][j] = getGeneralBiomeGrid(world, (grid_x_begin + i) * enlarge_total, (grid_z_begin + j) * enlarge_total);
+            }
+
+        String[] processToUse = {
+                "zoom_in",
+                "zoom_in",
+                "zoom_in",
+                "add_beach",
+                "smooth_biome",
+                "zoom_in",
+                "zoom_in",
+                "zoom_in",
+                "smooth_biome",
+        };
+        int scale = 64;
+        int marginDiscard = 0;
+        for (String operation : processToUse) {
+            switch (operation) {
+                case "zoom_in":
+                    scale /= 2;
+                    land_grid = zoom_in(land_grid, wld, offsetX, offsetZ, scale);
+                    if (marginDiscard == 0) marginDiscard ++;
+                    else marginDiscard *= 2;
+                    break;
+                case "add_islands":
+                    land_grid = add_islands(land_grid, wld, offsetX, offsetZ, scale);
+                    marginDiscard ++;
+                    break;
+                case "fill_ocean":
+                    land_grid = fill_ocean(land_grid, wld, offsetX, offsetZ, scale);
+                    marginDiscard ++;
+                    break;
+                case "smooth_biome":
+                    land_grid = smooth_biome(land_grid, wld, offsetX, offsetZ, scale);
+                    marginDiscard ++;
+                    break;
+                case "add_beach":
+                    land_grid = add_beach(land_grid, wld, offsetX, offsetZ, scale);
+                    marginDiscard ++;
+                    break;
+            }
         }
 
         Biome result;
-        switch (rst) {
-            case -1:
-                result = Biome.FROZEN_OCEAN; // sulphurous ocean
-                break;
-            case 0:
-                result = Biome.OCEAN; // ocean
-                break;
-            case 2:
-                result = Biome.JUNGLE; // jungle
-                break;
-            case 3:
-                result = Biome.TAIGA_COLD; // tundra
-                break;
-            case 4:
-                result = Biome.DESERT; // desert
-                break;
-            case 5:
-                result = Biome.MUSHROOM_ISLAND; // corruption
-                break;
-            case 6:
-                result = Biome.ICE_FLATS; // hallow
-                break;
-            case 7:
-                result = Biome.MESA; // astral infection
-                break;
-            case 8:
-                result = Biome.COLD_BEACH; // sulphurous beach
-                break;
-            case 9:
-                result = Biome.BEACHES; // beach
-                break;
-            default:
-                result = Biome.FOREST; //forest
-        }
-        Bukkit.getServer().shutdown();
-        return result;
+        for (int i = marginDiscard; i + marginDiscard < land_grid.length; i ++)
+            for (int j = marginDiscard; j + marginDiscard < land_grid[i].length; j ++) {
+                switch (land_grid[i][j]) {
+                    case -1:
+                        result = Biome.FROZEN_OCEAN; // sulphurous ocean
+                        break;
+                    case 0:
+                        result = Biome.OCEAN; // ocean
+                        break;
+                    case 2:
+                        result = Biome.JUNGLE; // jungle
+                        break;
+                    case 3:
+                        result = Biome.TAIGA_COLD; // tundra
+                        break;
+                    case 4:
+                        result = Biome.DESERT; // desert
+                        break;
+                    case 5:
+                        result = Biome.MUSHROOM_ISLAND; // corruption
+                        break;
+                    case 6:
+                        result = Biome.ICE_FLATS; // hallow
+                        break;
+                    case 7:
+                        result = Biome.MESA; // astral infection
+                        break;
+                    case 8:
+                        result = Biome.COLD_BEACH; // sulphurous beach
+                        break;
+                    case 9:
+                        result = Biome.BEACHES; // beach
+                        break;
+                    default:
+                        result = Biome.FOREST; //forest
+                }
+                String tempLocKey = (offsetX + i)+"|"+(offsetZ + j);
+                biomeCache.put(tempLocKey, result);
+            }
+        return biomeCache.get(biomeLocKey);
     }
 }
