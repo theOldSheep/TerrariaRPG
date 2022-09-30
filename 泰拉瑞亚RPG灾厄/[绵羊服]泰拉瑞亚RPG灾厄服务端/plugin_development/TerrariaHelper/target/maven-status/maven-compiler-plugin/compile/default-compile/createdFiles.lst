@@ -6,6 +6,5 @@ terraria\dragoncorehelper\RandomTitle.class
 terraria\dragoncorehelper\SlotHelper.class
 terraria\worldgen\overworld\OverworldBiomeGenerator.class
 terraria\dragoncorehelper\playerTestListener.class
-terraria\worldgen\overworld\OverworldBiomeGenerator_old.class
 terraria\worldgen\overworld\OverworldChunkGenerator$1.class
 terraria\TerrariaHelper.class
