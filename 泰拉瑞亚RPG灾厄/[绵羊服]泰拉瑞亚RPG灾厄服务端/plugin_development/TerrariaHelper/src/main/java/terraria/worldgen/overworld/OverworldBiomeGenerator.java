@@ -3,7 +3,6 @@ package terraria.worldgen.overworld;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.omg.CORBA.TypeCodePackage.BadKind;
 import terraria.worldgen.RandomGenerator;
 
 import javax.imageio.ImageIO;
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class OverworldBiomeGenerator {
     World wld;
@@ -22,9 +20,8 @@ public class OverworldBiomeGenerator {
     HashMap<String, Integer> biomeCache;
     String[] biomeGenProcess;
 
-    double lastRecCall = -1, total = 0, cached = 0;
+    double total = 0, cached = 0;
     static final int CACHE_SIZE = 15000000, CACHE_DELETION_SIZE = CACHE_SIZE * 2 / 3;
-    boolean isFirst = true, sendGridInfo = true;
 
     public OverworldBiomeGenerator() {
         biomeGenProcess = new String[] {
@@ -40,73 +37,20 @@ public class OverworldBiomeGenerator {
                 "setup_rough_biome",
                 "zoom_in",
                 "zoom_in",
-                "zoom_in",
                 "smooth_biome",
-                "add_beach",
-                "zoom_in",
-                "zoom_in",
-                "zoom_in",
-                "add_beach",
-                "zoom_in",
+                "zoom_in_smooth",
+                "zoom_in_smooth",
                 "smooth_biome",
-                "zoom_in",
-                "zoom_in",
+                "zoom_in_smooth",
+                "add_beach",
+                "add_beach",
+                "add_beach",
+                "zoom_in_smooth",
+                "zoom_in_smooth",
+                "zoom_in_smooth",
+                "zoom_in_smooth",
                 "smooth_biome"
         };
-//        biomeGenProcess = new String[] {
-////                "zoom_in",
-//                "add_islands",
-////                "zoom_in",
-//                "add_islands",
-//                "add_islands",
-//                "add_islands",
-//                "fill_ocean",
-//                "add_islands",
-//                "setup_rough_biome",
-////                "zoom_in",
-////                "zoom_in",
-//                "smooth_biome",
-////                "zoom_in",
-////                "zoom_in",
-//                "add_beach",
-////                "zoom_in",
-//                "add_beach",
-////                "zoom_in",
-////                "zoom_in",
-////                "zoom_in",
-//                "smooth_biome",
-////                "zoom_in",
-////                "zoom_in",
-//                "smooth_biome"
-//        };
-//        // BUGGY!
-//        biomeGenProcess = new String[] {
-//                "zoom_in",
-//                "zoom_in",
-//                "zoom_in",
-//                "add_islands",
-//                "fill_ocean",
-//                "setup_rough_biome",
-////                "smooth_biome",
-//                "add_beach"
-//        };
-//        biomeGenProcess = new String[] {
-//                "zoom_in",
-//                "zoom_in",
-//                "zoom_in",
-//        };
-//        biomeGenProcess = new String[] {
-//                "add_islands",
-//                "fill_ocean",
-//                "setup_rough_biome",
-//                "smooth_biome",
-//                "add_beach",
-//                "add_islands",
-//                "fill_ocean",
-//                "setup_rough_biome",
-//                "smooth_biome",
-//                "add_beach"
-//        };
         biomeCache = new HashMap<>(CACHE_SIZE, 0.8f);
         biomeColors = new HashMap<>();
         biomeColors.put(Biome.FOREST,               new Color(0, 175, 0).getRGB()); //forest(normal)
@@ -122,47 +66,18 @@ public class OverworldBiomeGenerator {
         biomeColors.put(Biome.MESA,                 new Color(50, 25, 60).getRGB()); //astral infection
         biomeColors.put(Biome.ICE_FLATS,            new Color(255, 255, 255).getRGB()); //hallow
     }
-    private void printGridInfo(int[][] grid) {
-        for (int[] row : grid) {
-            String msg = "";
-            for (int gridToPrint : row)
-                msg += gridToPrint + " ";
-            Bukkit.getLogger().info(msg);
-        }
-    }
     private void generateBiomeImage(World world) {
         if (wld != null) return;
         wld = world;
-        /* NOTHING IS WRONG WITH ZOOM_IN. LOCATION KEY IS PROBABLY FAULTY.
-        {
-            int[][] test = {
-                    {1, 0, 2, 0},
-                    {0, 0, 0, 0},
-                    {4, 0, -1, 0},
-                    {5, 6, 1, -1}
-            };
-            for (int i = 0; i < 10; i ++) {
-                int[][] result = zoom_in(test, world, 125, 235, 2);
-                for (int j = 0; j < result.length; j ++) {
-                    String msg = "";
-                    for (int k = 0; k < result[j].length; k++)
-                        msg += result[j][k] + ",";
-                    Bukkit.getLogger().info(msg);
-                }
-                Bukkit.getLogger().info("__________________");
-            }
-        }
-         */
         Bukkit.getLogger().info("");
         Bukkit.getLogger().info("");
         Bukkit.getLogger().info("");
         Bukkit.getLogger().info("START GENERATING BIOME MAP");
         // generateBiomeGridImage(wld);
         // test: save a map of biomes for testing purposes
-//        int center = 750;
         int center = 0;
-        int scale = 1500;
-        int jump = 1;
+        int scale = 1000;
+        int jump = 5;
         double progress = 0, progressMax = scale * scale;
         long lastPrinted = Calendar.getInstance().getTimeInMillis();
         BufferedImage biomeMap = new BufferedImage(scale, scale, BufferedImage.TYPE_INT_RGB);
@@ -172,16 +87,8 @@ public class OverworldBiomeGenerator {
                 int blockX = (i-(scale / 2)) * jump + center, blockZ = (j-(scale / 2)) * jump + center;
                 Biome currBiome = getBiome(wld, blockX, blockZ);
                 biomeMap.setRGB(i, j, biomeColors.getOrDefault(currBiome, new Color(0, 255, 0).getRGB()));
-
-//                for (int k = 0; k < 1; k ++) {
-//                    biomeCache.remove(1+"|"+blockX+"|"+blockZ);
-//                    Biome rslt = getBiome(wld, blockX, blockZ);
-//                    if (rslt != currBiome) {
-//                        Bukkit.getLogger().info("----------------------> inconsistency DETECTED! " + blockX + "," + blockZ);
-//                    }
-//                }
                 progress ++;
-                if (lastPrinted + 5000 < Calendar.getInstance().getTimeInMillis()) {
+                if (lastPrinted + 1000 < Calendar.getInstance().getTimeInMillis()) {
                     lastPrinted = Calendar.getInstance().getTimeInMillis();
                     Bukkit.getLogger().info("Generation progress: " + progress / progressMax);
                     Bukkit.getLogger().info("Progress detail: " + progress + "/" + progressMax);
@@ -201,7 +108,7 @@ public class OverworldBiomeGenerator {
         Bukkit.getLogger().info("FINISHED GENERATING BIOME MAP");
     }
     // biome enlarge helper functions
-    private int[][] zoom_in(int[][] original, World wld, int x, int z, int scale) {
+    private int[][] zoom_in(int[][] original, World wld, int x, int z, int scale, boolean is_smooth) {
         int sizeOriginal = original.length;
         int size = original.length * 2 - 1;
         int[][] result = new int[size][size];
@@ -241,27 +148,39 @@ public class OverworldBiomeGenerator {
                 // · · ·
                 // · * ·
                 // · · ·
-                ArrayList<Integer> candidates = new ArrayList<>(5);
-                HashMap<Integer, Integer> occurrence = new HashMap<>(8);
-                for (int indX = j; indX <= j + 1; indX ++)
-                    for (int indZ = i; indZ <= i + 1; indZ ++) {
-                        int gridType = original[indZ][indX];
-                        occurrence.put(gridType, occurrence.getOrDefault(gridType, 0) + 1);
-                        candidates.add(gridType);
+                if (is_smooth) {
+                    ArrayList<Integer> candidates = new ArrayList<>(5);
+                    HashMap<Integer, Integer> occurrence = new HashMap<>(8);
+                    for (int indX = j; indX <= j + 1; indX++)
+                        for (int indZ = i; indZ <= i + 1; indZ++) {
+                            int gridType = original[indZ][indX];
+                            occurrence.put(gridType, occurrence.getOrDefault(gridType, 0) + 1);
+                            candidates.add(gridType);
+                        }
+                    // only the biome that have the highest rate of occurrence can be the result.
+                    int maxOccurrence = 0;
+                    for (int createdGrid : occurrence.keySet()) {
+                        int currOccurrence = occurrence.get(createdGrid);
+                        if (currOccurrence > maxOccurrence) {
+                            maxOccurrence = currOccurrence;
+                            candidates.clear();
+                        }
+                        if (currOccurrence == maxOccurrence)
+                            candidates.add(createdGrid);
                     }
-                // only the biome that have the highest rate of occurrence can be the result.
-                int maxOccurrence = 0;
-                for (int createdGrid : occurrence.keySet()) {
-                    int currOccurrence = occurrence.get(createdGrid);
-                    if (currOccurrence > maxOccurrence) {
-                        maxOccurrence = currOccurrence;
-                        candidates.clear();
-                    }
-                    if (currOccurrence == maxOccurrence)
-                        candidates.add(createdGrid);
+                    int rdmResult = RandomGenerator.getRandomGenerator(wld.getSeed(), x + ((j * 2 + 1) * scale), z + ((i * 2 + 1) * scale)).nextInt();
+                    result[i * 2 + 1][j * 2 + 1] = candidates.get(Math.abs(rdmResult) % candidates.size());
+                } else {
+                    double rdmResult = RandomGenerator.getRandom(wld.getSeed(), x + ((j * 2 + 1) * scale), z + ((i * 2 + 1) * scale));
+                    if (rdmResult < 0.25)
+                        result[i * 2 + 1][j * 2 + 1] = original[i][j];
+                    else if (rdmResult < 0.5)
+                        result[i * 2 + 1][j * 2 + 1] = original[i + 1][j];
+                    else if (rdmResult < 0.75)
+                        result[i * 2 + 1][j * 2 + 1] = original[i][j + 1];
+                    else
+                        result[i * 2 + 1][j * 2 + 1] = original[i + 1][j + 1];
                 }
-                int rdmResult = RandomGenerator.getRandomGenerator(wld.getSeed(), x + ((j * 2 + 1) * scale), z + ((i * 2 + 1) * scale)).nextInt();
-                result[i * 2 + 1][j * 2 + 1] = candidates.get(Math.abs(rdmResult) % candidates.size());
             }
         return result;
     }
@@ -270,6 +189,8 @@ public class OverworldBiomeGenerator {
         int[][] result = new int[size][size];
         for (int i = 0; i < size; i ++)
             for (int j = 0; j < size; j ++) {
+                int blockX = x + (j * scale), blockZ = z + (i * scale);
+                boolean isNearSpawnloc = (Math.abs(blockX) < 1000 && Math.abs(blockZ) < 1000);
                 result[i][j] = mapLand[i][j];
                 if (i == 0 || j == 0 || i + 1 == size || j + 1 == size) continue; // skip margins
                 boolean hasAdjacentLand = false;
@@ -283,8 +204,8 @@ public class OverworldBiomeGenerator {
                     if (hasAdjacentLand && hasAdjacentOcean) break;
                 }
                 double rdmResult = RandomGenerator.getRandom(wld.getSeed(), x + (j * scale), z + (i * scale));
-                if (hasAdjacentLand && mapLand[i][j] == 0 && rdmResult < 0.33) result[i][j] = 1;
-                else if (hasAdjacentOcean && mapLand[i][j] == 1 && rdmResult < 0.2) result[i][j] = 0;
+                if (hasAdjacentLand && mapLand[i][j] <= 0 && rdmResult < 0.33) result[i][j] = 1;
+                else if (hasAdjacentOcean && mapLand[i][j] >= 1 && rdmResult < 0.2 && !isNearSpawnloc) result[i][j] = 0;
                 else result[i][j] = mapLand[i][j];
             }
         return result;
@@ -294,6 +215,8 @@ public class OverworldBiomeGenerator {
         int[][] result = new int[size][size];
         for (int i = 0; i < size; i ++)
             for (int j = 0; j < size; j ++) {
+                int blockX = x + (j * scale), blockZ = z + (i * scale);
+                boolean isNearSpawnloc = (Math.abs(blockX) < 1000 && Math.abs(blockZ) < 1000);
                 result[i][j] = mapLand[i][j];
                 if (i == 0 || j == 0 || i + 1 == size || j + 1 == size) continue; // skip margins
                 if (mapLand[i][j] >= 1) continue; // do nothing to lands
@@ -315,7 +238,8 @@ public class OverworldBiomeGenerator {
                     }
                 if (!hasAdjacentLand) {
                     // only try to make ocean a land when it has all water around
-                    if (RandomGenerator.getRandom(wld.getSeed(), x + (j * scale), z + (i * scale)) < 0.5) result[i][j] = 1;
+                    if (isNearSpawnloc) result[i][j] = 1;
+                    else if (RandomGenerator.getRandom(wld.getSeed(), x + (j * scale), z + (i * scale)) < 0.5) result[i][j] = 1;
                 }
             }
         return result;
@@ -332,10 +256,10 @@ public class OverworldBiomeGenerator {
                 if (i == 0 || j == 0 || i + 1 == size || j + 1 == size) continue; // skip margins
                 // put forest between different land biomes.
                 if (biome_need_forest_margin(mapLand[i][j]) &&
-                        biome_need_forest_margin(mapLand[i - 1][j]) ||
-                        biome_need_forest_margin(mapLand[i + 1][j]) ||
-                        biome_need_forest_margin(mapLand[i][j - 1]) ||
-                        biome_need_forest_margin(mapLand[i][j + 1])) {
+                        (biome_need_forest_margin(mapLand[i - 1][j]) && mapLand[i][j] != mapLand[i - 1][j]) ||
+                        (biome_need_forest_margin(mapLand[i + 1][j]) && mapLand[i][j] != mapLand[i + 1][j]) ||
+                        (biome_need_forest_margin(mapLand[i][j - 1]) && mapLand[i][j] != mapLand[i][j - 1]) ||
+                        (biome_need_forest_margin(mapLand[i][j + 1]) && mapLand[i][j] != mapLand[i][j + 1])){
                     result[i][j] = 1;
                 }
                 // · * ·
@@ -387,19 +311,20 @@ public class OverworldBiomeGenerator {
         for (int i = 0; i < size; i ++)
             for (int j = 0; j < size; j ++) {
                 int blockX = x + (j * scale), blockZ = z + (i * scale);
-                boolean isNearSpawnloc = (Math.abs(blockX) < 500 && Math.abs(blockZ) < 500);
+                boolean isNearSpawnloc = (Math.abs(blockX) < 750 && Math.abs(blockZ) < 750);
                 double randomNum = RandomGenerator.getRandom(wld.getSeed(), blockX, blockZ);
-                if (mapLand[i][j] == 0) {
+                result[i][j] = mapLand[i][j];
+                if (mapLand[i][j] <= 0) {
                     // ocean
                     if (randomNum < 0.2) result[i][j] = -1;
-                } else {
+                } else if (!isNearSpawnloc) {
                     // land
                     if (randomNum < 0.15) result[i][j] = 2; // jungle
                     else if (randomNum < 0.3) result[i][j] = 3; // tundra
                     else if (randomNum < 0.45) result[i][j] = 4; // desert
-                    else if (randomNum < 0.55) result[i][j] = isNearSpawnloc ? 1 : 5; // corruption
-                    else if (randomNum < 0.65) result[i][j] = isNearSpawnloc ? 1 : 6; // hallow
-                    else if (randomNum < 0.75) result[i][j] = isNearSpawnloc ? 1 : 7; // astral infection
+                    else if (randomNum < 0.55) result[i][j] = 5; // corruption
+                    else if (randomNum < 0.65) result[i][j] = 6; // hallow
+                    else if (randomNum < 0.75) result[i][j] = 7; // astral infection
                 }
             }
         return result;
@@ -416,15 +341,6 @@ public class OverworldBiomeGenerator {
                 if (recursion < biomeGenProcess.length) {
                     // up 1 recursion level
                     land_grid[i][j] = getGeneralBiomeGrid(world, blockX, blockZ, gridSizeOffset, recursion + 1);
-//                    for (int k = 0; k < 1; k ++) {
-//                        int xx = x_begin / gridSizeOffset + j, zz = z_begin / gridSizeOffset + i;
-//                        biomeCache.remove((recursion + 1)+"|"+xx+"|"+zz);
-//                        int rslt = getGeneralBiomeGrid(world, blockX, blockZ, gridSizeOffset, recursion + 1);
-//                        if (rslt != land_grid[i][j]) {
-//                            Bukkit.getLogger().info("----------------------> inconsistency DETECTED! " + blockX + "," + blockZ + " @ rec. level " + (recursion + 1));
-//                            Bukkit.getLogger().info("Got " + rslt + " instead of " + land_grid[i][j]);
-//                        }
-//                    }
                 } else {
                     // initialize the highest level grid
                     if (Math.abs(blockX) <= 1024 && Math.abs(blockZ) <= 1024) land_grid[i][j] = 1;
@@ -444,7 +360,10 @@ public class OverworldBiomeGenerator {
         } else {
             switch (operation) {
                 case "zoom_in":
-                    result = zoom_in(land_grid, world, x_begin, z_begin, gridSize);
+                    result = zoom_in(land_grid, world, x_begin, z_begin, gridSize, false);
+                    break;
+                case "zoom_in_smooth":
+                    result = zoom_in(land_grid, world, x_begin, z_begin, gridSize, true);
                     break;
                 case "add_islands":
                     result = add_islands(land_grid, world, x_begin, z_begin, gridSize);
@@ -459,43 +378,6 @@ public class OverworldBiomeGenerator {
                     result = smooth_biome(land_grid, world, x_begin, z_begin, gridSize);
             }
         }
-        {
-            int[][] result2;
-            if (operation.equals("setup_rough_biome")) {
-                result2 = setup_rough_biome(land_grid, world, x_begin, z_begin, gridSize);
-            } else {
-                switch (operation) {
-                    case "zoom_in":
-                        result2 = zoom_in(land_grid, world, x_begin, z_begin, gridSize);
-                        break;
-                    case "add_islands":
-                        result2 = add_islands(land_grid, world, x_begin, z_begin, gridSize);
-                        break;
-                    case "fill_ocean":
-                        result2 = fill_ocean(land_grid, world, x_begin, z_begin, gridSize);
-                        break;
-                    case "add_beach":
-                        result2 = add_beach(land_grid, world, x_begin, z_begin, gridSize);
-                        break;
-                    default:
-                        result2 = smooth_biome(land_grid, world, x_begin, z_begin, gridSize);
-                }
-            }
-            for (int i = 0; i < result.length; i ++)
-                for (int j = 0; j < result[i].length; j ++) {
-                    if (result[i][j] != result2[i][j]) {
-                        Bukkit.getLogger().warning("INCONSISTENCY FOUND.");
-                        printGridInfo(land_grid);
-                        Bukkit.getLogger().warning("________________");
-                        printGridInfo(result);
-                        Bukkit.getLogger().warning("________________");
-                        printGridInfo(result2);
-                        Bukkit.getLogger().warning("...................");
-                        i = result.length;
-                        break;
-                    }
-                }
-        }
         return result;
     }
     private void saveBiomeGrid(int[][] land_grid, int marginDiscard, int x_begin, int z_begin, int gridSize, int recursion) {
@@ -505,20 +387,11 @@ public class OverworldBiomeGenerator {
                 if (x_begin < 0 && x_begin % gridSize != 0) grid_x_save --;
                 if (z_begin < 0 && z_begin % gridSize != 0) grid_z_save --;
                 String tempKey = recursion + "|" + grid_x_save + "|" + grid_z_save;
-//                    if (grid_x_save == 0 && grid_z_save == 1 && recursion == 1) {
-//                        Bukkit.getLogger().info("0, 1: " + tempKey + " : " + land_grid[i][j] + " @@ " + x + ", " + z);
-//                    }
-                if (lastRecCall != recursion) {
-                    lastRecCall = recursion;
-////                        Bukkit.getLogger().info("________________________________________");
-                }
-////                    Bukkit.getLogger().info(recursion + "|" + gridSizeOffset + "|" + gridSize + "........" + tempKey + "(WANTED:" + biomeLocKey);
                 biomeCache.put(tempKey, land_grid[i][j]);
             }
         }
     }
     private int getGeneralBiomeGrid(World world, int x, int z, int gridSize, int recursion) {
-////        Bukkit.getLogger().info("WANTED LOC: " + x + ", " + z + ", rec. call: " + recursion);
         int gridX = x / gridSize, gridZ = z / gridSize;
         if (x < 0 && x % gridSize != 0) gridX --;
         if (z < 0 && z % gridSize != 0) gridZ --;
@@ -532,7 +405,7 @@ public class OverworldBiomeGenerator {
             String operation = biomeGenProcess[biomeGenProcess.length - recursion];
             int[][] land_grid;
             int grid_x_begin, grid_z_begin, gridSizeOffset;
-            if (operation.equals("zoom_in")) {
+            if (operation.startsWith("zoom_in")) {
                 gridSizeOffset = gridSize * 2;
             } else {
                 gridSizeOffset = gridSize;
@@ -545,24 +418,12 @@ public class OverworldBiomeGenerator {
             grid_x_begin -= radius;
             grid_z_begin -= radius;
             int x_begin = grid_x_begin * gridSizeOffset, z_begin = grid_z_begin * gridSizeOffset;
+
             // load the grid 1 recursion level higher than current
             land_grid = getUpperLevelBiomeGrid(world, radius, x_begin, z_begin, gridSizeOffset, recursion);
-
-            int recToPrint = -1;
-            if (recursion == recToPrint && gridX <= 2 && gridX >= -2 && gridZ <= 2 && gridZ >= -2 && sendGridInfo) {
-                Bukkit.getLogger().info("111 " + gridX + ", " + gridZ + "|||" + x + ", " + z + "@grid begin" + grid_x_begin + ", " + grid_z_begin + ", GRIDSIZEOFFSET" + gridSizeOffset + "<-GRIDSIZE" + gridSize);
-                printGridInfo(land_grid);
-                Bukkit.getLogger().info("");
-            }
             // manipulate the grid according to current operation
             int[][] manipulated_grid = manipulateBiomeGrid(land_grid, world, operation, x_begin, z_begin, gridSize);
             int marginDiscard = operation.equals("setup_rough_biome") ? 0 : 1;
-
-            if (recursion == recToPrint && gridX <= 2 && gridX >= -2 && gridZ <= 2 && gridZ >= -2 && sendGridInfo) {
-                Bukkit.getLogger().info("222 " + gridX + ", " + gridZ + "|||" + x + ", " + z + "@grid begin" + grid_x_begin + ", " + grid_z_begin + ", GRIDSIZEOFFSET" + gridSizeOffset + "~" + gridSize);
-                printGridInfo(manipulated_grid);
-                Bukkit.getLogger().info("");
-            }
             //save the grid info
             saveBiomeGrid(manipulated_grid, marginDiscard, x_begin, z_begin, gridSize, recursion);
         }
@@ -573,8 +434,6 @@ public class OverworldBiomeGenerator {
         return result;
     }
     public Biome getBiome(World world, int x, int z) {
-        // generateTestImage(world);
-////        if (!isFirst) return Biome.FOREST;
         generateBiomeImage(world);
         String biomeLocKey = 1+"|"+x+"|"+z;
         int rst;
@@ -619,7 +478,6 @@ public class OverworldBiomeGenerator {
             default:
                 result = Biome.FOREST; //forest
         }
-        isFirst = false;
         Bukkit.getServer().shutdown();
         return result;
     }
