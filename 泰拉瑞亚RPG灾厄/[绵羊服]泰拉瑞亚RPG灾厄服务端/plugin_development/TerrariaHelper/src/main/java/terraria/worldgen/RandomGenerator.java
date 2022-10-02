@@ -10,8 +10,9 @@ public class RandomGenerator {
         return getRandomGenerator(worldSeed, x, z).nextDouble();
     }
     public static Random getRandomGenerator(long worldSeed, int x, int z) {
-        return new Random(worldSeed + x * 11451L + z * 41919L + (long) x * z);
-//        return new Random(worldSeed + new Random(new Random(x).nextLong() + z * 1145).nextLong());
+//        return new Random(worldSeed + x + z + (long) x * z);
+        // !!! ↓this seems to cause inconsistency?
+        return new Random(worldSeed + new Random(new Random(x).nextLong() + z).nextLong());
     }
     public static double getRandomByPerlinNoise(long worldSeed, int x, int z) {
         // as perlin noise uses trig functions this is a lot slower than random generator.
