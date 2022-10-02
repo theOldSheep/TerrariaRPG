@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class OverworldBiomeGenerator {
     World wld;
@@ -35,17 +36,17 @@ public class OverworldBiomeGenerator {
                 "add_islands",
                 "fill_ocean",
                 "add_islands",
+                "zoom_in",
                 "setup_rough_biome",
                 "zoom_in",
                 "zoom_in",
+                "zoom_in",
                 "smooth_biome",
-                "zoom_in",
-                "zoom_in",
-                "add_beach",
-                "zoom_in",
                 "add_beach",
                 "zoom_in",
                 "zoom_in",
+                "zoom_in",
+                "add_beach",
                 "zoom_in",
                 "smooth_biome",
                 "zoom_in",
@@ -98,7 +99,11 @@ public class OverworldBiomeGenerator {
 //                "add_islands",
 //                "fill_ocean",
 //                "setup_rough_biome",
-//                "zoom_in",
+//                "smooth_biome",
+//                "add_beach",
+//                "add_islands",
+//                "fill_ocean",
+//                "setup_rough_biome",
 //                "smooth_biome",
 //                "add_beach"
 //        };
@@ -156,8 +161,8 @@ public class OverworldBiomeGenerator {
         // test: save a map of biomes for testing purposes
 //        int center = 750;
         int center = 0;
-        int scale = 1000;
-        int jump = 10;
+        int scale = 1500;
+        int jump = 1;
         double progress = 0, progressMax = scale * scale;
         long lastPrinted = Calendar.getInstance().getTimeInMillis();
         BufferedImage biomeMap = new BufferedImage(scale, scale, BufferedImage.TYPE_INT_RGB);
@@ -236,12 +241,13 @@ public class OverworldBiomeGenerator {
                 // · · ·
                 // · * ·
                 // · · ·
-                ArrayList<Integer> candidates = new ArrayList<>(4);
-                HashMap<Integer, Integer> occurrence = new HashMap<>(6);
+                ArrayList<Integer> candidates = new ArrayList<>(5);
+                HashMap<Integer, Integer> occurrence = new HashMap<>(8);
                 for (int indX = j; indX <= j + 1; indX ++)
                     for (int indZ = i; indZ <= i + 1; indZ ++) {
-                        int gridType = original[indX][indZ];
+                        int gridType = original[indZ][indX];
                         occurrence.put(gridType, occurrence.getOrDefault(gridType, 0) + 1);
+                        candidates.add(gridType);
                     }
                 // only the biome that have the highest rate of occurrence can be the result.
                 int maxOccurrence = 0;
@@ -264,13 +270,13 @@ public class OverworldBiomeGenerator {
         int[][] result = new int[size][size];
         for (int i = 0; i < size; i ++)
             for (int j = 0; j < size; j ++) {
+                result[i][j] = mapLand[i][j];
+                if (i == 0 || j == 0 || i + 1 == size || j + 1 == size) continue; // skip margins
                 boolean hasAdjacentLand = false;
                 boolean hasAdjacentOcean = false;
-                for (int checkI = i - 1; checkI < size; checkI += 2) {
-                    if (checkI < 0) continue;
-                    for (int checkJ = j - 1; checkJ < size; checkJ += 2) {
-                        if (checkJ < 0) continue;
-                        if (mapLand[i][j] >= 1) hasAdjacentLand = true;
+                for (int checkI = i - 1; checkI <= i + 1; checkI += 2) {
+                    for (int checkJ = j - 1; checkJ <= j + 1; checkJ += 2) {
+                        if (mapLand[checkI][checkJ] >= 1) hasAdjacentLand = true;
                         else hasAdjacentOcean = true;
                         if (hasAdjacentLand && hasAdjacentOcean) break;
                     }
@@ -289,10 +295,10 @@ public class OverworldBiomeGenerator {
         for (int i = 0; i < size; i ++)
             for (int j = 0; j < size; j ++) {
                 result[i][j] = mapLand[i][j];
-                // do nothing to lands
-                if (mapLand[i][j] >= 1) continue;
+                if (i == 0 || j == 0 || i + 1 == size || j + 1 == size) continue; // skip margins
+                if (mapLand[i][j] >= 1) continue; // do nothing to lands
                 boolean hasAdjacentLand = false;
-                for (int checkI = i - 1; checkI < size; checkI += 2) {
+                for (int checkI = i - 1; checkI < i + 1; checkI += 2) {
                     if (checkI < 0) continue;
                     if (mapLand[checkI][j] >= 1) {
                         hasAdjacentLand = true;
@@ -300,7 +306,7 @@ public class OverworldBiomeGenerator {
                     }
                 }
                 if (!hasAdjacentLand)
-                    for (int checkJ = j - 1; checkJ < size; checkJ += 2) {
+                    for (int checkJ = j - 1; checkJ < j + 1; checkJ += 2) {
                         if (checkJ < 0) continue;
                         if (mapLand[i][checkJ] == 1) {
                             hasAdjacentLand = true;
@@ -361,11 +367,11 @@ public class OverworldBiomeGenerator {
                 for (int idxOffset = -1; idxOffset <= 1; idxOffset += 2) {
                     int toCheck;
                     toCheck = mapLand[i + idxOffset][j];
-                    if (toCheck == -1 || toCheck == 9) adjacentSulphurous ++;
-                    else if (toCheck == 0 || toCheck == 8) adjacentOcean ++;
+                    if (toCheck == -1 || toCheck == 8) adjacentSulphurous ++;
+                    else if (toCheck == 0 || toCheck == 9) adjacentOcean ++;
                     toCheck = mapLand[i][j + idxOffset];
-                    if (toCheck == -1 || toCheck == 9) adjacentSulphurous ++;
-                    else if (toCheck == 0 || toCheck == 8) adjacentOcean ++;
+                    if (toCheck == -1 || toCheck == 8) adjacentSulphurous ++;
+                    else if (toCheck == 0 || toCheck == 9) adjacentOcean ++;
                 }
                 if (adjacentSulphurous >= adjacentOcean && adjacentSulphurous > 0) result[i][j] = 8;
                 else if (adjacentOcean > adjacentSulphurous) result[i][j] = 9;
@@ -388,12 +394,12 @@ public class OverworldBiomeGenerator {
                     if (randomNum < 0.2) result[i][j] = -1;
                 } else {
                     // land
-                    if (randomNum < 0.075) result[i][j] = 2;
-                    else if (randomNum < 0.15) result[i][j] = 3;
-                    else if (randomNum < 0.225) result[i][j] = 4;
-                    else if (randomNum < 0.26) result[i][j] = isNearSpawnloc ? 1 : 5;
-                    else if (randomNum < 0.275) result[i][j] = isNearSpawnloc ? 1 : 6;
-                    else if (randomNum < 0.3) result[i][j] = isNearSpawnloc ? 1 : 7;
+                    if (randomNum < 0.15) result[i][j] = 2; // jungle
+                    else if (randomNum < 0.3) result[i][j] = 3; // tundra
+                    else if (randomNum < 0.45) result[i][j] = 4; // desert
+                    else if (randomNum < 0.55) result[i][j] = isNearSpawnloc ? 1 : 5; // corruption
+                    else if (randomNum < 0.65) result[i][j] = isNearSpawnloc ? 1 : 6; // hallow
+                    else if (randomNum < 0.75) result[i][j] = isNearSpawnloc ? 1 : 7; // astral infection
                 }
             }
         return result;
@@ -522,7 +528,7 @@ public class OverworldBiomeGenerator {
             cached ++;
         } else {
             // setup original position info.
-            final int radius = 1;
+            final int radius = 2;
             String operation = biomeGenProcess[biomeGenProcess.length - recursion];
             int[][] land_grid;
             int grid_x_begin, grid_z_begin, gridSizeOffset;
