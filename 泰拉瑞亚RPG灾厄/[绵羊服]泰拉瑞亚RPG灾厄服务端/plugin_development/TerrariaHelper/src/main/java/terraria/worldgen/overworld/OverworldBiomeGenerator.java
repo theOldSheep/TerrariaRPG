@@ -22,7 +22,10 @@ public class OverworldBiomeGenerator {
     String[] biomeGenProcess;
 
     double total = 0, cached = 0;
-    static final int CACHE_SIZE = 15000000, CACHE_DELETION_SIZE = CACHE_SIZE * 2 / 3, spawnLocProtectionRadius = 0;
+    static final int CACHE_SIZE = 15000000,
+            CACHE_DELETION_SIZE = CACHE_SIZE * 2 / 3,
+            SPAWN_LOC_PROTECTION_RADIUS = 500;
+    static final double SPECIAL_BIOME_RATE = 0.35;
 
     private void printGridInfo(int[][] grid) {
         Bukkit.getLogger().info("__________________");
@@ -38,34 +41,24 @@ public class OverworldBiomeGenerator {
         biomeGenProcess = new String[] {
                 "zoom_in",
                 "add_islands",
-                "zoom_in",
                 "add_islands",
                 "fill_ocean",
-                "add_islands",
-                "fill_ocean",
-                "add_islands",
+                "zoom_in_smooth",
                 "zoom_in_smooth",
                 "setup_rough_biome",
+                "zoom_in",
+                "zoom_in",
                 "zoom_in_smooth",
                 "zoom_in_smooth",
                 "smooth_biome",
                 "zoom_in_smooth",
+                "add_beach",
+                "add_beach",
                 "zoom_in_smooth",
-                "add_beach",
-                "add_beach",
-                "add_beach",
                 "zoom_in_smooth",
                 "zoom_in_smooth",
                 "smooth_biome",
-                "zoom_in_smooth",
-                "zoom_in_smooth",
-                "smooth_biome"
         };
-//        biomeGenProcess = new String[]{
-//                "setup_rough_biome",
-//                "zoom_in_smooth",
-//                "zoom_in_smooth",
-//        };
         biomeCache = new HashMap<>(CACHE_SIZE, 0.8f);
         biomeColors = new HashMap<>();
         biomeColors.put(Biome.FOREST,               new Color(0, 175, 0).getRGB()); //forest(normal)
@@ -87,8 +80,8 @@ public class OverworldBiomeGenerator {
         // generateBiomeGridImage(wld);
         // test: save a map of biomes for testing purposes
         int center = 0;
-        int scale = 2500;
-        int jump = 1;
+        int scale = 2000;
+        int jump = 5;
         while (biomeGenProcess.length >= 1) {
             biomeCache.clear();
             Bukkit.getLogger().info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -215,7 +208,7 @@ public class OverworldBiomeGenerator {
         for (int i = 0; i < size; i ++)
             for (int j = 0; j < size; j ++) {
                 int blockX = x + (j * scale), blockZ = z + (i * scale);
-                boolean isNearSpawnloc = (Math.abs(blockX) < spawnLocProtectionRadius * 2 && Math.abs(blockZ) < spawnLocProtectionRadius * 2);
+                boolean isNearSpawnloc = (Math.abs(blockX) < SPAWN_LOC_PROTECTION_RADIUS * 2 && Math.abs(blockZ) < SPAWN_LOC_PROTECTION_RADIUS * 2);
                 result[i][j] = mapLand[i][j];
                 if (i == 0 || j == 0 || i + 1 == size || j + 1 == size) continue; // skip margins
                 boolean hasAdjacentLand = false;
@@ -241,7 +234,7 @@ public class OverworldBiomeGenerator {
         for (int i = 0; i < size; i ++)
             for (int j = 0; j < size; j ++) {
                 int blockX = x + (j * scale), blockZ = z + (i * scale);
-                boolean isNearSpawnloc = (Math.abs(blockX) < spawnLocProtectionRadius * 2 && Math.abs(blockZ) < spawnLocProtectionRadius * 2);
+                boolean isNearSpawnloc = (Math.abs(blockX) < SPAWN_LOC_PROTECTION_RADIUS * 2 && Math.abs(blockZ) < SPAWN_LOC_PROTECTION_RADIUS * 2);
                 result[i][j] = mapLand[i][j];
                 if (i == 0 || j == 0 || i + 1 == size || j + 1 == size) continue; // skip margins
                 if (mapLand[i][j] >= 1) continue; // do nothing to lands
@@ -346,25 +339,21 @@ public class OverworldBiomeGenerator {
         for (int i = 0; i < size; i ++)
             for (int j = 0; j < size; j ++) {
                 result[i][j] = mapLand[i][j];
-                int blockX = x + (j * scale), blockZ = z + (i * scale), rough_size = 3 * scale;
-//                if (blockX % rough_size == 0 || blockZ % rough_size == 0) continue; // leave the margin intact.
-//                if (blockX % rough_size != 0 && (blockX + 1) % rough_size != 0 &&
-//                        blockZ % rough_size != 0 && (blockZ + 1) % rough_size != 0) continue; // leave the margin intact.
-                blockX = MathHelper.betterFloorDivision(blockX, rough_size) * rough_size;
-                blockZ = MathHelper.betterFloorDivision(blockZ, rough_size) * rough_size;
-                boolean isNearSpawnloc = (Math.abs(blockX) < spawnLocProtectionRadius && Math.abs(blockZ) < spawnLocProtectionRadius);
+                int blockX = x + (j * scale), blockZ = z + (i * scale);
+                boolean isNearSpawnloc = (Math.abs(blockX) < SPAWN_LOC_PROTECTION_RADIUS && Math.abs(blockZ) < SPAWN_LOC_PROTECTION_RADIUS);
                 double randomNum = RandomGenerator.getRandom(wld.getSeed(), blockX, blockZ);
                 if (mapLand[i][j] <= 0) {
                     // ocean
-                    if (randomNum < 0.2) result[i][j] = -1;
+                    if (randomNum < 0.2)
+                        result[i][j] = -1;
                 } else if (!isNearSpawnloc && mapLand[i][j] <= 7) {
                     // land (not beach)
-                    if (randomNum < 1d/6) result[i][j] = 2; // jungle
-                    else if (randomNum < 1d/3) result[i][j] = 3; // tundra
-                    else if (randomNum < 1d/2) result[i][j] = 4; // desert
-                    else if (randomNum < 2d/3) result[i][j] = 5; // corruption
-                    else if (randomNum < 5d/6) result[i][j] = 6; // hallow
-                    else result[i][j] = 7; // astral infection
+                    if      (randomNum < SPECIAL_BIOME_RATE / 6)        result[i][j] = 2; // jungle
+                    else if (randomNum < SPECIAL_BIOME_RATE / 3)        result[i][j] = 3; // tundra
+                    else if (randomNum < SPECIAL_BIOME_RATE / 2)        result[i][j] = 4; // desert
+                    else if (randomNum < SPECIAL_BIOME_RATE * 2 / 3)    result[i][j] = 5; // corruption
+                    else if (randomNum < SPECIAL_BIOME_RATE * 5 / 6)    result[i][j] = 6; // hallow
+                    else if (randomNum < SPECIAL_BIOME_RATE)            result[i][j] = 7; // astral infection
                 }
             }
         return result;
@@ -425,7 +414,7 @@ public class OverworldBiomeGenerator {
     }
     private void saveBiomeGrid(int[][] land_grid, int marginDiscard, int x_begin, int z_begin, int gridSize, int recursion) {
         int grid_x_save_start = MathHelper.betterFloorDivision(x_begin, gridSize),
-            grid_z_save_start = MathHelper.betterFloorDivision(z_begin, gridSize);
+                grid_z_save_start = MathHelper.betterFloorDivision(z_begin, gridSize);
         for (int i = marginDiscard; i + marginDiscard < land_grid.length; i++) {
             for (int j = marginDiscard; j + marginDiscard < land_grid[i].length; j++) {
                 int grid_x_save = grid_x_save_start + j, grid_z_save = grid_z_save_start + i;
