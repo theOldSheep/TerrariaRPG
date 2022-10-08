@@ -6,18 +6,13 @@ import org.bukkit.block.Biome;
 import terraria.mathhelper.MathHelper;
 import terraria.worldgen.RandomGenerator;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
+// to retrieve the former functional version, go to 2022/10/06
+// TODO: https://www.youtube.com/watch?v=CSa5O6knuwI new biome generation idea?
 public class OverworldBiomeGenerator {
     World wld;
-    HashMap<Biome, Integer> biomeColors;
     HashMap<String, Integer> biomeCache;
     String[] biomeGenProcess;
 
@@ -27,16 +22,6 @@ public class OverworldBiomeGenerator {
             SPAWN_LOC_PROTECTION_RADIUS = 500;
     static final double SPECIAL_BIOME_RATE = 0.35;
 
-    private void printGridInfo(int[][] grid) {
-        Bukkit.getLogger().info("__________________");
-        for (int[] row : grid) {
-            String msg = "";
-            for (int gridToPrint : row)
-                msg += gridToPrint + " ";
-            Bukkit.getLogger().info(msg);
-        }
-        Bukkit.getLogger().info("__________________");
-    }
     public OverworldBiomeGenerator() {
         biomeGenProcess = new String[] {
                 "zoom_in",
@@ -51,80 +36,15 @@ public class OverworldBiomeGenerator {
                 "zoom_in_smooth",
                 "zoom_in_smooth",
                 "smooth_biome",
+                "add_beach",
+                "add_beach",
                 "zoom_in_smooth",
-                "add_beach",
-                "add_beach",
                 "zoom_in_smooth",
                 "zoom_in_smooth",
                 "zoom_in_smooth",
                 "smooth_biome",
         };
         biomeCache = new HashMap<>(CACHE_SIZE, 0.8f);
-        biomeColors = new HashMap<>();
-        biomeColors.put(Biome.FOREST,               new Color(0, 175, 0).getRGB()); //forest(normal)
-        biomeColors.put(Biome.JUNGLE,               new Color(0, 100, 0).getRGB()); //jungle
-        biomeColors.put(Biome.DESERT,               new Color(255, 255, 0).getRGB()); //desert
-        biomeColors.put(Biome.MUTATED_DESERT,       new Color(0, 50, 80).getRGB()); //sunken sea
-        biomeColors.put(Biome.BEACHES,              new Color(255, 255, 150).getRGB()); //beach
-        biomeColors.put(Biome.OCEAN,                new Color(0, 0, 255).getRGB()); //ocean
-        biomeColors.put(Biome.COLD_BEACH,           new Color(130, 110, 100).getRGB()); //sulphurous beach
-        biomeColors.put(Biome.FROZEN_OCEAN,         new Color(120, 200, 150).getRGB()); //sulphurous ocean
-        biomeColors.put(Biome.TAIGA_COLD,           new Color(150, 200, 255).getRGB()); //tundra
-        biomeColors.put(Biome.MUSHROOM_ISLAND,      new Color(150, 0, 150).getRGB()); //corruption
-        biomeColors.put(Biome.MESA,                 new Color(50, 25, 60).getRGB()); //astral infection
-        biomeColors.put(Biome.ICE_FLATS,            new Color(255, 255, 255).getRGB()); //hallow
-    }
-    private void generateBiomeImage(World world) {
-        if (wld != null) return;
-        wld = world;
-        // generateBiomeGridImage(wld);
-        // test: save a map of biomes for testing purposes
-        int center = 0;
-        int scale = 2000;
-        int jump = 5;
-        while (biomeGenProcess.length >= 1) {
-            biomeCache.clear();
-            Bukkit.getLogger().info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            Bukkit.getLogger().info("START GENERATING BIOME MAP " + biomeGenProcess.length);
-            double progress = 0, progressMax = scale * scale;
-            long lastPrinted = Calendar.getInstance().getTimeInMillis();
-            BufferedImage biomeMap = new BufferedImage(scale, scale, BufferedImage.TYPE_INT_RGB);
-            Bukkit.getLogger().info("Cache size: " + biomeCache.size() + " / " + CACHE_SIZE);
-            int[][] biomeGridToPrint = new int[scale][scale];
-            for (int i = 0; i < scale; i++)
-                for (int j = 0; j < scale; j++) {
-                    int blockX = (i - (scale / 2)) * jump + center, blockZ = (j - (scale / 2)) * jump + center;
-                    Biome currBiome = getBiome(wld, blockX, blockZ);
-                    biomeGridToPrint[i][j] = biomeCache.getOrDefault(1+"|"+blockX+"|"+blockZ, -2);
-                    biomeMap.setRGB(i, j, biomeColors.getOrDefault(currBiome, new Color(0, 255, 0).getRGB()));
-                    progress++;
-                    if (lastPrinted + 1000 < Calendar.getInstance().getTimeInMillis()) {
-                        lastPrinted = Calendar.getInstance().getTimeInMillis();
-                        Bukkit.getLogger().info("Generation progress: " + progress / progressMax);
-                        Bukkit.getLogger().info("Progress detail: " + progress + "/" + progressMax);
-                        Bukkit.getLogger().info("Cache size: " + biomeCache.size() + " / " + CACHE_SIZE);
-                    }
-                }
-            Bukkit.getLogger().info("Generation progress: " + progress / progressMax);
-            Bukkit.getLogger().info("Progress detail: " + progress + "/" + progressMax);
-            Bukkit.getLogger().info("Cache size: " + biomeCache.size() + " / " + CACHE_SIZE);
-            Bukkit.getLogger().info("Operation: " + biomeGenProcess[biomeGenProcess.length - 1]);
-//            printGridInfo(biomeGridToPrint);
-            File dir_biome_map = new File("worldGenDebug/biomesMap" + biomeGenProcess.length + "_" + biomeGenProcess[biomeGenProcess.length - 1] + ".png");
-            try {
-                ImageIO.write(biomeMap, "png", dir_biome_map);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Bukkit.getLogger().warning(e.getMessage());
-            }
-            Bukkit.getLogger().info("FINISHED GENERATING BIOME MAP " + biomeGenProcess.length);
-
-//            if (biomeGenProcess[biomeGenProcess.length - 1].startsWith("zoom_in")) scale /= 2;
-            String[] temp = new String[biomeGenProcess.length - 1];
-            for (int idx = 0; idx < temp.length; idx ++) temp[idx] = biomeGenProcess[idx];
-            biomeGenProcess = temp;
-            break;
-        }
     }
     // biome enlarge helper functions
     private int[][] zoom_in(int[][] original, World wld, int x, int z, int scale, boolean is_smooth) {
@@ -393,10 +313,6 @@ public class OverworldBiomeGenerator {
                 break;
             case "zoom_in_smooth":
                 result = zoom_in(land_grid, world, x_begin, z_begin, gridSize, true);
-//                Bukkit.getLogger().info("___ZOOMIN___");
-//                printGridInfo(land_grid);
-//                printGridInfo(result);
-//                Bukkit.getLogger().info("____________");
                 break;
             case "add_islands":
                 result = add_islands(land_grid, world, x_begin, z_begin, gridSize);
@@ -464,12 +380,12 @@ public class OverworldBiomeGenerator {
         return result;
     }
     public Biome getBiome(World world, int x, int z) {
-        generateBiomeImage(world);
         String biomeLocKey = 1+"|"+x+"|"+z;
         int rst;
         if (biomeCache.containsKey(biomeLocKey)) {
             rst = biomeCache.get(biomeLocKey);
         } else {
+            wld = world;
             rst = getGeneralBiomeGrid(world, x, z, 1, 1);
         }
 
@@ -508,7 +424,6 @@ public class OverworldBiomeGenerator {
             default:
                 result = Biome.FOREST; //forest
         }
-        Bukkit.getServer().shutdown();
         return result;
     }
 }
