@@ -1,11 +1,12 @@
 terraria\dragoncorehelper\playerKeyToggleListener.class
 terraria\worldgen\RandomGenerator.class
-terraria\dragoncorehelper\SlotHelper$SlotCallback.class
 terraria\worldgen\overworld\OverworldChunkGenerator.class
 terraria\dragoncorehelper\RandomTitle.class
+terraria\dragoncorehelper\SlotHelper$SlotCallback.class
 terraria\dragoncorehelper\SlotHelper.class
 terraria\worldgen\overworld\OverworldBiomeGenerator.class
 terraria\dragoncorehelper\playerTestListener.class
 terraria\mathhelper\MathHelper.class
+terraria\worldgen\overworld\OverworldBlockGenericPopulator.class
 terraria\worldgen\overworld\OverworldChunkGenerator$1.class
 terraria\TerrariaHelper.class
