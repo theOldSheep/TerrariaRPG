@@ -1,10 +1,13 @@
 package terraria.worldgen.overworld;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.generator.BlockPopulator;
+import terraria.TerrariaHelper;
 
 import java.util.Random;
 
@@ -16,15 +19,32 @@ public class OverworldBlockGenericPopulator extends BlockPopulator {
         for (int i = 0; i < 16; i++)
             for (int j = 0; j < 16; j++) {
                 int blockX = startX + i, blockZ = startZ + j;
-                Biome biome = OverworldBiomeGenerator.getBiome(wld.getSeed(), blockX, blockZ);
+                Biome biome = OverworldBiomeGenerator.getBiome(TerrariaHelper.worldSeed, blockX, blockZ);
                 // additional setup for terracotta color etc.
                 if (biome == Biome.MUSHROOM_ISLAND ||
                         biome == Biome.ICE_FLATS ||
                         biome == Biome.MESA ||
                         biome == Biome.COLD_BEACH ||
                         biome == Biome.FROZEN_OCEAN) {
-                    for (int y = 1; y < 256; y ++) {
+                    for (int y = 1; y < 255; y ++) {
                         // TODO, setup terracotta/sand type
+                        Block currBlock = chunk.getBlock(i, y, j);
+                        if (currBlock.getType() == Material.SAND) {
+                            if (biome == Biome.COLD_BEACH || biome == Biome.FROZEN_OCEAN)
+                                Bukkit.getLogger().info(currBlock.getState().getData().toString());
+                        } else if (currBlock.getType() == Material.STAINED_CLAY) {
+                            switch (biome) {
+                                case ICE_FLATS: // hallow
+                                    currBlock.getState().getData().setData((byte) 0);
+                                    break;
+                                case MESA: // astral infection : black stained clay
+                                    currBlock.getState().getData().setData((byte) 15);
+                                    break;
+                                case MUSHROOM_ISLAND: // corruption : grey stained clay
+                                    currBlock.getState().getData().setData((byte) 7);
+                                    break;
+                            }
+                        }
                     }
                 }
             }

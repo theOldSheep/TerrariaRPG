@@ -2,7 +2,7 @@ package terraria.worldgen.overworld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Biome;
-import terraria.mathhelper.MathHelper;
+import terraria.util.MathHelper;
 import terraria.worldgen.RandomGenerator;
 
 import javax.imageio.ImageIO;
@@ -16,20 +16,19 @@ import java.util.HashMap;
 
 public class OverworldBiomeGenerator {
     static long seed = 0;
-    static HashMap<Long, Integer> biomeCache;
-    static HashMap<Long, Integer> biomeGridCache;
-    // biomeCache ONLY STORES biome info, while biomeGridCache ONLY STORES biome grid info that are used to derive biome info
-    // further info about the key format can be seen in the comment of function getSeed
-    static String[] biomeGenProcess;
-
     static final int CACHE_SIZE = 1500000,
             CACHE_DELETION_SIZE = CACHE_SIZE * 2 / 3,
             SPAWN_LOC_PROTECTION_RADIUS = 500;
     static final double SPECIAL_BIOME_RATE = 0.5;
 
-    public OverworldBiomeGenerator() {
-        biomeGenProcess = new String[] {
-                "zoom_in",
+    static HashMap<Long, Integer> biomeCache = new HashMap<>(CACHE_SIZE, 0.8f);
+    static HashMap<Long, Integer> biomeGridCache = new HashMap<>(CACHE_SIZE, 0.8f);
+    // biomeCache ONLY STORES biome info, while biomeGridCache ONLY STORES biome grid info that are used to derive biome info
+    // further info about the key format can be seen in the comment of function getSeed
+    static boolean test = true; // should we always return forest to test out other functionalities?
+
+    static String[] biomeGenProcess = new String[] {
+        "zoom_in",
                 "add_islands",
                 "add_islands",
                 "fill_ocean",
@@ -47,11 +46,11 @@ public class OverworldBiomeGenerator {
                 "zoom_in_smooth",
                 "zoom_in_smooth",
                 "zoom_in_smooth",
+                "zoom_in_smooth",
                 "smooth_biome",
-        };
-        biomeCache = new HashMap<>(CACHE_SIZE, 0.8f);
-        biomeGridCache = new HashMap<>(CACHE_SIZE, 0.8f);
-    }
+    };
+
+
     private static void generateBiomeImage() {
         HashMap<Biome, Integer> biomeColors = new HashMap<>();
         biomeColors.put(Biome.FOREST,               new Color(0, 175, 0).getRGB()); //forest(normal)
@@ -477,6 +476,8 @@ public class OverworldBiomeGenerator {
         return result;
     }
     public static Biome getBiome(long seed, int x, int z) {
+        if (test)
+            return Biome.FOREST;
         long biomeLocKey = getSeed(1, x, z);
         int rst;
         if (biomeCache.containsKey(biomeLocKey)) {

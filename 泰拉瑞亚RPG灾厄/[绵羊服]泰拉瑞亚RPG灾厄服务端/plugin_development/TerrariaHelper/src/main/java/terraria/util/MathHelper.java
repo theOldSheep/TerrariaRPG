@@ -1,4 +1,4 @@
-package terraria.mathhelper;
+package terraria.util;
 
 public class MathHelper {
     public static int betterFloorDivision(int dividend, int divisor) {
