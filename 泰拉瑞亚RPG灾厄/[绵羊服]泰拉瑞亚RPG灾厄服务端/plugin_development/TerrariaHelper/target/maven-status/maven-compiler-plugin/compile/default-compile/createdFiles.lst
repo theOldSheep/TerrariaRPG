@@ -3,11 +3,13 @@ terraria\util\YmlHelper.class
 terraria\worldgen\overworld\OrePopulator.class
 terraria\worldgen\overworld\OverworldBlockGenericPopulator$1.class
 terraria\worldgen\RandomGenerator.class
+terraria\util\CachedOctaveGenerator$CachedNoiseGenerator.class
 terraria\util\MathHelper.class
 terraria\worldgen\overworld\OverworldChunkGenerator.class
 terraria\dragoncorehelper\RandomTitle.class
+terraria\gameplay\WorldRegisterListener.class
 terraria\worldgen\overworld\cavern\CavernChunkGenerator.class
-terraria\gameplay\CavernRegisterListener.class
+terraria\util\CachedOctaveGenerator.class
 terraria\util\GameplayHelper.class
 terraria\dragoncorehelper\SlotHelper$SlotCallback.class
 terraria\dragoncorehelper\SlotHelper.class

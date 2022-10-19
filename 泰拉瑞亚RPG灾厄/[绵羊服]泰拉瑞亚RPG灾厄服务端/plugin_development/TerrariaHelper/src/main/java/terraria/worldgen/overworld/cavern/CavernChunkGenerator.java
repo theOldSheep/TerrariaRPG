@@ -13,6 +13,10 @@ import java.util.Random;
 
 public class CavernChunkGenerator extends ChunkGenerator {
     static final int yOffset = -253;
+    static CavernChunkGenerator instance = new CavernChunkGenerator();
+    public static CavernChunkGenerator getInstance() {
+        return instance;
+    }
 
     @Override
     public ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {

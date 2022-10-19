@@ -16,38 +16,40 @@ import java.util.HashMap;
 
 public class OverworldBiomeGenerator {
     static long seed = 0;
-    static final int CACHE_SIZE = 1500000,
+    static final int CACHE_SIZE = 150000,
             CACHE_DELETION_SIZE = CACHE_SIZE * 2 / 3,
             SPAWN_LOC_PROTECTION_RADIUS = 500;
     static final double SPECIAL_BIOME_RATE = 0.5;
 
+
     static HashMap<Long, Integer> biomeCache = new HashMap<>(CACHE_SIZE, 0.8f);
     static HashMap<Long, Integer> biomeGridCache = new HashMap<>(CACHE_SIZE, 0.8f);
     // biomeCache ONLY STORES biome info, while biomeGridCache ONLY STORES biome grid info that are used to derive biome info
-    // further info about the key format can be seen in the comment of function getSeed
-    static boolean test = true; // should we always return forest to test out other functionalities?
+    // further info about the key format can be seen in the comment of function getCacheKey
+    static boolean test = false; // should we always return forest to test out other functionalities?
 
     static String[] biomeGenProcess = new String[] {
         "zoom_in",
-                "add_islands",
-                "add_islands",
-                "fill_ocean",
-                "zoom_in_smooth",
-                "zoom_in_smooth",
-                "setup_rough_biome",
-                "zoom_in",
-                "zoom_in",
-                "zoom_in_smooth",
-                "smooth_biome",
-                "zoom_in_smooth",
-                "add_beach",
-                "add_beach",
-                "zoom_in_smooth",
-                "zoom_in_smooth",
-                "zoom_in_smooth",
-                "zoom_in_smooth",
-                "zoom_in_smooth",
-                "smooth_biome",
+        "add_islands",
+        "add_islands",
+        "fill_ocean",
+        "zoom_in_smooth",
+        "zoom_in_smooth",
+        "setup_rough_biome",
+        "zoom_in",
+        "zoom_in",
+        "zoom_in_smooth",
+        "smooth_biome",
+        "zoom_in_smooth",
+        "add_beach",
+        "add_beach",
+        "zoom_in_smooth",
+        "zoom_in_smooth",
+        "zoom_in_smooth",
+//        remove two zoom in smooth, as we are dividing actual x and z by 4
+//        "zoom_in_smooth",
+//        "zoom_in_smooth",
+        "smooth_biome",
     };
 
 
@@ -68,7 +70,7 @@ public class OverworldBiomeGenerator {
         // test: save a map of biomes for testing purposes
         int center = 0;
         int scale = 1000;
-        int jump = 10;
+        int jump = 20;
         while (biomeGenProcess.length >= 1) {
             biomeCache.clear();
             Bukkit.getLogger().info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -109,7 +111,7 @@ public class OverworldBiomeGenerator {
             break;
         }
     }
-    private static long getSeed(int recursion, int x, int z) {
+    private static long getCacheKey(int recursion, int x, int z) {
         long result = 0;
         // first two bytes denotes x and z
         if (x < 0) result ++;
@@ -388,8 +390,7 @@ public class OverworldBiomeGenerator {
                     land_grid[i][j] = getGeneralBiomeGrid(blockX, blockZ, gridSizeOffset, recursion + 1);
                 } else {
                     // initialize the highest level grid
-                    if (Math.abs(blockX) <= gridSizeOffset && Math.abs(blockZ) <= gridSizeOffset) land_grid[i][j] = 1;
-                    else if (RandomGenerator.getRandom(seed, blockX, blockZ) < 0.1)
+                    if (RandomGenerator.getRandom(seed, blockX, blockZ) < 0.1)
                         land_grid[i][j] = 1;
                     else land_grid[i][j] = 0;
                 }
@@ -430,7 +431,7 @@ public class OverworldBiomeGenerator {
         for (int i = marginDiscard; i + marginDiscard < land_grid.length; i++) {
             for (int j = marginDiscard; j + marginDiscard < land_grid[i].length; j++) {
                 int grid_x_save = grid_x_save_start + j, grid_z_save = grid_z_save_start + i;
-                long tempKey = getSeed(recursion, grid_x_save, grid_z_save);
+                long tempKey = getCacheKey(recursion, grid_x_save, grid_z_save);
                 if (recursion == 1)
                     biomeCache.put(tempKey, land_grid[i][j]);
                 else
@@ -440,7 +441,7 @@ public class OverworldBiomeGenerator {
     }
     private static int getGeneralBiomeGrid(int x, int z, int gridSize, int recursion) {
         int gridX = MathHelper.betterFloorDivision(x, gridSize), gridZ = MathHelper.betterFloorDivision(z, gridSize);
-        long biomeLocKey = getSeed(recursion, gridX, gridZ);
+        long biomeLocKey = getCacheKey(recursion, gridX, gridZ);
         HashMap<Long, Integer> cache = recursion == 1 ? biomeCache : biomeGridCache;
         if (!cache.containsKey(biomeLocKey)) {
             // setup original position info.
@@ -475,10 +476,11 @@ public class OverworldBiomeGenerator {
         }
         return result;
     }
-    public static Biome getBiome(long seed, int x, int z) {
+    public static Biome getBiome(long seed, int actualX, int actualZ) {
         if (test)
             return Biome.FOREST;
-        long biomeLocKey = getSeed(1, x, z);
+        int x = actualX / 4, z = actualZ / 4;
+        long biomeLocKey = getCacheKey(1, x, z);
         int rst;
         if (biomeCache.containsKey(biomeLocKey)) {
             rst = biomeCache.get(biomeLocKey);
