@@ -19,7 +19,6 @@ public class OrePopulator extends BlockPopulator {
             UNDERGROUND = 0,
             CAVERN = -100,
             DEEP_CAVERN = -150;
-    static long test_ore = 0, test_ore_time = 0;
     public OrePopulator(int yOffset) {
         this.yOffset = yOffset;
         oreMaterials = new HashMap<>(50);
@@ -127,6 +126,7 @@ public class OrePopulator extends BlockPopulator {
     void generateAstral(World wld, Random rdm, Chunk chunk) {
         if (yOffset < 0) return; // only surface world get this ore
         if (wld.getBiome(chunk.getX() * 16, chunk.getZ() * 16) != Biome.MESA) return;
+        Bukkit.getLogger().info("IS MESA!");
         if (rdm.nextDouble() < 0.01) {
             int xCenter = chunk.getX() * 16 + (int) (Math.random() * 16),
                     zCenter = chunk.getZ() * 16 + (int) (Math.random() * 16);
@@ -180,34 +180,26 @@ public class OrePopulator extends BlockPopulator {
 
     @Override
     public void populate(World wld, Random rdm, Chunk chunk) {
-//        long timeStart = System.nanoTime();
-        for (int i = 0; i < 1000; i ++) {
-            // vanilla Terraria
-            generateCopper(wld, rdm, chunk);
-            generateIron(wld, rdm, chunk);
-            generateSilver(wld, rdm, chunk);
-            generateGold(wld, rdm, chunk);
-            generateCobalt(wld, rdm, chunk);
-            generateMythril(wld, rdm, chunk);
-            generateAdamantite(wld, rdm, chunk);
-            generateChlorophyte(wld, rdm, chunk);
-            // Calamity, pre-hardmode
-            generateSeaPrism(wld, rdm, chunk);
-            generateAerialite(wld, rdm, chunk);
-            // Calamity, hardmode
-            generateCryonic(wld, rdm, chunk);
-            generatePerennial(wld, rdm, chunk);
-            generateScoria(wld, rdm, chunk);
-            generateAstral(wld, rdm, chunk);
-            // Calamity, post-moon lord
-            generateExodium(wld, rdm, chunk);
-            generateUelibloom(wld, rdm, chunk);
-            generateAuric(wld, rdm, chunk);
-        }
-
-//        test_ore += (System.nanoTime() - timeStart);
-//        test_ore_time ++;
-//        if (test_ore_time % 10 == 0)
-//            Bukkit.broadcastMessage("Time elapsed for ore generation: " + test_ore / test_ore_time);
+        // vanilla Terraria
+        generateCopper(wld, rdm, chunk);
+        generateIron(wld, rdm, chunk);
+        generateSilver(wld, rdm, chunk);
+        generateGold(wld, rdm, chunk);
+        generateCobalt(wld, rdm, chunk);
+        generateMythril(wld, rdm, chunk);
+        generateAdamantite(wld, rdm, chunk);
+        generateChlorophyte(wld, rdm, chunk);
+        // Calamity, pre-hardmode
+        generateSeaPrism(wld, rdm, chunk);
+        generateAerialite(wld, rdm, chunk);
+        // Calamity, hardmode
+        generateCryonic(wld, rdm, chunk);
+        generatePerennial(wld, rdm, chunk);
+        generateScoria(wld, rdm, chunk);
+        generateAstral(wld, rdm, chunk);
+        // Calamity, post-moon lord
+        generateExodium(wld, rdm, chunk);
+        generateUelibloom(wld, rdm, chunk);
+        generateAuric(wld, rdm, chunk);
     }
 }

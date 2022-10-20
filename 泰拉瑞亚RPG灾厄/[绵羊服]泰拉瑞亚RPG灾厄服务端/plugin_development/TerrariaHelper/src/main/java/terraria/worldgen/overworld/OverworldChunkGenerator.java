@@ -26,14 +26,15 @@ public class OverworldChunkGenerator extends ChunkGenerator {
     static OverworldChunkGenerator instance = new OverworldChunkGenerator();
     private OverworldChunkGenerator() {
         // terrain noise functions
+        OCTAVES = 4;
         terrainGenerator = new PerlinOctaveGenerator(seed, OCTAVES);
-        terrainGenerator.setScale(0.005);
+        terrainGenerator.setScale(0.015);
         cheeseCaveGenerator = new PerlinOctaveGenerator(seed, OCTAVES);
-        cheeseCaveGenerator.setScale(0.00175);
+        cheeseCaveGenerator.setScale(0.05);
         spaghettiGeneratorOne = new PerlinOctaveGenerator(seed, OCTAVES);
-        spaghettiGeneratorOne.setScale(0.0025);
+        spaghettiGeneratorOne.setScale(0.01);
         spaghettiGeneratorTwo = new PerlinOctaveGenerator(seed, OCTAVES);
-        spaghettiGeneratorTwo.setScale(0.003);
+        spaghettiGeneratorTwo.setScale(0.0105);
 
         seed = TerrariaHelper.worldSeed;
         // variables for surface height
@@ -41,7 +42,6 @@ public class OverworldChunkGenerator extends ChunkGenerator {
         biomeHeightVariance = new HashMap<>();
         BIOME_HEIGHT_DEFAULT = 100;
         BIOME_HEIGHT_VARIANCE_DEFAULT = 10;
-        OCTAVES = 4;
         FREQUENCY = 0.05221649073;
         NEARBY_BIOME_SAMPLE_RADIUS = 6;
         // if this is NOT 1, THE SLIDING WINDOW TECHNIQUE WILL NOT WORK!
@@ -89,10 +89,13 @@ public class OverworldChunkGenerator extends ChunkGenerator {
                         if (effectualY <= SEA_LEVEL) chunk.setBlock(i, y, j, Material.WATER);
                     } else if (--topSoilThickness > 0) chunk.setBlock(i, y, j, Material.SAND);
                 }
-                for (int y = Math.min(SEA_LEVEL - yOffset, 254); y > 0; y--) {
-                    if (chunk.getType(i, y, j) == Material.AIR) {
-                        chunk.setBlock(i, y, j, Material.WATER);
-                    } else break;
+                if (yOffset >= 0) {
+                    // for surface only
+                    for (int y = SEA_LEVEL; y > 0; y--) {
+                        if (chunk.getType(i, y, j) == Material.AIR) {
+                            chunk.setBlock(i, y, j, Material.WATER);
+                        } else break;
+                    }
                 }
                 break;
             default: // forest style landscape, consisting of the majority of biomes.
@@ -162,31 +165,29 @@ public class OverworldChunkGenerator extends ChunkGenerator {
         double biomesSampled = (1 + NEARBY_BIOME_SAMPLE_RADIUS * 2) * (1 + NEARBY_BIOME_SAMPLE_RADIUS * 2);
         int currX, currZ;
 
-        // setup height info according to nearby biomes at both offset 0. Then use sliding window technique to derive the height everywhere.
-        heightOffset = 0;
-        squashFactor = 0;
-        for (int sampleOffsetX = NEARBY_BIOME_SAMPLE_RADIUS * -1; sampleOffsetX <= NEARBY_BIOME_SAMPLE_RADIUS; sampleOffsetX++) {
-            int currSampleX = blockXStart + sampleOffsetX * NEARBY_BIOME_SAMPLE_STEPSIZE;
-            for (int sampleOffsetZ = NEARBY_BIOME_SAMPLE_RADIUS * -1; sampleOffsetZ <= NEARBY_BIOME_SAMPLE_RADIUS; sampleOffsetZ ++) {
-                int currSampleZ = blockZStart + sampleOffsetZ * NEARBY_BIOME_SAMPLE_STEPSIZE;
-                Biome currBiome = OverworldBiomeGenerator.getBiome(seed, currSampleX, currSampleZ);
-                heightOffset += biomeHeight.getOrDefault(           currBiome, BIOME_HEIGHT_DEFAULT);
-                squashFactor += biomeHeightVariance.getOrDefault(   currBiome, BIOME_HEIGHT_VARIANCE_DEFAULT);
-            }
-        }
-        heightOffset /= biomesSampled;
-        squashFactor /= biomesSampled;
-
         // loop through all blocks.
         double heightOffset_tmp, squashFactor_tmp;
         for (int i = 0; i < 16; i ++) {
             currX = blockXStart + i;
-            // these will be modified as we loop through the x coordinates.
-            heightOffset_tmp = heightOffset;
-            squashFactor_tmp = squashFactor;
             for (int j = 0; j < 16; j++) {
                 currZ = blockZStart + j;
-                height = heightOffset_tmp + (squashFactor_tmp * terrainGenerator.noise(currX, 0, currZ, 0.5, 0.5, false));
+
+                // setup height info according to nearby biomes.
+                heightOffset = 0;
+                squashFactor = 0;
+                for (int sampleOffsetX = NEARBY_BIOME_SAMPLE_RADIUS * -1; sampleOffsetX <= NEARBY_BIOME_SAMPLE_RADIUS; sampleOffsetX++) {
+                    int currSampleX = currX + sampleOffsetX * NEARBY_BIOME_SAMPLE_STEPSIZE;
+                    for (int sampleOffsetZ = NEARBY_BIOME_SAMPLE_RADIUS * -1; sampleOffsetZ <= NEARBY_BIOME_SAMPLE_RADIUS; sampleOffsetZ++) {
+                        int currSampleZ = currZ + sampleOffsetZ * NEARBY_BIOME_SAMPLE_STEPSIZE;
+                        Biome currBiome = OverworldBiomeGenerator.getBiome(seed, currSampleX, currSampleZ);
+                        heightOffset += biomeHeight.getOrDefault(currBiome, BIOME_HEIGHT_DEFAULT);
+                        squashFactor += biomeHeightVariance.getOrDefault(currBiome, BIOME_HEIGHT_VARIANCE_DEFAULT);
+                    }
+                }
+                heightOffset /= biomesSampled;
+                squashFactor /= biomesSampled;
+
+                height = heightOffset + (squashFactor * terrainGenerator.noise(currX, 0, currZ, 0.5, 0.5, false));
 
                 // loop through y to set blocks
                 for (int y_coord = 0; y_coord < 256; y_coord ++) {
@@ -233,48 +234,6 @@ public class OverworldChunkGenerator extends ChunkGenerator {
                 }
 
                 generateTopSoil(chunk, i, (int) Math.ceil(height), j, currX, currZ, biome.getBiome(i, j), yOffset);
-
-                // then, we tweak the offset info as z increases.
-                if (j + 1 < 16) {
-                    double heightOffsetTweak = 0, squashFactorTweak = 0;
-                    int currSample_dropZ = currZ - NEARBY_BIOME_SAMPLE_RADIUS * NEARBY_BIOME_SAMPLE_STEPSIZE;
-                    int currSample_addZ  = currZ + (NEARBY_BIOME_SAMPLE_RADIUS + 1) * NEARBY_BIOME_SAMPLE_STEPSIZE;
-                    // setup height info according to nearby biomes at both offset 0. Then use sliding window technique to derive the height everywhere.
-                    for (int sampleOffset = NEARBY_BIOME_SAMPLE_RADIUS * -1; sampleOffset <= NEARBY_BIOME_SAMPLE_RADIUS; sampleOffset++) {
-                        int currSampleX = currX + sampleOffset * NEARBY_BIOME_SAMPLE_STEPSIZE;
-                        Biome currBiome_drop = OverworldBiomeGenerator.getBiome(seed, currSampleX, currSample_dropZ);
-                        heightOffsetTweak -= biomeHeight.getOrDefault(           currBiome_drop, BIOME_HEIGHT_DEFAULT);
-                        squashFactorTweak -= biomeHeightVariance.getOrDefault(   currBiome_drop, BIOME_HEIGHT_VARIANCE_DEFAULT);
-                        Biome currBiome_add = OverworldBiomeGenerator.getBiome(seed, currSampleX, currSample_addZ);
-                        heightOffsetTweak += biomeHeight.getOrDefault(           currBiome_add, BIOME_HEIGHT_DEFAULT);
-                        squashFactorTweak += biomeHeightVariance.getOrDefault(   currBiome_add, BIOME_HEIGHT_VARIANCE_DEFAULT);
-                    }
-                    heightOffsetTweak /= biomesSampled;
-                    squashFactorTweak /= biomesSampled;
-                    heightOffset_tmp += heightOffsetTweak;
-                    squashFactor_tmp += squashFactorTweak;
-                }
-            }
-
-            // then, we tweak the offset info as x increases.
-            if (i + 1 < 16) {
-                double heightOffsetTweak = 0, squashFactorTweak = 0;
-                int currSample_dropX = currX - NEARBY_BIOME_SAMPLE_RADIUS * NEARBY_BIOME_SAMPLE_STEPSIZE;
-                int currSample_addX  = currX + (NEARBY_BIOME_SAMPLE_RADIUS + 1) * NEARBY_BIOME_SAMPLE_STEPSIZE;
-                // setup height info according to nearby biomes at both offset 0. Then use sliding window technique to derive the height everywhere.
-                for (int sampleOffset = NEARBY_BIOME_SAMPLE_RADIUS * -1; sampleOffset <= NEARBY_BIOME_SAMPLE_RADIUS; sampleOffset++) {
-                    int currSampleZ = blockZStart + sampleOffset * NEARBY_BIOME_SAMPLE_STEPSIZE;
-                    Biome currBiome_drop = OverworldBiomeGenerator.getBiome(seed, currSample_dropX, currSampleZ);
-                    heightOffsetTweak -= biomeHeight.getOrDefault(           currBiome_drop, BIOME_HEIGHT_DEFAULT);
-                    squashFactorTweak -= biomeHeightVariance.getOrDefault(   currBiome_drop, BIOME_HEIGHT_VARIANCE_DEFAULT);
-                    Biome currBiome_add = OverworldBiomeGenerator.getBiome(seed, currSample_addX, currSampleZ);
-                    heightOffsetTweak += biomeHeight.getOrDefault(           currBiome_add, BIOME_HEIGHT_DEFAULT);
-                    squashFactorTweak += biomeHeightVariance.getOrDefault(   currBiome_add, BIOME_HEIGHT_VARIANCE_DEFAULT);
-                }
-                heightOffsetTweak /= biomesSampled;
-                squashFactorTweak /= biomesSampled;
-                heightOffset += heightOffsetTweak;
-                squashFactor += squashFactorTweak;
             }
         }
     }
@@ -297,7 +256,7 @@ public class OverworldChunkGenerator extends ChunkGenerator {
 
                 timing = System.nanoTime();
 
-                // setup height info according to nearby biomes at both offset 0. Then use sliding window technique to derive the height everywhere.
+                // setup height info according to nearby biomes at both offset 0.
                 heightOffset = 0;
                 squashFactor = 0;
                 for (int sampleOffsetX = NEARBY_BIOME_SAMPLE_RADIUS * -1; sampleOffsetX <= NEARBY_BIOME_SAMPLE_RADIUS; sampleOffsetX++) {
@@ -355,9 +314,9 @@ public class OverworldChunkGenerator extends ChunkGenerator {
                             spaghettiCaveNoiseTwo = spaghettiGeneratorTwo.noise(currX, effectualY, currZ, 0.5, 0.5, false);
                         }
                         boolean isCave;
-                        if (cheeseCaveNoise > 0.95)
+                        if (cheeseCaveNoise > 0.5)
                             isCave = true;
-                        else isCave = Math.abs(spaghettiCaveNoiseOne) < 0.075 && Math.abs(spaghettiCaveNoiseTwo) < 0.075;
+                        else isCave = Math.abs(spaghettiCaveNoiseOne) < 0 && Math.abs(spaghettiCaveNoiseTwo) < 0;
                         if (isCave)
                             chunk.setBlock(i, y_coord, j, Material.AIR);
                         else
@@ -387,18 +346,18 @@ public class OverworldChunkGenerator extends ChunkGenerator {
     @Override
     public ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
         // setup biome
-//        long timing = System.nanoTime();
+        long timing = System.nanoTime();
 
         tweakBiome(x, z, biome);
 
-//        test_biome += (System.nanoTime() - timing);
-//        test_biome_time ++;
-//        if (test_biome_time % 10 == 0)
-//            Bukkit.broadcastMessage("Time elapsed for setup biome: " + test_biome / test_biome_time);
+        test_biome += (System.nanoTime() - timing);
+        test_biome_time ++;
+        if (test_biome_time % 10 == 0)
+            Bukkit.broadcastMessage("Time elapsed for setup biome: " + test_biome / test_biome_time);
         // init terrain
         ChunkData chunk = createChunkData(world);
-//        initializeTerrain_timingTest(chunk, x * 16, z * 16, biome, yOffset);
-        initializeTerrain(chunk, x * 16, z * 16, biome, yOffset);
+        initializeTerrain_timingTest(chunk, x * 16, z * 16, biome, yOffset);
+//        initializeTerrain(chunk, x * 16, z * 16, biome, yOffset);
         // tweak terrain
         return chunk;
     }
@@ -406,7 +365,8 @@ public class OverworldChunkGenerator extends ChunkGenerator {
     public List<BlockPopulator> getDefaultPopulators(World world) {
         ArrayList<BlockPopulator> result = new ArrayList<>();
         result.add(new OverworldBlockGenericPopulator());
-        result.add(new OrePopulator(yOffset));
+//        result.add(new OrePopulator(yOffset));
+        result.add(new OrePopulator(-253));
         return result;
     }
 }

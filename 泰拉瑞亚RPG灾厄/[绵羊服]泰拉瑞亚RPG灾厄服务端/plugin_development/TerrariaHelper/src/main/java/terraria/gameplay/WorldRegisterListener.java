@@ -54,9 +54,8 @@ public class WorldRegisterListener implements Listener {
                     e.printStackTrace();
                     Bukkit.getLogger().info("正在关闭服务器……");
                     Bukkit.getServer().shutdown();
-                } finally {
-                    Bukkit.getLogger().info("世界初始化尝试完毕！");
                 }
+                Bukkit.getLogger().info("世界初始化尝试完毕！");
             }, 1);
         }
     }

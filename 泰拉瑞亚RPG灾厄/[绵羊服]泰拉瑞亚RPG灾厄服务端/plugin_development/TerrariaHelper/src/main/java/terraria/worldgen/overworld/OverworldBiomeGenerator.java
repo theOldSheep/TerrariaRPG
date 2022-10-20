@@ -46,9 +46,9 @@ public class OverworldBiomeGenerator {
         "zoom_in_smooth",
         "zoom_in_smooth",
         "zoom_in_smooth",
-//        remove two zoom in smooth, as we are dividing actual x and z by 4
+//        remove two zoom in smooth and divide actual x and z by 4 if we wish for faster biome generation
 //        "zoom_in_smooth",
-//        "zoom_in_smooth",
+        "zoom_in_smooth",
         "smooth_biome",
     };
 
@@ -334,6 +334,15 @@ public class OverworldBiomeGenerator {
             }
         return result;
     }
+    private static boolean biomeNeedTemperatureBuffer(int biome) {
+        switch(biome) {
+            case 2:
+            case 3:
+            case 4:
+                return true;
+        }
+        return false;
+    }
     private static int[][] setup_rough_biome(int[][] mapLand, int x, int z, int scale) {
         // -1: sulphurous ocean  0: ocean
         // 1: forest  2: jungle  3: tundra  4: desert  5: corruption  6: hallow  7: astral infection
@@ -363,14 +372,14 @@ public class OverworldBiomeGenerator {
         // make sure tundra, jungle and desert do not meet each other
         for (int i = 1; i + 1 < size; i ++)
             for (int j = 1; j + 1 < size; j ++) {
-                if (result[i][j] == 4 || result[i][j] == 3 || result[i][j] == 2) {
-                    if ((result[i + 1][j] == 4 || result[i + 1][j] == 3 || result[i + 1][j] == 2) && result[i + 1][j] != result[i][j])
+                if (biomeNeedTemperatureBuffer(result[i][j])) {
+                    if (biomeNeedTemperatureBuffer(result[i + 1][j]) && result[i + 1][j] != result[i][j])
                         result[i][j] = 1;
-                    else if ((result[i][j + 1] == 4 || result[i][j + 1] == 3 || result[i][j + 1] == 2) && result[i][j + 1] != result[i][j])
+                    else if (biomeNeedTemperatureBuffer(result[i][j + 1]) && result[i][j + 1] != result[i][j])
                         result[i][j] = 1;
-                    else if ((result[i + 1][j + 1] == 4 || result[i + 1][j + 1] == 3 || result[i + 1][j + 1] == 2) && result[i + 1][j + 1] != result[i][j])
+                    else if (biomeNeedTemperatureBuffer(result[i + 1][j + 1]) && result[i + 1][j + 1] != result[i][j])
                         result[i][j] = 1;
-                    else if ((result[i + 1][j - 1] == 4 || result[i + 1][j - 1] == 3 || result[i + 1][j - 1] == 2) && result[i + 1][j - 1] != result[i][j])
+                    else if (biomeNeedTemperatureBuffer(result[i + 1][j - 1]) && result[i + 1][j - 1] != result[i][j])
                         result[i][j] = 1;
                 }
             }
@@ -479,7 +488,8 @@ public class OverworldBiomeGenerator {
     public static Biome getBiome(long seed, int actualX, int actualZ) {
         if (test)
             return Biome.FOREST;
-        int x = actualX / 4, z = actualZ / 4;
+        int x = actualX / 2, z = actualZ / 2;
+//        int x = actualX, z = actualZ;
         long biomeLocKey = getCacheKey(1, x, z);
         int rst;
         if (biomeCache.containsKey(biomeLocKey)) {
