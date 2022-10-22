@@ -1,13 +1,12 @@
 package terraria;
 
 import org.bukkit.Bukkit;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 import terraria.dragoncorehelper.RandomTitle;
 import terraria.dragoncorehelper.playerKeyToggleListener;
 import terraria.gameplay.WorldRegisterListener;
 import terraria.util.YmlHelper;
-import terraria.worldgen.overworld.OverworldChunkGenerator;
+import terraria.worldgen.overworld.NoiseGeneratorTest;
 
 
 public class TerrariaHelper extends JavaPlugin {
@@ -25,6 +24,8 @@ public class TerrariaHelper extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new playerKeyToggleListener(), this);
         Bukkit.getPluginManager().registerEvents(new RandomTitle(), this);
         Bukkit.getPluginManager().registerEvents(new WorldRegisterListener(), this);
+
+        this.getCommand("findNoise").setExecutor(new NoiseGeneratorTest());
 
         getLogger().info("泰拉瑞亚RPG插件部分已启动。");
         getLogger().info("世界种子: " + worldSeed);

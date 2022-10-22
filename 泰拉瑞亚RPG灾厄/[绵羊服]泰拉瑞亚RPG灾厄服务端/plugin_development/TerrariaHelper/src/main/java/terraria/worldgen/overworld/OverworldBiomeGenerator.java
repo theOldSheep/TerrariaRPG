@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class OverworldBiomeGenerator {
     static long seed = 0;
     static final int CACHE_SIZE = 150000,
-            CACHE_DELETION_SIZE = CACHE_SIZE * 2 / 3,
+            CACHE_DELETION_SIZE = 100000,
             SPAWN_LOC_PROTECTION_RADIUS = 500;
     static final double SPECIAL_BIOME_RATE = 0.5;
 
@@ -48,7 +48,7 @@ public class OverworldBiomeGenerator {
         "zoom_in_smooth",
 //        remove two zoom in smooth and divide actual x and z by 4 if we wish for faster biome generation
 //        "zoom_in_smooth",
-        "zoom_in_smooth",
+//        "zoom_in_smooth",
         "smooth_biome",
     };
 
@@ -71,45 +71,41 @@ public class OverworldBiomeGenerator {
         int center = 0;
         int scale = 1000;
         int jump = 20;
-        while (biomeGenProcess.length >= 1) {
-            biomeCache.clear();
-            Bukkit.getLogger().info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            Bukkit.getLogger().info("START GENERATING BIOME MAP " + biomeGenProcess.length);
-            double progress = 0, progressMax = scale * scale;
-            long lastPrinted = Calendar.getInstance().getTimeInMillis();
-            BufferedImage biomeMap = new BufferedImage(scale, scale, BufferedImage.TYPE_INT_RGB);
-            Bukkit.getLogger().info("Cache size: " + biomeCache.size() + " / " + CACHE_SIZE);
-            for (int i = 0; i < scale; i++)
-                for (int j = 0; j < scale; j++) {
-                    int blockX = (i - (scale / 2)) * jump + center, blockZ = (j - (scale / 2)) * jump + center;
-                    Biome currBiome = getBiome(seed, blockX, blockZ);
-                    biomeMap.setRGB(i, j, biomeColors.getOrDefault(currBiome, new Color(0, 255, 0).getRGB()));
-                    progress++;
-                    if (lastPrinted + 1000 < Calendar.getInstance().getTimeInMillis()) {
-                        lastPrinted = Calendar.getInstance().getTimeInMillis();
-                        Bukkit.getLogger().info("Generation progress: " + progress / progressMax);
-                        Bukkit.getLogger().info("Progress detail: " + progress + "/" + progressMax);
-                        Bukkit.getLogger().info("Cache size: " + biomeCache.size() + " / " + CACHE_SIZE);
-                    }
-                }
-            Bukkit.getLogger().info("Generation progress: " + progress / progressMax);
-            Bukkit.getLogger().info("Progress detail: " + progress + "/" + progressMax);
-            Bukkit.getLogger().info("Cache size: " + biomeCache.size() + " / " + CACHE_SIZE);
-            Bukkit.getLogger().info("Operation: " + biomeGenProcess[biomeGenProcess.length - 1]);
-            File dir_biome_map = new File("worldGenDebug/biomesMap" + biomeGenProcess.length + "_" + biomeGenProcess[biomeGenProcess.length - 1] + ".png");
-            try {
-                ImageIO.write(biomeMap, "png", dir_biome_map);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Bukkit.getLogger().warning(e.getMessage());
-            }
-            Bukkit.getLogger().info("FINISHED GENERATING BIOME MAP " + biomeGenProcess.length);
-
-            String[] temp = new String[biomeGenProcess.length - 1];
-            for (int idx = 0; idx < temp.length; idx ++) temp[idx] = biomeGenProcess[idx];
-            biomeGenProcess = temp;
-            break;
+        File dir_biome_map = new File("worldGenDebug/biomesMap(20000x20000).png");
+        Bukkit.getLogger().info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        if (dir_biome_map.exists()) {
+            Bukkit.getLogger().info("BIOME MAP FILE ALREADY EXISTS. DELETE THE FILE IF YOU WISH FOR GENERATING A NEW ONE.");
+            return;
         }
+        Bukkit.getLogger().info("START GENERATING BIOME MAP");
+        double progress = 0, progressMax = scale * scale;
+        long lastPrinted = Calendar.getInstance().getTimeInMillis();
+        BufferedImage biomeMap = new BufferedImage(scale, scale, BufferedImage.TYPE_INT_RGB);
+        Bukkit.getLogger().info("Cache size: " + biomeCache.size() + " / " + CACHE_SIZE);
+        for (int i = 0; i < scale; i++)
+            for (int j = 0; j < scale; j++) {
+                int blockX = (i - (scale / 2)) * jump + center, blockZ = (j - (scale / 2)) * jump + center;
+                Biome currBiome = getBiome(seed, blockX, blockZ);
+                biomeMap.setRGB(i, j, biomeColors.getOrDefault(currBiome, new Color(0, 255, 0).getRGB()));
+                progress++;
+                if (lastPrinted + 1000 < Calendar.getInstance().getTimeInMillis()) {
+                    lastPrinted = Calendar.getInstance().getTimeInMillis();
+                    Bukkit.getLogger().info("Generation progress: " + progress / progressMax);
+                    Bukkit.getLogger().info("Progress detail: " + progress + "/" + progressMax);
+                    Bukkit.getLogger().info("Cache size: " + biomeCache.size() + " / " + CACHE_SIZE);
+                }
+            }
+        Bukkit.getLogger().info("Generation progress: " + progress / progressMax);
+        Bukkit.getLogger().info("Progress detail: " + progress + "/" + progressMax);
+        Bukkit.getLogger().info("Cache size: " + biomeCache.size() + " / " + CACHE_SIZE);
+        try {
+            ImageIO.write(biomeMap, "png", dir_biome_map);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Bukkit.getLogger().warning(e.getMessage());
+        }
+        Bukkit.getLogger().info("FINISHED GENERATING BIOME MAP.");
+        Bukkit.getLogger().info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     }
     private static long getCacheKey(int recursion, int x, int z) {
         long result = 0;
@@ -487,9 +483,8 @@ public class OverworldBiomeGenerator {
     }
     public static Biome getBiome(long seed, int actualX, int actualZ) {
         if (test)
-            return Biome.FOREST;
-        int x = actualX / 2, z = actualZ / 2;
-//        int x = actualX, z = actualZ;
+            return Biome.MESA;
+        int x = actualX / 4, z = actualZ / 4;
         long biomeLocKey = getCacheKey(1, x, z);
         int rst;
         if (biomeCache.containsKey(biomeLocKey)) {
@@ -497,7 +492,7 @@ public class OverworldBiomeGenerator {
         } else {
             if (OverworldBiomeGenerator.seed == 0) {
                 OverworldBiomeGenerator.seed = seed;
-//                generateBiomeImage();
+                generateBiomeImage();
             }
             rst = getGeneralBiomeGrid(x, z, 1, 1);
         }

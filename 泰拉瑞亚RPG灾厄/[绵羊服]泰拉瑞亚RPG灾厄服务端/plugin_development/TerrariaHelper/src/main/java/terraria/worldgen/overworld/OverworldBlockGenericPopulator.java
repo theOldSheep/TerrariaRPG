@@ -29,20 +29,20 @@ public class OverworldBlockGenericPopulator extends BlockPopulator {
                             switch (biome) {
                                 case COLD_BEACH:
                                 case FROZEN_OCEAN:
-                                    currBlock.getState().getData().setData((byte) 1);
+                                    currBlock.setData((byte) 1);
                                     break;
                             }
                             break;
                         case STAINED_CLAY:
                             switch (biome) {
                                 case ICE_FLATS: // hallow : white stained clay
-                                    currBlock.getState().getData().setData((byte) 0);
+                                    currBlock.setData((byte) 0);
                                     break;
                                 case MESA: // astral infection : black stained clay
-                                    currBlock.getState().getData().setData((byte) 15);
+                                    currBlock.setData((byte) 15);
                                     break;
                                 case MUSHROOM_ISLAND: // corruption : grey stained clay
-                                    currBlock.getState().getData().setData((byte) 7);
+                                    currBlock.setData((byte) 7);
                                     break;
                             }
                             break;
@@ -50,10 +50,10 @@ public class OverworldBlockGenericPopulator extends BlockPopulator {
                             switch (biome) {
                                 case ICE_FLATS: // hallow : podzol (surface)
                                     if (!currBlock.getRelative(BlockFace.UP).getType().isSolid())
-                                        currBlock.getState().getData().setData((byte) 2);
+                                        currBlock.setData((byte) 2);
                                     break;
                                 case MESA: // astral infection : coarse_dirt
-                                    currBlock.getState().getData().setData((byte) 1);
+                                    currBlock.setData((byte) 1);
                                     break;
                             }
                             break;

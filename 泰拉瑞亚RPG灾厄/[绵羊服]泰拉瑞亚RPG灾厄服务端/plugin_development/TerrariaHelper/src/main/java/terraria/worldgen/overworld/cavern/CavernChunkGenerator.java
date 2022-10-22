@@ -3,8 +3,10 @@ package terraria.worldgen.overworld.cavern;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
+import terraria.TerrariaHelper;
 import terraria.worldgen.overworld.OrePopulator;
 import terraria.worldgen.overworld.OverworldBlockGenericPopulator;
+import terraria.worldgen.overworld.OverworldCaveGenerator;
 import terraria.worldgen.overworld.OverworldChunkGenerator;
 
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class CavernChunkGenerator extends ChunkGenerator {
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
         ArrayList<BlockPopulator> result = new ArrayList<>();
+        result.add(new OverworldCaveGenerator(yOffset, TerrariaHelper.worldSeed, OverworldChunkGenerator.OCTAVES));
         result.add(new OverworldBlockGenericPopulator());
         result.add(new OrePopulator(yOffset));
         return result;

@@ -26,10 +26,12 @@ public class OrePopulator extends BlockPopulator {
         oreMaterials.put("IRON",                Material.IRON_ORE);
         oreMaterials.put("SILVER",              Material.LAPIS_ORE);
         oreMaterials.put("GOLD",                Material.GOLD_ORE);
+        oreMaterials.put("HELLSTONE",           Material.MAGMA);
         oreMaterials.put("COBALT",              Material.LAPIS_BLOCK);
         oreMaterials.put("LIFE_CRYSTAL",        Material.EMERALD_ORE);
         oreMaterials.put("MYTHRIL",             Material.EMERALD_BLOCK);
         oreMaterials.put("ADAMANTITE",          Material.REDSTONE_ORE);
+        oreMaterials.put("CHARRED",             Material.QUARTZ_ORE);
         oreMaterials.put("CHLOROPHYTE",         Material.MOSSY_COBBLESTONE);
         oreMaterials.put("SEA_PRISM",           Material.PRISMARINE);
         oreMaterials.put("AERIALITE",           Material.DIAMOND_ORE);
@@ -126,7 +128,6 @@ public class OrePopulator extends BlockPopulator {
     void generateAstral(World wld, Random rdm, Chunk chunk) {
         if (yOffset < 0) return; // only surface world get this ore
         if (wld.getBiome(chunk.getX() * 16, chunk.getZ() * 16) != Biome.MESA) return;
-        Bukkit.getLogger().info("IS MESA!");
         if (rdm.nextDouble() < 0.01) {
             int xCenter = chunk.getX() * 16 + (int) (Math.random() * 16),
                     zCenter = chunk.getZ() * 16 + (int) (Math.random() * 16);
@@ -151,7 +152,7 @@ public class OrePopulator extends BlockPopulator {
 
     void generateExodium(World wld, Random rdm, Chunk chunk) {
         if (yOffset < 0) return; // only surface world get this ore
-        if (rdm.nextDouble() < 0.005) {
+        if (rdm.nextDouble() < 0.001) {
             int xCenter = chunk.getX() * 16 + (int) (Math.random() * 16),
                     zCenter = chunk.getZ() * 16 + (int) (Math.random() * 16),
                     height = 215 + rdm.nextInt(20);
@@ -175,31 +176,44 @@ public class OrePopulator extends BlockPopulator {
             generateGenericOre(wld, rdm, chunk, CAVERN, 0, 125, "UELIBLOOM", 6);
     }
     void generateAuric(World wld, Random rdm, Chunk chunk) {
-        generateGenericOre(wld, rdm, chunk, DEEP_CAVERN, 0, 225, "AURIC", 8);
+        generateGenericOre(wld, rdm, chunk, DEEP_CAVERN, 0, 500, "AURIC", 8);
+    }
+    void generateHellstone(World wld, Random rdm, Chunk chunk) {
+        generateGenericOre(wld, rdm, chunk, SURFACE, 0, 500, "HELLSTONE", 5);
+    }
+    void generateCharred(World wld, Random rdm, Chunk chunk) {
+        generateGenericOre(wld, rdm, chunk, SURFACE, 0, 500, "CHARRED", 5);
     }
 
     @Override
     public void populate(World wld, Random rdm, Chunk chunk) {
-        // vanilla Terraria
-        generateCopper(wld, rdm, chunk);
-        generateIron(wld, rdm, chunk);
-        generateSilver(wld, rdm, chunk);
-        generateGold(wld, rdm, chunk);
-        generateCobalt(wld, rdm, chunk);
-        generateMythril(wld, rdm, chunk);
-        generateAdamantite(wld, rdm, chunk);
-        generateChlorophyte(wld, rdm, chunk);
-        // Calamity, pre-hardmode
-        generateSeaPrism(wld, rdm, chunk);
-        generateAerialite(wld, rdm, chunk);
-        // Calamity, hardmode
-        generateCryonic(wld, rdm, chunk);
-        generatePerennial(wld, rdm, chunk);
-        generateScoria(wld, rdm, chunk);
-        generateAstral(wld, rdm, chunk);
-        // Calamity, post-moon lord
-        generateExodium(wld, rdm, chunk);
-        generateUelibloom(wld, rdm, chunk);
-        generateAuric(wld, rdm, chunk);
+        // overworld
+        if (wld.getEnvironment() == World.Environment.NORMAL) {
+            // vanilla Terraria
+            generateCopper(wld, rdm, chunk);
+            generateIron(wld, rdm, chunk);
+            generateSilver(wld, rdm, chunk);
+            generateGold(wld, rdm, chunk);
+            generateCobalt(wld, rdm, chunk);
+            generateMythril(wld, rdm, chunk);
+            generateAdamantite(wld, rdm, chunk);
+            generateChlorophyte(wld, rdm, chunk);
+            // Calamity, pre-hardmode
+            generateSeaPrism(wld, rdm, chunk);
+            generateAerialite(wld, rdm, chunk);
+            // Calamity, hardmode
+            generateCryonic(wld, rdm, chunk);
+            generatePerennial(wld, rdm, chunk);
+            generateScoria(wld, rdm, chunk);
+            generateAstral(wld, rdm, chunk);
+            // Calamity, post-moon lord
+            generateExodium(wld, rdm, chunk);
+            generateUelibloom(wld, rdm, chunk);
+            generateAuric(wld, rdm, chunk);
+        } else {
+            // nether
+            generateHellstone(wld, rdm, chunk);
+            generateCharred(wld, rdm, chunk);
+        }
     }
 }

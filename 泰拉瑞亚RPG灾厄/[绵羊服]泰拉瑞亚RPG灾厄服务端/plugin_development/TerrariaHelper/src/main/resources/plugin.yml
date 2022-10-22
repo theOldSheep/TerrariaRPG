@@ -4,3 +4,7 @@ main: terraria.TerrariaHelper
 softdepend:
   - DragonCore
 load: startup
+commands:
+  findNoise:
+    description: teleport to somewhere near the noise input
+    usage: /<command> [<noise(double)>]
