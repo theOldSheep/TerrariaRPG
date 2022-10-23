@@ -11,12 +11,10 @@ terraria\dragoncorehelper\playerKeyToggleListener.class
 terraria\util\YmlHelper.class
 terraria\worldgen\overworld\OrePopulator.class
 terraria\worldgen\RandomGenerator.class
-terraria\util\CachedOctaveGenerator$CachedNoiseGenerator.class
 terraria\util\MathHelper.class
 terraria\worldgen\Interpolate.class
 terraria\gameplay\WorldRegisterListener.class
 terraria\worldgen\overworld\cavern\CavernChunkGenerator.class
-terraria\util\CachedOctaveGenerator.class
 terraria\worldgen\overworld\OverworldCaveGenerator.class
 terraria\dragoncorehelper\SlotHelper$SlotCallback.class
 terraria\dragoncorehelper\SlotHelper.class

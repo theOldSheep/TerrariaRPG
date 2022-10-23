@@ -16,8 +16,18 @@ import java.util.Random;
 public class CavernChunkGenerator extends ChunkGenerator {
     static final int yOffset = -253;
     static CavernChunkGenerator instance = new CavernChunkGenerator();
+    ArrayList<BlockPopulator> populators;
     public static CavernChunkGenerator getInstance() {
         return instance;
+    }
+
+    public CavernChunkGenerator() {
+        super();
+        // init populator
+        populators = new ArrayList<>();
+        populators.add(new OverworldCaveGenerator(yOffset, TerrariaHelper.worldSeed, OverworldChunkGenerator.OCTAVES));
+        populators.add(new OverworldBlockGenericPopulator());
+        populators.add(new OrePopulator(yOffset));
     }
 
     @Override
@@ -33,10 +43,6 @@ public class CavernChunkGenerator extends ChunkGenerator {
 
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
-        ArrayList<BlockPopulator> result = new ArrayList<>();
-        result.add(new OverworldCaveGenerator(yOffset, TerrariaHelper.worldSeed, OverworldChunkGenerator.OCTAVES));
-        result.add(new OverworldBlockGenericPopulator());
-        result.add(new OrePopulator(yOffset));
-        return result;
+        return populators;
     }
 }

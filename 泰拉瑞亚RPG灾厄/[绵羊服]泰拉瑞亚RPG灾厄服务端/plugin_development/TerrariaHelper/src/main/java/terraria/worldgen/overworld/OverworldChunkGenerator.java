@@ -30,7 +30,9 @@ public class OverworldChunkGenerator extends ChunkGenerator {
             test_sample = 0, test_sample_time = 0,
             test_biome = 0, test_biome_time = 0;
     static OverworldChunkGenerator instance = new OverworldChunkGenerator();
+    static List<BlockPopulator> populators;
     private OverworldChunkGenerator() {
+        super();
         // send noise info
         Bukkit.getScheduler().scheduleSyncRepeatingTask(TerrariaHelper.getInstance(), () -> {
             Player laomianyang = Bukkit.getPlayer("laomianyang");
@@ -42,15 +44,16 @@ public class OverworldChunkGenerator extends ChunkGenerator {
             }
         }, 1, 5);
         // terrain noise functions
-        terrainGenerator = new PerlinOctaveGenerator(seed, OCTAVES);
+        Random rdm = new Random(seed);
+        terrainGenerator = new PerlinOctaveGenerator(rdm.nextLong(), OCTAVES);
         terrainGenerator.setScale(0.0005);
-        terrainGeneratorTwo = new PerlinOctaveGenerator(seed, OCTAVES);
+        terrainGeneratorTwo = new PerlinOctaveGenerator(rdm.nextLong(), OCTAVES);
         terrainGeneratorTwo.setScale(0.0075);
-        terrainDetailGenerator = new PerlinOctaveGenerator(seed, OCTAVES);
+        terrainDetailGenerator = new PerlinOctaveGenerator(rdm.nextLong(), OCTAVES);
         terrainDetailGenerator.setScale(0.025);
-        stoneVeinGenerator = new PerlinOctaveGenerator(seed, 1);
+        stoneVeinGenerator = new PerlinOctaveGenerator(rdm.nextLong(), 1);
         stoneVeinGenerator.setScale(0.05);
-
+        // constants
         seed = TerrariaHelper.worldSeed;
         FREQUENCY = 0.05221649073;
         NEARBY_BIOME_SAMPLE_RADIUS = 25;
@@ -60,7 +63,7 @@ public class OverworldChunkGenerator extends ChunkGenerator {
         PLATEAU_HEIGHT = 50;
         LAND_HEIGHT = 100;
         LAVA_LEVEL = -150;
-
+        // interpolates
         astralInfectionHeightProvider = new Interpolate(new InterpolatePoint[]{
                 InterpolatePoint.create(-0.5 , LAND_HEIGHT + PLATEAU_HEIGHT),
                 InterpolatePoint.create(-0.45, LAND_HEIGHT),
@@ -68,29 +71,35 @@ public class OverworldChunkGenerator extends ChunkGenerator {
                 InterpolatePoint.create( 0.5 , LAND_HEIGHT + PLATEAU_HEIGHT)
         }, "astral_infection_heightmap");
         oceanHeightProvider = new Interpolate(new InterpolatePoint[]{
-                InterpolatePoint.create(-0.1, SEA_LEVEL - 30),
-                InterpolatePoint.create( 0  , SEA_LEVEL - 10),
-                InterpolatePoint.create( 0.1, SEA_LEVEL - 20)
+                InterpolatePoint.create(-0.1, SEA_LEVEL - 50),
+                InterpolatePoint.create( 0  , SEA_LEVEL - 25),
+                InterpolatePoint.create( 0.1, SEA_LEVEL - 30)
         }, "ocean_heightmap");
         genericHeightProvider = new Interpolate(new InterpolatePoint[]{
-                InterpolatePoint.create(-0.9   , LAND_HEIGHT + PLATEAU_HEIGHT),
-                InterpolatePoint.create(-0.85  , LAND_HEIGHT),
+                InterpolatePoint.create(-0.85   , LAND_HEIGHT + PLATEAU_HEIGHT),
+                InterpolatePoint.create(-0.8  , LAND_HEIGHT),
                 InterpolatePoint.create(-0.7   , LAND_HEIGHT),
                 InterpolatePoint.create(-0.6   , LAND_HEIGHT + 50),
                 InterpolatePoint.create(-0.5   , SEA_LEVEL - 10),
                 InterpolatePoint.create(-0.4   , LAND_HEIGHT + 100),
                 InterpolatePoint.create(-0.3   , LAND_HEIGHT),
-                InterpolatePoint.create(-0.04  , SEA_LEVEL),
-                InterpolatePoint.create(0      , SEA_LEVEL - RIVER_DEPTH),
-                InterpolatePoint.create(0.04   , SEA_LEVEL),
+                InterpolatePoint.create(-0.05  , SEA_LEVEL),
+                InterpolatePoint.create(0      , SEA_LEVEL - RIVER_DEPTH * 2), // the depth is multiplied by noise2. it is expected to be around 0.5.
+                InterpolatePoint.create(0.05   , SEA_LEVEL),
                 InterpolatePoint.create(0.3    , LAND_HEIGHT),
                 InterpolatePoint.create(0.4    , LAND_HEIGHT + 50),
                 InterpolatePoint.create(0.5    , LAND_HEIGHT + 30),
                 InterpolatePoint.create(0.6    , LAND_HEIGHT + 40),
                 InterpolatePoint.create(0.7    , LAND_HEIGHT),
-                InterpolatePoint.create(0.85   , LAND_HEIGHT),
-                InterpolatePoint.create(0.9    , LAND_HEIGHT + PLATEAU_HEIGHT)
+                InterpolatePoint.create(0.8   , LAND_HEIGHT),
+                InterpolatePoint.create(0.85    , LAND_HEIGHT + PLATEAU_HEIGHT)
         }, "generic_heightmap");
+        // block populators
+        populators = new ArrayList<>();
+        populators.add(new OverworldCaveGenerator(yOffset_overworld, seed, OCTAVES));
+        populators.add(new OverworldBlockGenericPopulator());
+        populators.add(new OrePopulator(yOffset_overworld));
+        populators.add(new TreePopulator());
     }
     static double getTerrainHeight(Biome currBiome, double noise, double noiseTwo) {
         double result;
@@ -101,45 +110,14 @@ public class OverworldChunkGenerator extends ChunkGenerator {
             case COLD_BEACH:                // sulphurous beach
                 return SEA_LEVEL;
             case OCEAN:                     // ocean
-                /*
-                 * ________/`·····
-                 */
-//                if (noise < 0) return SEA_LEVEL - 20;
-//                else if (noise < 0.35) {
-//                    if (noise < 0.15) return SEA_LEVEL - 20 + noise * 100;
-//                    if (noise < 0.20) return SEA_LEVEL - 5;
-//                    return SEA_LEVEL - 5 - (noise - 0.2) * 33.33;
-//                }
-//                return SEA_LEVEL - 10;
                 result = oceanHeightProvider.getY(noise);
                 return LAND_HEIGHT + (result - LAND_HEIGHT) * noiseTwo;
             case MESA:                      // astral infection
-//                if (noise < -0.5) return LAND_HEIGHT + PLATEAU_HEIGHT; // plateau
-//                if (noise < -0.45) return LAND_HEIGHT + PLATEAU_HEIGHT * (MathHelper.xsin(40 * (-0.475 - noise)) + 1) / 2; // plateau edge
-//                if (noise < 0.4) return LAND_HEIGHT; // land
-//                if (noise < 0.45) return LAND_HEIGHT + PLATEAU_HEIGHT * (MathHelper.xsin(40 * (noise - 0.425)) + 1) / 2; // plateau edge
-//                return LAND_HEIGHT + PLATEAU_HEIGHT;
                 result = astralInfectionHeightProvider.getY(noise);
                 return LAND_HEIGHT + (result - LAND_HEIGHT) * noiseTwo;
             case JUNGLE:                    // jungle
                 return SEA_LEVEL;
             default:
-//                if (noise < -0.9) return LAND_HEIGHT + PLATEAU_HEIGHT; // plateau
-//                if (noise < -0.85) return LAND_HEIGHT + PLATEAU_HEIGHT * (MathHelper.xsin(40 * (-0.875 - noise)) + 1) / 2; // plateau edge
-//                if (noise < -0.7) return LAND_HEIGHT; // land
-//                if (noise < -0.3) return LAND_HEIGHT - 150000 * (noise + 0.7) * (noise + 0.6) * (noise + 0.55) * (noise + 0.3) * noiseTwo; // tall mountain
-//                if (noise < -0.08) return LAND_HEIGHT; // land
-//                if (noise < 0) {
-//                    double argument = (0.0016 - (noise + 0.04) * (noise + 0.04)) / -0.0016;
-//                    // very shallow river in deserts
-//                    double riverHeightMulti = (currBiome == Biome.DESERT ? 3 : RIVER_DEPTH) + LAND_HEIGHT - SEA_LEVEL;
-//                    return LAND_HEIGHT + riverHeightMulti * MathHelper.xsin(argument); // river
-//                }
-//                if (noise < 0.3) return LAND_HEIGHT; // land
-//                if (noise < 0.7) return LAND_HEIGHT - 150000 * (noise - 0.3) * (noise - 0.45) * (noise - 0.5) * (noise - 0.7) * noiseTwo; // rolling hills
-//                if (noise < 0.85) return LAND_HEIGHT; // land
-//                if (noise < 0.9) return LAND_HEIGHT + PLATEAU_HEIGHT * (MathHelper.xsin(40 * (noise - 0.875)) + 1) / 2; // plateau edge
-//                return LAND_HEIGHT + PLATEAU_HEIGHT;
                 result = genericHeightProvider.getY(noise);
                 return LAND_HEIGHT + (result - LAND_HEIGHT) * noiseTwo;
         }
@@ -456,11 +434,6 @@ public class OverworldChunkGenerator extends ChunkGenerator {
     }
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
-        ArrayList<BlockPopulator> result = new ArrayList<>();
-        result.add(new OverworldCaveGenerator(yOffset_overworld, seed, OCTAVES));
-        result.add(new OverworldBlockGenericPopulator());
-        result.add(new OrePopulator(yOffset_overworld));
-        result.add(new TreePopulator());
-        return result;
+        return populators;
     }
 }
