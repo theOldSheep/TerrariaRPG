@@ -19,7 +19,7 @@ public class OverworldChunkGenerator extends ChunkGenerator {
     static long seed = TerrariaHelper.worldSeed;
     public static int OCTAVES = 4,
             NEARBY_BIOME_SAMPLE_RADIUS, NEARBY_BIOME_SAMPLE_STEPSIZE,
-            LAND_HEIGHT, RIVER_DEPTH, PLATEAU_HEIGHT, SEA_LEVEL, LAVA_LEVEL;
+            LAND_HEIGHT, RIVER_DEPTH, LAKE_DEPTH, PLATEAU_HEIGHT, SEA_LEVEL, LAVA_LEVEL;
     static int yOffset_overworld = 0;
     static double FREQUENCY;
     public static PerlinOctaveGenerator terrainGenerator, terrainGeneratorTwo, terrainDetailGenerator,
@@ -48,7 +48,7 @@ public class OverworldChunkGenerator extends ChunkGenerator {
         terrainGenerator = new PerlinOctaveGenerator(rdm.nextLong(), OCTAVES);
         terrainGenerator.setScale(0.0005);
         terrainGeneratorTwo = new PerlinOctaveGenerator(rdm.nextLong(), OCTAVES);
-        terrainGeneratorTwo.setScale(0.0075);
+        terrainGeneratorTwo.setScale(0.015);
         terrainDetailGenerator = new PerlinOctaveGenerator(rdm.nextLong(), OCTAVES);
         terrainDetailGenerator.setScale(0.025);
         stoneVeinGenerator = new PerlinOctaveGenerator(rdm.nextLong(), 1);
@@ -60,6 +60,7 @@ public class OverworldChunkGenerator extends ChunkGenerator {
         NEARBY_BIOME_SAMPLE_STEPSIZE = 1;
         SEA_LEVEL = 90;
         RIVER_DEPTH = 15;
+        LAKE_DEPTH = 30;
         PLATEAU_HEIGHT = 50;
         LAND_HEIGHT = 100;
         LAVA_LEVEL = -150;
@@ -76,23 +77,23 @@ public class OverworldChunkGenerator extends ChunkGenerator {
                 InterpolatePoint.create( 0.1, SEA_LEVEL - 30)
         }, "ocean_heightmap");
         genericHeightProvider = new Interpolate(new InterpolatePoint[]{
-                InterpolatePoint.create(-0.85   , LAND_HEIGHT + PLATEAU_HEIGHT),
-                InterpolatePoint.create(-0.8  , LAND_HEIGHT),
+                InterpolatePoint.create(-1     , LAND_HEIGHT - LAKE_DEPTH),
+                InterpolatePoint.create(-0.95  , LAND_HEIGHT),
                 InterpolatePoint.create(-0.7   , LAND_HEIGHT),
                 InterpolatePoint.create(-0.6   , LAND_HEIGHT + 50),
                 InterpolatePoint.create(-0.5   , SEA_LEVEL - 10),
                 InterpolatePoint.create(-0.4   , LAND_HEIGHT + 100),
                 InterpolatePoint.create(-0.3   , LAND_HEIGHT),
-                InterpolatePoint.create(-0.05  , SEA_LEVEL),
-                InterpolatePoint.create(0      , SEA_LEVEL - RIVER_DEPTH * 2), // the depth is multiplied by noise2. it is expected to be around 0.5.
-                InterpolatePoint.create(0.05   , SEA_LEVEL),
-                InterpolatePoint.create(0.3    , LAND_HEIGHT),
-                InterpolatePoint.create(0.4    , LAND_HEIGHT + 50),
-                InterpolatePoint.create(0.5    , LAND_HEIGHT + 30),
+                InterpolatePoint.create(-0.05  , LAND_HEIGHT),
+                InterpolatePoint.create(0      , SEA_LEVEL - RIVER_DEPTH),
+                InterpolatePoint.create(0.05   , LAND_HEIGHT),
+                InterpolatePoint.create(0.3    , LAND_HEIGHT + 15),
+                InterpolatePoint.create(0.4    , LAND_HEIGHT + 60),
+                InterpolatePoint.create(0.5    , LAND_HEIGHT + 25),
                 InterpolatePoint.create(0.6    , LAND_HEIGHT + 40),
-                InterpolatePoint.create(0.7    , LAND_HEIGHT),
-                InterpolatePoint.create(0.8   , LAND_HEIGHT),
-                InterpolatePoint.create(0.85    , LAND_HEIGHT + PLATEAU_HEIGHT)
+                InterpolatePoint.create(0.7    , LAND_HEIGHT + 10),
+                InterpolatePoint.create(0.8    , LAND_HEIGHT),
+                InterpolatePoint.create(0.85   , LAND_HEIGHT + PLATEAU_HEIGHT)
         }, "generic_heightmap");
         // block populators
         populators = new ArrayList<>();
@@ -119,6 +120,7 @@ public class OverworldChunkGenerator extends ChunkGenerator {
                 return SEA_LEVEL;
             default:
                 result = genericHeightProvider.getY(noise);
+                if (result < LAND_HEIGHT) return result; // prevent shallow rivers etc
                 return LAND_HEIGHT + (result - LAND_HEIGHT) * noiseTwo;
         }
     }

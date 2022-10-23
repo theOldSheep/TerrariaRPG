@@ -26,7 +26,7 @@ public class OverworldBiomeGenerator {
     static HashMap<Long, Integer> biomeGridCache = new HashMap<>(CACHE_SIZE, 0.8f);
     // biomeCache ONLY STORES biome info, while biomeGridCache ONLY STORES biome grid info that are used to derive biome info
     // further info about the key format can be seen in the comment of function getCacheKey
-    static boolean test = false; // should we always return forest to test out other functionalities?
+    static boolean test = true; // should we always return forest to test out other functionalities?
 
     static String[] biomeGenProcess = new String[] {
         "zoom_in",
@@ -483,7 +483,7 @@ public class OverworldBiomeGenerator {
     }
     public static Biome getBiome(long seed, int actualX, int actualZ) {
         if (test)
-            return Biome.MESA;
+            return Biome.FOREST;
         int x = actualX / 4, z = actualZ / 4;
         long biomeLocKey = getCacheKey(1, x, z);
         int rst;
