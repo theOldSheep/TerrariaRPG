@@ -17,6 +17,7 @@ public class CavernChunkGenerator extends ChunkGenerator {
     static final int yOffset = -253;
     static CavernChunkGenerator instance = new CavernChunkGenerator();
     ArrayList<BlockPopulator> populators;
+    OverworldCaveGenerator caveGen;
     public static CavernChunkGenerator getInstance() {
         return instance;
     }
@@ -24,8 +25,8 @@ public class CavernChunkGenerator extends ChunkGenerator {
     public CavernChunkGenerator() {
         super();
         // init populator
+        caveGen = new OverworldCaveGenerator(yOffset, TerrariaHelper.worldSeed, 2);
         populators = new ArrayList<>();
-        populators.add(new OverworldCaveGenerator(yOffset, TerrariaHelper.worldSeed, OverworldChunkGenerator.OCTAVES));
         populators.add(new OverworldBlockGenericPopulator());
         populators.add(new OrePopulator(yOffset));
     }
@@ -36,8 +37,13 @@ public class CavernChunkGenerator extends ChunkGenerator {
         OverworldChunkGenerator.tweakBiome(x, z, biome);
         // init terrain
         ChunkData chunk = createChunkData(world);
-        OverworldChunkGenerator.initializeTerrain(chunk, x * 16, z * 16, biome, yOffset);
+        int[][] heightMap = OverworldChunkGenerator.initializeTerrain(chunk, x * 16, z * 16, biome, yOffset);
         // tweak terrain
+//        caveGen.populate(world, chunk, biome, x, z);
+        caveGen.populate_no_estimate(chunk, biome, heightMap, x, z);
+        for (int i = 0; i < 16; i ++)
+            for (int j = 0; j < 16; j ++)
+                OverworldChunkGenerator.generateTopSoil(chunk, i, heightMap[i][j], j, (x << 4) + i, (z << 4) + j, biome.getBiome(i, j), yOffset);
         return chunk;
     }
 

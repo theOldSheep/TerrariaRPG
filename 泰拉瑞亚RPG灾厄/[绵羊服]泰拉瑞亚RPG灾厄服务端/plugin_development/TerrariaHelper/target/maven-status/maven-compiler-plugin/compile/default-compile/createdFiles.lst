@@ -13,10 +13,11 @@ terraria\worldgen\overworld\OrePopulator.class
 terraria\worldgen\RandomGenerator.class
 terraria\util\MathHelper.class
 terraria\worldgen\Interpolate.class
-terraria\gameplay\WorldRegisterListener.class
 terraria\worldgen\overworld\cavern\CavernChunkGenerator.class
+terraria\worldgen\underworld\UnderworldChunkGenerator.class
 terraria\worldgen\overworld\OverworldCaveGenerator.class
 terraria\dragoncorehelper\SlotHelper$SlotCallback.class
+terraria\worldgen\WorldRegisterListener.class
 terraria\dragoncorehelper\SlotHelper.class
 terraria\dragoncorehelper\playerTestListener.class
 terraria\worldgen\Interpolate$InterpolatePoint.class

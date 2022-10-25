@@ -1,4 +1,4 @@
-package terraria.gameplay;
+package terraria.worldgen;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -10,6 +10,7 @@ import org.bukkit.event.world.WorldLoadEvent;
 import terraria.TerrariaHelper;
 import terraria.worldgen.overworld.OverworldChunkGenerator;
 import terraria.worldgen.overworld.cavern.CavernChunkGenerator;
+import terraria.worldgen.underworld.UnderworldChunkGenerator;
 
 
 public class WorldRegisterListener implements Listener {
@@ -39,10 +40,10 @@ public class WorldRegisterListener implements Listener {
                                 .createWorld();
                     }
                     // TODO: change world generator for hell world to a new one
-                    if (Bukkit.getServer().getWorld("world_hell") == null) {
+                    if (Bukkit.getServer().getWorld("world_underworld") == null) {
                         Bukkit.getLogger().info("正在尝试初始化地狱世界！");
-                        new WorldCreator("world_hell")
-                                .generator(CavernChunkGenerator.getInstance())
+                        new WorldCreator("world_underworld")
+                                .generator(UnderworldChunkGenerator.getInstance())
                                 .environment(World.Environment.NETHER)
                                 .type(WorldType.CUSTOMIZED)
                                 .generateStructures(false)

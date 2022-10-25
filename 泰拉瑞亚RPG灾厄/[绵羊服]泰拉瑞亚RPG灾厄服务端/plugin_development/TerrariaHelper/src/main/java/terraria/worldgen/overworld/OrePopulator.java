@@ -58,7 +58,7 @@ public class OrePopulator extends BlockPopulator {
                     if (distSqr > maxDistSqr) continue; // make the shape less sharp
 
                     Block blk = wld.getBlockAt(blockX + i, blockY + j, blockZ + k);
-                    if (blk.getType().isSolid()) blk.setType(oreType);
+                    if (blk.getType().isSolid() && blk.getType() != Material.BEDROCK) blk.setType(oreType);
                 }
     }
     void generateGenericOre(World wld, Random rdm, Chunk chunk, int yMax, int yMin, int stepSize, String oreName, int size) {
@@ -179,14 +179,97 @@ public class OrePopulator extends BlockPopulator {
         generateGenericOre(wld, rdm, chunk, DEEP_CAVERN, 0, 500, "AURIC", 8);
     }
     void generateHellstone(World wld, Random rdm, Chunk chunk) {
-        generateGenericOre(wld, rdm, chunk, SURFACE, 0, 500, "HELLSTONE", 5);
+        generateGenericOre(wld, rdm, chunk, 75, 0, 24, "HELLSTONE", 4);
     }
     void generateCharred(World wld, Random rdm, Chunk chunk) {
-        generateGenericOre(wld, rdm, chunk, SURFACE, 0, 500, "CHARRED", 5);
+        if (wld.getBiome(chunk.getX() * 16, chunk.getZ() * 16) == Biome.SAVANNA)
+            generateGenericOre(wld, rdm, chunk, 60, 0, 32, "CHARRED", 5);
+    }
+    void generateUndergroundLake(World world, Random random, Chunk chunk) {
+        // source code from https://bukkit.fandom.com/wiki/Developing_a_World_Generator_Plugin
+        // which is converted from vanilla minecraft's lake generator
+        if (random.nextInt(100) < 10) {
+            int chunkX = chunk.getX();
+            int chunkZ = chunk.getZ();
+
+            int randomX = chunkX * 16 + random.nextInt(16);
+            int randomZ = chunkZ * 16 + random.nextInt(16);
+            int y;
+
+            for (y = 1; world.getBlockAt(randomX, y, randomZ).getType() != Material.AIR; y++) {
+                if (y >= 225) return;
+            }
+            y -= 7;
+
+            Block block = world.getBlockAt(randomX + 8, y, randomZ + 8);
+
+            if (world.getEnvironment() == World.Environment.NORMAL && y + yOffset > -150) {
+                block.setType(Material.WATER);
+            } else {
+                block.setType(Material.LAVA);
+            }
+
+            boolean[] booleans = new boolean[2048];
+
+            int i = random.nextInt(4) + 4;
+
+            int j, j1, k1;
+
+            for (j = 0; j < i; ++j) {
+                double d0 = random.nextDouble() * 6.0D + 3.0D;
+                double d1 = random.nextDouble() * 4.0D + 2.0D;
+                double d2 = random.nextDouble() * 6.0D + 3.0D;
+                double d3 = random.nextDouble() * (16.0D - d0 - 2.0D) + 1.0D + d0 / 2.0D;
+                double d4 = random.nextDouble() * (8.0D - d1 - 4.0D) + 2.0D + d1 / 2.0D;
+                double d5 = random.nextDouble() * (16.0D - d2 - 2.0D) + 1.0D + d2 / 2.0D;
+
+                for (int k = 1; k < 15; ++k) {
+                    for (int l = 1; l < 15; ++l) {
+                        for (int i1 = 0; i1 < 7; ++i1) {
+                            double d6 = (k - d3) / (d0 / 2.0D);
+                            double d7 = (i1 - d4) / (d1 / 2.0D);
+                            double d8 = (l - d5) / (d2 / 2.0D);
+                            double d9 = d6 * d6 + d7 * d7 + d8 * d8;
+
+                            if (d9 < 1.0D) {
+                                booleans[(k * 16 + l) * 8 + i1] = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (j = 0; j < 16; ++j) {
+                for (k1 = 0; k1 < 16; ++k1) {
+                    for (j1 = 0; j1 < 8; ++j1) {
+                        if (booleans[(j * 16 + k1) * 8 + j1]) {
+                            world.getBlockAt(randomX + j, y + j1, randomZ + k1).setType(j1 > 4 ? Material.AIR : block.getType());
+                        }
+                    }
+                }
+            }
+
+            for (j = 0; j < 16; ++j) {
+                for (k1 = 0; k1 < 16; ++k1) {
+                    for (j1 = 4; j1 < 8; ++j1) {
+                        if (booleans[(j * 16 + k1) * 8 + j1]) {
+                            int X1 = randomX + j;
+                            int Y1 = y + j1 - 1;
+                            int Z1 = randomZ + k1;
+
+                            if (world.getBlockAt(X1, Y1, Z1).getType() == Material.DIRT) {
+                                world.getBlockAt(X1, Y1, Z1).setType(Material.GRASS);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void populate(World wld, Random rdm, Chunk chunk) {
+//        generateUndergroundLake(wld, rdm, chunk);
         // overworld
         if (wld.getEnvironment() == World.Environment.NORMAL) {
             // vanilla Terraria

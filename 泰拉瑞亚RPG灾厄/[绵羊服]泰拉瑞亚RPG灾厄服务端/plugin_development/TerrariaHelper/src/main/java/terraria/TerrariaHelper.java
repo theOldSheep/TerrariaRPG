@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import terraria.dragoncorehelper.RandomTitle;
 import terraria.dragoncorehelper.playerKeyToggleListener;
-import terraria.gameplay.WorldRegisterListener;
+import terraria.worldgen.WorldRegisterListener;
 import terraria.util.YmlHelper;
 import terraria.worldgen.overworld.NoiseGeneratorTest;
 
