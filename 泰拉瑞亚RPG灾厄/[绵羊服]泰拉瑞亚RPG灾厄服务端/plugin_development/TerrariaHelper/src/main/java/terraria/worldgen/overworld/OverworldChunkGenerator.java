@@ -26,29 +26,11 @@ public class OverworldChunkGenerator extends ChunkGenerator {
                                         stoneVeinGenerator;
     public static Interpolate astralInfectionHeightProvider, oceanHeightProvider, genericHeightProvider,
                                 riverRatioProvider, lakeRatioProvider;
-    static long test_rough = 0, test_rough_time = 0,
-            test_soil = 0, test_soil_time = 0,
-            test_sample = 0, test_sample_time = 0,
-            test_biome = 0, test_biome_time = 0;
     static OverworldChunkGenerator instance = new OverworldChunkGenerator();
     static List<BlockPopulator> populators;
     static OverworldCaveGenerator caveGen;
     private OverworldChunkGenerator() {
         super();
-        // send noise info
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(TerrariaHelper.getInstance(), () -> {
-            Player laomianyang = Bukkit.getPlayer("laomianyang");
-            if (laomianyang != null) {
-                double currX = laomianyang.getLocation().getX();
-                double currZ = laomianyang.getLocation().getZ();
-                double terrainNoise = terrainGenerator.noise(currX, currZ, 0.5, 0.5, false);
-                double terrainNoiseTwo = terrainGeneratorTwo.noise(currX, currZ, 0.5, 0.5, true);
-                terrainNoiseTwo = terrainNoiseTwo * 0.75 + 0.5;
-                double riverNoise = riverGenerator.noise(currX, currZ, 0.5, 0.5, false);
-                double lakeNoise = lakeGenerator.noise(currX, currZ, 0.5, 0.5, false);
-                laomianyang.sendMessage("noise: " + terrainNoise + ", " + terrainNoiseTwo + ", " + riverNoise + ", " + lakeNoise);
-            }
-        }, 1, 5);
         // terrain noise functions
         Random rdm = new Random(seed);
         terrainGenerator = new PerlinOctaveGenerator(rdm.nextLong(), OCTAVES);
