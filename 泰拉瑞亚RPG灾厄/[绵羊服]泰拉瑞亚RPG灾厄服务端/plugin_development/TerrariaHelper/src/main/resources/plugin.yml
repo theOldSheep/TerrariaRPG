@@ -3,6 +3,7 @@ version: 1.0
 main: terraria.TerrariaHelper
 softdepend:
   - DragonCore
+  - LibsDisguises
 load: startup
 commands:
   findNoise:
