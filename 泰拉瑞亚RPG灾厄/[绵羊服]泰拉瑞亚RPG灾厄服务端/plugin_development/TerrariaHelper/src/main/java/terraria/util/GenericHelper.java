@@ -58,20 +58,21 @@ public class GenericHelper {
     }
     public static Vector vectorFromYawPitch(double yaw, double pitch) {
         // source code from Skript
-        double y = Math.sin(pitch * DEG_TO_RAD);
+        double y = -1 * Math.sin(pitch * DEG_TO_RAD);
         double div = Math.cos(pitch * DEG_TO_RAD);
-        double x = Math.cos(yaw * DEG_TO_RAD);
-        double z = Math.sin(yaw * DEG_TO_RAD);
+        double x = -1 * Math.sin(yaw * DEG_TO_RAD);
+        double z = Math.cos(yaw * DEG_TO_RAD);
         x *= div;
         z *= div;
         return new Vector(x,y,z);
     }
     public static Vector vectorFromYawPitch_quick(double yaw, double pitch) {
         // algorithm from Skript
-        double y = MathHelper.xsin_degree(pitch);
+        // uses xsin and xcos so that it is quicker. a bit less accurate though.
+        double y = -1 * MathHelper.xsin_degree(pitch);
         double div = MathHelper.xcos_degree(pitch);
-        double x = MathHelper.xcos_degree(yaw);
-        double z = MathHelper.xsin_degree(yaw);
+        double x = -1 * MathHelper.xsin_degree(yaw);
+        double z = MathHelper.xcos_degree(yaw);
         x *= div;
         z *= div;
         return new Vector(x,y,z);

@@ -1,4 +1,4 @@
-package terraria.worldgen;
+package terraria.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;

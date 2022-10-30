@@ -1,3 +1,4 @@
 1. BOSS血量/动态DR转而在boss类中实现
 2. buff：燃烧，霜火等流血类debuff在config中实现 (effects.{effect}.damage, effects.{effect}.damageInterval)
 3. buff: hashmap形式存在实体的“"effects"”metadata中
+4. buff: 玩家加入时tick所有剩余的buff

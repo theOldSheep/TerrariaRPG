@@ -9,7 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftSlime;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Entity;
@@ -25,11 +24,13 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import terraria.TerrariaHelper;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Level;
 
 public class EntityHelper {
+    public static void initEntityMetadata(Entity entity) {
+        setMetadata(entity, "effects", new HashMap<String, Integer>());
+    }
     public static MetadataValue getMetadata(Metadatable owner, String key) {
         return owner.getMetadata(key).get(0);
     }
@@ -145,14 +146,6 @@ public class EntityHelper {
         }
         return new HashMap<>();
     }
-    public static HashSet<String> getAccessories(Entity entity) {
-        try {
-            return (HashSet<String>) getMetadata(entity, "accessory").value();
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "[Entity Helper] getAccessories", e);
-        }
-        return new HashSet<>();
-    }
     public static int getEffectLevelMax(String effect) {
         switch (effect) {
             case "破晓":
@@ -185,67 +178,58 @@ public class EntityHelper {
     public static void tickEffect(Entity entity, String effect) {
         try {
             YmlHelper.YmlSection effectConfig = YmlHelper.getFile("plugins/Data/setting.yml");
-            final int delay, damagePerDelay;
-            switch (effect) {
-                case "扭曲":
-                    delay = 4;
-                    damagePerDelay = 0;
-                    break;
-                case "恐惧":
-                    delay = 10;
-                    damagePerDelay = 0;
-                    break;
-                default:
-                    delay = effectConfig.getInt("effects." + effect + ".damageInterval", 5);
-                    damagePerDelay = effectConfig.getInt("effects." + effect + ".damage", 0);
-                    break;
+            int delay = 10, damagePerDelay = 0;
+            if ("扭曲".equals(effect)) {
+                delay = 4;
+            } else {
+                delay = effectConfig.getInt("effects." + effect + ".damageInterval", delay);
+                damagePerDelay = effectConfig.getInt("effects." + effect + ".damage", 0);
+                if (!(entity instanceof Player))
+                    damagePerDelay = effectConfig.getInt("effects." + effect + ".damageMonster", damagePerDelay);
             }
-            Runnable potionThread = () -> {
-                HashMap<String, Integer> allEffects = getEffectMap(entity);
-                int timeRemaining = allEffects.getOrDefault(effect, 0) - delay;
-                boolean shouldStop = false;
-                // validate if the entity still needs ticking effect
-                if (entity instanceof Player) {
-                    Player playerE = (Player) entity;
-                    if (!playerE.isOnline()) {
-                        shouldStop = true;
-                    }
-                    else if (playerE.getGameMode() != GameMode.SURVIVAL) {
-                        // additionally, the effect time is being cleared if the player dies.
-                        allEffects.clear();
-                        shouldStop = true;
-                    }
-                }
-                if (((LivingEntity) entity).getHealth() < 1e-5) shouldStop = true;
-                if (timeRemaining <= 0) {
-                    allEffects.remove(effect);
+            // tick mechanism
+            HashMap<String, Integer> allEffects = getEffectMap(entity);
+            int timeRemaining = allEffects.getOrDefault(effect, 0) - delay;
+            boolean shouldStop = false;
+            // validate if the entity still needs ticking effect
+            if (entity instanceof Player) {
+                Player playerE = (Player) entity;
+                if (!playerE.isOnline()) {
                     shouldStop = true;
                 }
-                if (shouldStop) {
-                    int taskID = getMetadata(entity, "effectTickThread_" + effect).asInt();
-                    Bukkit.getScheduler().cancelTask(taskID);
+                else if (playerE.getGameMode() != GameMode.SURVIVAL) {
+                    // additionally, the effect time is being cleared if the player dies.
+                    allEffects.clear();
+                    shouldStop = true;
                 }
-                allEffects.put(effect, timeRemaining);
-                // tick mechanism
-                Bukkit.broadcastMessage("Ticking Potion Effect " + effect + " for entity " + entity.getName());
-                if (damagePerDelay > 0) {
-                    double damageMulti = 1;
-                    if (effect.equals("破晓")) damageMulti = getEffectLevel(effect, timeRemaining);
-                    handleDamage(entity, entity, damagePerDelay * damageMulti, "debuff_" + effect);
-                }
-                if (effect.equals("扭曲")) {
-                    World entityWorld = entity.getLocation().getWorld();
-                    Location targetLoc = entityWorld.getHighestBlockAt(entity.getLocation()).getLocation();
-                    targetLoc.add(0, 8 + MathHelper.xsin_degree(timeRemaining * 2.5) * 2, 0);
-                    Vector velocity = targetLoc.subtract(entity.getLocation()).toVector();
-                    velocity.multiply(1/6);
-                    entity.setVelocity(velocity);
-                    entity.setFallDistance(0);
-                }
-                // next delayed task
-            };
-            int threadID = Bukkit.getScheduler().scheduleSyncRepeatingTask(TerrariaHelper.getInstance(), potionThread, delay, 1);
-            setMetadata(entity, "effectTickThread_" + effect, threadID);
+            }
+            if (((LivingEntity) entity).getHealth() < 1e-5) shouldStop = true;
+            if (timeRemaining <= 0) {
+                allEffects.remove(effect);
+                shouldStop = true;
+            }
+            if (shouldStop) {
+                return;
+            }
+            allEffects.put(effect, timeRemaining);
+            // tick mechanism
+            Bukkit.broadcastMessage("Ticking Potion Effect " + effect + " for entity " + entity.getName());
+            if (damagePerDelay > 0) {
+                double damageMulti = 1;
+                if (effect.equals("破晓")) damageMulti = getEffectLevel(effect, timeRemaining);
+                handleDamage(entity, entity, damagePerDelay * damageMulti, "debuff_" + effect);
+            }
+            if (effect.equals("扭曲")) {
+                World entityWorld = entity.getLocation().getWorld();
+                Location targetLoc = entityWorld.getHighestBlockAt(entity.getLocation()).getLocation();
+                targetLoc.add(0, 8 + MathHelper.xsin_degree(timeRemaining * 2.5) * 2, 0);
+                Vector velocity = targetLoc.subtract(entity.getLocation()).toVector();
+                velocity.multiply(1/6);
+                entity.setVelocity(velocity);
+                entity.setFallDistance(0);
+            }
+            // next delayed task
+            Bukkit.getScheduler().scheduleSyncDelayedTask(TerrariaHelper.getInstance(), () -> tickEffect(entity, effect), delay);
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "[Entity Helper] tickEffect", e);
         }
@@ -262,7 +246,7 @@ public class EntityHelper {
                     if (immune.contains(effect)) return;
                 }
             } else {
-                HashSet<String> accessories = getAccessories(entity);
+                HashSet<String> accessories = PlayerHelper.getAccessories(entity);
                 switch (effect) {
                     case "黑暗":
                         if (accessories.contains("蒙眼布")) return;

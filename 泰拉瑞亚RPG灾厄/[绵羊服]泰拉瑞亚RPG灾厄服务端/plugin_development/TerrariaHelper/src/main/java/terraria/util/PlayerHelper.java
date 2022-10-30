@@ -14,6 +14,7 @@ import org.bukkit.util.Vector;
 import terraria.TerrariaHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
@@ -76,8 +77,36 @@ public class PlayerHelper {
             }
         }, 3, 0);
     }
+    public static void initPlayerStats(Player ply) {
+        EntityHelper.initEntityMetadata(ply);
+        ply.setFoodLevel(0);
+        ply.setGravity(true);
 
+        EntityHelper.setMetadata(ply, "craftingStation", "CLOSED");
+        EntityHelper.setMetadata(ply, "recipeNumber", -1);
 
+        EntityHelper.setMetadata(ply, "isLoadingWeapon", false);
+        EntityHelper.setMetadata(ply, "autoSwing", false);
+        EntityHelper.setMetadata(ply, "swingAmount", 0);
+        EntityHelper.setMetadata(ply, "minions", new ArrayList<Entity>());
+        EntityHelper.setMetadata(ply, "sentries", new ArrayList<Entity>());
+        EntityHelper.setMetadata(ply, "accessory", new HashSet<String>());
+        EntityHelper.setMetadata(ply, "effects", new HashMap<String, Integer>());
+        EntityHelper.setMetadata(ply, "hooks", new ArrayList<Entity>());
+        EntityHelper.setMetadata(ply, "nextMinionIndex", 0);
+        EntityHelper.setMetadata(ply, "nextSentryIndex", 0);
+        EntityHelper.setMetadata(ply, "toolChanged", false);
+        EntityHelper.setMetadata(ply, "useCD", false);
+
+        EntityHelper.setMetadata(ply, "mobAmount", 0);
+
+        EntityHelper.setMetadata(ply, "grapplingHookItem", "");
+        EntityHelper.setMetadata(ply, "thrusting", false);
+        EntityHelper.setMetadata(ply, "thrust", 0);
+        EntityHelper.setMetadata(ply, "thrustProgress", 0);
+
+        EntityHelper.setMetadata(ply, "team", "red");
+    }
     public static int getMaxHealthByTier(int tier) {
         if (tier < 21) return tier * 40;
         if (tier < 41) return 800 + (tier - 20) * 10;
@@ -107,13 +136,23 @@ public class PlayerHelper {
         YmlHelper.YmlSection fileSection = YmlHelper.getFile("plugins/PlayerData/" + player.getName() + ".yml");
         return fileSection.getBoolean("bossDefeated" + progressToCheck, false);
     }
+    public static HashSet<String> getAccessories(Entity entity) {
+        try {
+            return (HashSet<String>) EntityHelper.getMetadata(entity, "accessory").value();
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "[Entity Helper] getAccessories", e);
+        }
+        return new HashSet<>();
+    }
     public static void handleGrapplingHook(Player ply) {
         try {
             List<Entity> hooks = (ArrayList<Entity>) EntityHelper.getMetadata(ply, "hooks").value();
-            String hookItemName = EntityHelper.getMetadata(ply, "grapplingHookItem").asString();
+            String hookItemName = ItemHelper.splitItemName(ply.getInventory().getItemInOffHand())[1];
+            EntityHelper.setMetadata(ply, "grapplingHookItem", hookItemName);
             World hookWorld = ply.getWorld();
             YmlHelper.YmlSection config = YmlHelper.getFile("plugins/Data/hooks.yml");
             int hookAmount = config.getInt(hookItemName + ".amount", 0);
+            Bukkit.broadcastMessage("Hook amount: " + hooks.size() + ", amount total: " + hookAmount);
             if (hooks.size() >= hookAmount) {
                 // removed the first hook on blocks if trying to launch more hooks than the player has
                 Entity removed = null;
@@ -134,12 +173,15 @@ public class PlayerHelper {
             EntityPlayer nms_ply = ((CraftPlayer) ply).getHandle();
             double yaw = nms_ply.yaw,
                     pitch = nms_ply.pitch;
+            Bukkit.broadcastMessage("Hook spd: " + hookSpeed + ", yaw " + yaw + ", pitch " + pitch);
             Vector velocity = GenericHelper.vectorFromYawPitch_quick(yaw, pitch);
             velocity.multiply(hookSpeed);
+            Bukkit.broadcastMessage("Vel: " + velocity);
             hookEntity.setGravity(false);
             hookEntity.setVelocity(velocity);
             // pre-set particle item
             List<String> hookColors = config.getStringList(hookItemName + ".particleItem");
+            Bukkit.broadcastMessage("Cols: " + hookColors);
             for (Entity hook : hooks) {
                 hookColors.remove(EntityHelper.getMetadata(hook, "color").asString());
             }
