@@ -145,13 +145,13 @@ public class OverworldCaveGenerator {
                         double[] noise = getCavernNoise(biome.getBiome(i, j), heightMap[i][j], currX, effectualY, currZ);
                         // cheese cave noise should be decreased above y=30, and completely gone above y=50
                         boolean isCave = validateCave(noise);
+                        if (isCave)
+                            chunk.setBlock(i, y_coord, j, Material.AIR);
                         if (test_timing) {
                             test_cave += (System.nanoTime() - timing);
                             blockTotal ++;
-                            if (isCave) {
-                                chunk.setBlock(i, y_coord, j, Material.AIR);
-                                if (++regenerated % 100000 == 0) Bukkit.getLogger().info("Cave percentage: " + (double)regenerated / blockTotal);
-                            }
+                            if (isCave && ++ regenerated % 100000 == 0)
+                                Bukkit.getLogger().info("Cave percentage: " + (double)regenerated / blockTotal);
                         }
                     }
                 }
