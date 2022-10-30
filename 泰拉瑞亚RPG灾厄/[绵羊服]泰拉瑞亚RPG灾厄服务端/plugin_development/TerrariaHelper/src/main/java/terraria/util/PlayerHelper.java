@@ -29,19 +29,26 @@ public class PlayerHelper {
                     String hookItemName = EntityHelper.getMetadata(ply, "grapplingHookItem").asString();
                     if (!ItemHelper.splitItemName(ply.getInventory().getItemInOffHand())[1].equals(hookItemName)) continue;
                     ArrayList<Entity> hooks = (ArrayList<Entity>) EntityHelper.getMetadata(ply, "hooks").value();
-                    if (hooks.size() == 0 || !hooks.get(0).getWorld().equals(ply.getWorld())) continue;
+                    if (hooks.size() == 0 || !hooks.get(0).getWorld().equals(ply.getWorld())) {
+                        // no grappling hook or world changed
+                        ply.setGravity(true);
+                        continue;
+                    }
+                    // get center location information
                     World plyWorld = ply.getWorld();
                     Location center = new Location(plyWorld, 0, 0, 0);
                     int hookedAmount = 0;
                     YmlHelper.YmlSection config = YmlHelper.getFile("plugins/Data/hooks.yml");
                     double hookReach = config.getDouble(hookItemName + ".reach", 12),
                             hookPullSpeed = config.getDouble(hookItemName + ".playerSpeed", 0.1);
-                    hookReach = hookReach * hookReach / 2;
+                    hookReach = hookReach * hookReach * 4;
                     HashSet<Entity> hooksToRemove = new HashSet<>();
                     for (Entity hook : hooks) {
+                        // if the hook is too far away
                         if (ply.getLocation().subtract(hook.getLocation()).lengthSquared() > hookReach) {
                             hook.remove();
                         }
+                        // if the hook is removed by any mean, schedule its removal from the list
                         if (hook.isDead()) {
                             hooksToRemove.add(hook);
                             continue;
@@ -70,7 +77,9 @@ public class PlayerHelper {
                         else if (thrust.lengthSquared() > 0)
                             thrust.multiply(0.1666667);
                         ply.setVelocity(thrust);
-                    }
+                    } else
+                        // no hook attached to ground
+                        ply.setGravity(true);
                 } catch (Exception e) {
                     Bukkit.getLogger().log(Level.SEVERE, "[Player Helper] threadGrapplingHook ", e);
                 }
@@ -152,7 +161,6 @@ public class PlayerHelper {
             World hookWorld = ply.getWorld();
             YmlHelper.YmlSection config = YmlHelper.getFile("plugins/Data/hooks.yml");
             int hookAmount = config.getInt(hookItemName + ".amount", 0);
-            Bukkit.broadcastMessage("Hook amount: " + hooks.size() + ", amount total: " + hookAmount);
             if (hooks.size() >= hookAmount) {
                 // removed the first hook on blocks if trying to launch more hooks than the player has
                 Entity removed = null;
@@ -173,15 +181,12 @@ public class PlayerHelper {
             EntityPlayer nms_ply = ((CraftPlayer) ply).getHandle();
             double yaw = nms_ply.yaw,
                     pitch = nms_ply.pitch;
-            Bukkit.broadcastMessage("Hook spd: " + hookSpeed + ", yaw " + yaw + ", pitch " + pitch);
             Vector velocity = GenericHelper.vectorFromYawPitch_quick(yaw, pitch);
             velocity.multiply(hookSpeed);
-            Bukkit.broadcastMessage("Vel: " + velocity);
             hookEntity.setGravity(false);
             hookEntity.setVelocity(velocity);
             // pre-set particle item
             List<String> hookColors = config.getStringList(hookItemName + ".particleItem");
-            Bukkit.broadcastMessage("Cols: " + hookColors);
             for (Entity hook : hooks) {
                 hookColors.remove(EntityHelper.getMetadata(hook, "color").asString());
             }

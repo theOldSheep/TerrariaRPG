@@ -24,7 +24,7 @@ public class OverworldChunkGenerator extends ChunkGenerator {
     public static PerlinOctaveGenerator terrainGenerator, terrainGeneratorTwo, terrainDetailGenerator,
                                         riverGenerator, lakeGenerator,
                                         stoneVeinGenerator;
-    public static Interpolate astralInfectionHeightProvider, oceanHeightProvider, genericHeightProvider,
+    public static Interpolate astralInfectionHeightProvider, genericHeightProvider,
                                 riverRatioProvider, lakeRatioProvider;
     static OverworldChunkGenerator instance = new OverworldChunkGenerator();
     static List<BlockPopulator> populators;
@@ -63,11 +63,6 @@ public class OverworldChunkGenerator extends ChunkGenerator {
                 InterpolatePoint.create( 0.45, LAND_HEIGHT),
                 InterpolatePoint.create( 0.5 , LAND_HEIGHT + PLATEAU_HEIGHT)
         }, "astral_infection_heightmap");
-        oceanHeightProvider = new Interpolate(new InterpolatePoint[]{
-                InterpolatePoint.create(-0.1, SEA_LEVEL - 50),
-                InterpolatePoint.create( 0  , SEA_LEVEL - 25),
-                InterpolatePoint.create( 0.1, SEA_LEVEL - 30)
-        }, "ocean_heightmap");
         genericHeightProvider = new Interpolate(new InterpolatePoint[]{
                 InterpolatePoint.create(-0.85  , LAND_HEIGHT + PLATEAU_HEIGHT),
                 InterpolatePoint.create(-0.7   , LAND_HEIGHT),
@@ -108,10 +103,9 @@ public class OverworldChunkGenerator extends ChunkGenerator {
                 return 0;
             case BEACHES:                   // beach
             case COLD_BEACH:                // sulphurous beach
-                return SEA_LEVEL;
+                return LAND_HEIGHT;
             case OCEAN:                     // ocean
-                result = oceanHeightProvider.getY(noise);
-                return LAND_HEIGHT + (result - LAND_HEIGHT) * noiseTwo;
+                return SEA_LEVEL - 30;
             case MESA:                      // astral infection
                 result = astralInfectionHeightProvider.getY(noise);
                 return LAND_HEIGHT + (result - LAND_HEIGHT) * noiseTwo;
@@ -327,8 +321,8 @@ public class OverworldChunkGenerator extends ChunkGenerator {
         ChunkData chunk = createChunkData(world);
         int[][] heightMap = initializeTerrain(chunk, x << 4, z << 4, biome, yOffset_overworld);
         // tweak terrain
-//        caveGen.populate(world, chunk, biome, heightMap, x, z);
-        caveGen.populate_no_estimate(chunk, biome, heightMap, x, z);
+        caveGen.populate(world, chunk, biome, heightMap, x, z);
+//        caveGen.populate_no_estimate(chunk, biome, heightMap, x, z);
         for (int i = 0; i < 16; i ++)
             for (int j = 0; j < 16; j ++)
                 generateTopSoil(chunk, i, heightMap[i][j], j, (x << 4) + i, (z << 4) + j, biome.getBiome(i, j), yOffset_overworld);

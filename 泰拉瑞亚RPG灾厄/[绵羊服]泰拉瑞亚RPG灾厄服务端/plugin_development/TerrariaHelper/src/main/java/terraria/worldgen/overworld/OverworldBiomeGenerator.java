@@ -40,9 +40,9 @@ public class OverworldBiomeGenerator {
         "zoom_in",
         "zoom_in_smooth",
         "smooth_biome",
+        "add_beach",
+        "add_beach",
         "zoom_in_smooth",
-        "add_beach",
-        "add_beach",
         "zoom_in_smooth",
         "zoom_in_smooth",
         "zoom_in_smooth",
@@ -450,7 +450,7 @@ public class OverworldBiomeGenerator {
         HashMap<Long, Integer> cache = recursion == 1 ? biomeCache : biomeGridCache;
         if (!cache.containsKey(biomeLocKey)) {
             // setup original position info.
-            final int radius = 5;
+            final int radius = 7;
             String operation = biomeGenProcess[biomeGenProcess.length - recursion];
             int[][] land_grid;
             int grid_x_begin, grid_z_begin, gridSizeOffset;
@@ -459,12 +459,14 @@ public class OverworldBiomeGenerator {
             } else {
                 gridSizeOffset = gridSize;
             }
-            grid_x_begin = MathHelper.betterFloorDivision(x, gridSizeOffset);
-            grid_z_begin = MathHelper.betterFloorDivision(z, gridSizeOffset);
-            // offset x and z by -radius. [radius][radius] contains the grid at (x, z).
-            grid_x_begin -= radius;
-            grid_z_begin -= radius;
-            int x_begin = grid_x_begin * gridSizeOffset, z_begin = grid_z_begin * gridSizeOffset;
+            grid_x_begin = MathHelper.betterFloorDivision(x, gridSizeOffset * (radius - 2));
+            grid_z_begin = MathHelper.betterFloorDivision(z, gridSizeOffset * (radius - 2));
+            // we do a floor division by radius - 2 (margins are removed later).
+            // so that the chunks we divide biome grid into can largely be independent
+            // reducing unnecessary performance consumption
+            grid_x_begin --;
+            grid_z_begin --;
+            int x_begin = grid_x_begin * gridSizeOffset * (radius - 2), z_begin = grid_z_begin * gridSizeOffset * (radius - 2);
 
             // load the grid 1 recursion level higher than current
             land_grid = getUpperLevelBiomeGrid(radius, x_begin, z_begin, gridSizeOffset, recursion);

@@ -17,7 +17,7 @@ public class OverworldCaveGenerator {
     static long test_cave = 0, test_cave_time = 0,
                 test_cave_setup = 0, test_cave_setup_time = 0,
                 blockTotal = 0, regenerated = 0;
-    static final boolean test_timing = true;
+    static final boolean test_timing = false;
     public OverworldCaveGenerator(int yOffset, long seed, int OCTAVES) {
         this.yOffset = yOffset;
 
@@ -78,7 +78,7 @@ public class OverworldCaveGenerator {
     }
     private boolean validateCaveEstimate(double[] noise) {
         double cheeseThreshold = 0.7;
-        double spaghettiThreshold = 0.5;
+        double spaghettiThreshold = 0.2;
         return (noise[0] > cheeseThreshold) || (
                     (Math.abs(noise[1]) < spaghettiThreshold) &&
                     (Math.abs(noise[2]) < spaghettiThreshold));
