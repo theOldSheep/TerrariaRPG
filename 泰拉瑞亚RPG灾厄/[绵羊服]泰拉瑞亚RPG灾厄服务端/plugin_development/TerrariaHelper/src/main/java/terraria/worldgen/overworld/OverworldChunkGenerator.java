@@ -147,11 +147,19 @@ public class OverworldChunkGenerator extends ChunkGenerator {
             case COLD_BEACH: // sulphurous beach
                 topSoilThickness = 35 + topSoilThicknessRandomizer * 5 + yOffset;
                 for (int y = Math.min(height - yOffset, 254); y > 0; y--) {
+                    if (topSoilThickness <= 0) break;
                     int effectualY = y + yOffset;
                     if (chunk.getType(i, y, j) == Material.AIR) {
                         if (effectualY <= SEA_LEVEL) chunk.setBlock(i, y, j, Material.WATER);
-                    } else if (--topSoilThickness > 0) chunk.setBlock(i, y, j, Material.SAND);
-                    else break;
+                    } else {
+                        topSoilThickness --;
+                        if (chunk.getType(i, y - 1, j) == Material.AIR) {
+                            // just above a cave
+                            chunk.setBlock(i, y, j, Material.STONE);
+                            topSoilThickness = -1;
+                        } else
+                            chunk.setBlock(i, y, j, Material.SAND);
+                    }
                 }
                 break;
             default: // forest style landscape, consisting of the majority of biomes.
@@ -207,13 +215,19 @@ public class OverworldChunkGenerator extends ChunkGenerator {
                         else
                             matToSet = matStone;
                     }
-                    if (chunk.getType(i, y + 1, j) == Material.AIR && matToSet == matSoil)
-                        matToSet = matTopSoil;
+                    if (matToSet == matSoil) {
+                        // the block below is air and this block has gravity
+                        if (chunk.getType(i, y - 1, j) == Material.AIR && matToSet.hasGravity())
+                            matToSet = matStone;
+                        // the block above is air then set a grass instead of dirt
+                        else if (chunk.getType(i, y + 1, j) == Material.AIR)
+                            matToSet = matTopSoil;
+                    }
                     chunk.setBlock(i, y, j, matToSet);
                 }
         }
 
-        if (yOffset >= 0 && height - 1 < SEA_LEVEL) {
+        if (yOffset == 0 && height - 1 < SEA_LEVEL) {
             // for surface only
             for (int y = SEA_LEVEL; y > 0; y--) {
                 if (chunk.getType(i, y, j) == Material.AIR) {
