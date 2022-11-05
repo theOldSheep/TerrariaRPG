@@ -643,5 +643,95 @@
 				"stream": true
 			}
 		]
+	},
+	"music.antarctic_reinforcement": {
+        "category": "music",
+		"sounds": [
+			{
+				"name": "music/calamity/antarctic_reinforcement",
+				"stream": true
+			}
+		]
+	},
+	"music.left_alone": {
+        "category": "music",
+		"sounds": [
+			{
+				"name": "music/calamity/left_alone",
+				"stream": true
+			}
+		]
+	},
+	"music.outcast_of_the_sulphurous_seas": {
+        "category": "music",
+		"sounds": [
+			{
+				"name": "music/calamity/outcast_of_the_sulphurous_seas",
+				"stream": true
+			}
+		]
+	},
+	"music.raw_unfiltered_calamity": {
+        "category": "music",
+		"sounds": [
+			{
+				"name": "music/calamity/raw_unfiltered_calamity",
+				"stream": true
+			}
+		]
+	},
+	"music.sirens_war_cry": {
+        "category": "music",
+		"sounds": [
+			{
+				"name": "music/calamity/sirens_war_cry",
+				"stream": true
+			}
+		]
+	},
+	"music.forbidden_lullaby": {
+        "category": "music",
+		"sounds": [
+			{
+				"name": "music/calamity/forbidden_lullaby",
+				"stream": true
+			}
+		]
+	},
+	"music.interstellar_stomper": {
+        "category": "music",
+		"sounds": [
+			{
+				"name": "music/calamity/interstellar_stomper",
+				"stream": true
+			}
+		]
+	},
+	"music.fly_of_beelzebub": {
+        "category": "music",
+		"sounds": [
+			{
+				"name": "music/calamity/fly_of_beelzebub",
+				"stream": true
+			}
+		]
+	},
+	"music.open_frenzy": {
+        "category": "music",
+		"sounds": [
+			{
+				"name": "music/calamity/open_frenzy",
+				"stream": true
+			}
+		]
+	},
+	"music.pest_of_the_cosmos": {
+        "category": "music",
+		"sounds": [
+			{
+				"name": "music/calamity/pest_of_the_cosmos",
+				"stream": true
+			}
+		]
 	}
 }
